@@ -1,0 +1,29 @@
+{
+    // 啟動存檔時自動格式化
+    "editor.formatOnSave": true,
+
+    // 指定 Prettier 為所有檔案的預設格式化工具
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+    // 針對特定語言強制指定格式化工具 (雙重保險)
+    "[vue]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+
+    // 存檔時，自動執行 ESLint 的 fix 功能，修復像是未使用的變數等問題
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    },
+
+    // 讓 ESLint 擴充套件知道要檢查哪些檔案格式
+    "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact", "vue"],
+    "editor.tabSize": 4,
+    "workbench.tree.indent": 20,
+    "emmet.triggerExpansionOnTab": true
+}

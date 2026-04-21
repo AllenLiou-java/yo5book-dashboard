@@ -1,0 +1,44 @@
+@import 'tailwindcss';
+@import '@nuxt/ui';
+
+/* 未來如果你需要自訂顏色、字體或斷點，可以直接寫在下方的 @theme 區塊中 */
+@theme {
+    /* --dark: .dark; */
+
+    /* --- Colors --- */
+    --color-primary: #082c4b;
+    --color-outline: #73777e;
+    --color-error: #ba1a1a;
+    --color-surface-container-lowest: #ffffff;
+    --color-surface-variant: #d3e4fe;
+    --color-primary-container: #082c4b;
+    --color-primary-fixed-dim: #abc9f0;
+    --color-surface: #f8f9ff;
+    --color-on-surface: #0b1c30;
+    --color-on-surface-variant: #43474e;
+    --color-outline-variant: #c3c6ce;
+    --color-background-light: #f8f9fa;
+    --color-background-dark: #041626;
+
+    /* --- Font Family --- */
+    --font-headline: 'Inter', 'sans-serif';
+    --font-body: 'Noto Sans TC', 'sans-serif';
+    --font-label: 'Inter', 'sans-serif';
+
+    /* --- Border Radius --- */
+    /* 在 v4 中，DEFAULT 對應的是 --radius-md */
+    /* --radius-none: 0rem;
+    --radius-sm: 0.1rem;
+    --radius-md: 0.125rem;
+    --radius-lg: 0.25rem;
+    --radius-xl: 0.5rem;
+    --radius-full: 0.75rem; */
+}
+
+.material-symbols-outlined {
+    font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24;
+}

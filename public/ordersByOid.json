@@ -1,0 +1,842 @@
+{
+    "240111115126123": {
+        "userId": "1RbfqPCRfaajrscsodX8Z9S7QXh2",
+        "bankAccountNo": "12345",
+        "buyer": "Allen co.",
+        "delivery": {
+            "company": "",
+            "trackingNo": "",
+            "trackingUrl": ""
+        },
+        "email": "devliou769@gmail.com",
+        "isClosed": false,
+        "phone": "0911123456",
+        "receiver": {
+            "address": "Taichung",
+            "name": "Allen Liou"
+        },
+        "remark": "",
+        "status": "1",
+        "taxId": "12345678",
+        "totalPrice": 15600,
+        "orderDate": 1704945060000,
+        "orderList": {
+            "AA00001": {
+                "productName": "公司登記實務及案例解析(共三冊)",
+                "qty": 3,
+                "totalPrice": 15600,
+                "unitPrice": 5200
+            }
+        }
+    },
+    "260308211004241": {
+        "userId": "cm20ILcSAhSyIimtgCABKrmLERN2",
+        "bankAccountNo": "12345",
+        "buyer": "signup co",
+        "delivery": {
+            "company": "",
+            "trackingNo": "",
+            "trackingUrl": ""
+        },
+        "email": "mydevmailsend@gmail.com",
+        "isClosed": false,
+        "phone": "0911234567",
+        "receiver": {
+            "address": "allen address",
+            "name": "mydevmailsend"
+        },
+        "remark": "",
+        "status": "3",
+        "taxId": "78532146",
+        "totalPrice": 6000,
+        "orderDate": 1772975400000,
+        "orderList": {
+            "AA00001": {
+                "content": [
+                    "有限公司篇【532頁】",
+                    "股份有限公司篇【964頁】",
+                    "應備文件詳析篇【296頁】"
+                ],
+                "imgSrc": "https://raw.githubusercontent.com/yooooobook/book_preview/refs/heads/main/book_cover/books.png",
+                "productName": "公司登記實務及案例解析(共三冊)",
+                "qty": 1,
+                "totalPrice": 5200,
+                "unitPrice": 5200
+            },
+            "AA00003": {
+                "content": [
+                    "增資 · 發行新股增補篇【180頁】"
+                ],
+                "imgSrc": "https://raw.githubusercontent.com/yooooobook/book_preview/refs/heads/main/book_cover/book4-2.png",
+                "productName": "公司登記實務及案例解析(增資 · 發行新股增補篇)",
+                "qty": 1,
+                "totalPrice": 800,
+                "unitPrice": 800
+            }
+        }
+    },
+    "240303201730860": {
+        "userId": "gUnkV92PjghXfp8gbv3GMZOaNIK2",
+        "bankAccountNo": "12345",
+        "buyer": "Allen co.",
+        "delivery": {
+            "company": "",
+            "trackingNo": "",
+            "trackingUrl": ""
+        },
+        "email": "ai0911953419@gmail.com",
+        "isClosed": false,
+        "phone": "0911123456",
+        "receiver": {
+            "address": "Taichung",
+            "name": "Allen Liou"
+        },
+        "remark": "",
+        "status": "1",
+        "taxId": "",
+        "totalPrice": 15900,
+        "orderDate": 1709468220000,
+        "orderList": {
+            "AA00001": {
+                "discountList": {
+                    "<10": 4000,
+                    "<5": 5200,
+                    ">=10": 3800
+                },
+                "productName": "公司登記實務及案例解析(共三冊)",
+                "promote": 3600,
+                "qty": 3,
+                "totalPrice": 15900,
+                "unitPrice": 5200
+            }
+        }
+    },
+    "240305092851548": {
+        "userId": "gUnkV92PjghXfp8gbv3GMZOaNIK2",
+        "bankAccountNo": "12345",
+        "buyer": "Allen co.",
+        "delivery": {
+            "company": "",
+            "trackingNo": "",
+            "trackingUrl": ""
+        },
+        "email": "ai0911953419@gmail.com",
+        "isClosed": false,
+        "phone": "0911123456",
+        "receiver": {
+            "address": "Taichung",
+            "name": "Allen Liou"
+        },
+        "remark": "",
+        "status": "1",
+        "taxId": "",
+        "totalPrice": 18300,
+        "orderDate": 1709602080000,
+        "orderList": {
+            "AA00001": {
+                "discountList": {
+                    "<10": 4000,
+                    "<5": 5200,
+                    ">=10": 3800
+                },
+                "productName": "公司登記實務及案例解析(共三冊)",
+                "promote": 3600,
+                "qty": 3,
+                "totalPrice": 18300,
+                "unitPrice": 5200
+            },
+            "AA00002": {
+                "discountList": {
+                    "<3": 1000,
+                    "<6": 900,
+                    ">=6": 800
+                },
+                "productName": " 公司法：規範與案例（二版）",
+                "promote": 750,
+                "qty": 3,
+                "totalPrice": 18300,
+                "unitPrice": 900
+            }
+        }
+    },
+    "240305092944692": {
+        "userId": "gUnkV92PjghXfp8gbv3GMZOaNIK2",
+        "bankAccountNo": "12345",
+        "buyer": "Allen co.",
+        "delivery": {
+            "company": "",
+            "trackingNo": "",
+            "trackingUrl": ""
+        },
+        "email": "ai0911953419@gmail.com",
+        "isClosed": false,
+        "phone": "0911123456",
+        "receiver": {
+            "address": "Taichung",
+            "name": "Allen Liou"
+        },
+        "remark": "",
+        "status": "1",
+        "taxId": "",
+        "totalPrice": 21100,
+        "orderDate": 1709602140000,
+        "orderList": {
+            "AA00001": {
+                "discountList": {
+                    "<10": 4000,
+                    "<5": 5200,
+                    ">=10": 3800
+                },
+                "productName": "公司登記實務及案例解析(共三冊)",
+                "promote": 3600,
+                "qty": 4,
+                "totalPrice": 21100,
+                "unitPrice": 5200
+            }
+        }
+    },
+    "240322095027300": {
+        "userId": "gUnkV92PjghXfp8gbv3GMZOaNIK2",
+        "bankAccountNo": "74185",
+        "buyer": "Allen co.",
+        "delivery": {
+            "company": "",
+            "trackingNo": "",
+            "trackingUrl": ""
+        },
+        "email": "ai0911953419@gmail.com",
+        "isClosed": false,
+        "phone": "0911123456",
+        "receiver": {
+            "address": "Taichung",
+            "name": "Allen Liou"
+        },
+        "remark": "",
+        "status": "1",
+        "taxId": "",
+        "totalPrice": 5200,
+        "orderDate": 1711072200000,
+        "orderList": {
+            "AA00001": {
+                "productName": "公司登記實務及案例解析(共三冊)",
+                "qty": 1,
+                "totalPrice": 5200,
+                "unitPrice": 5200
+            }
+        }
+    },
+    "240322160156814": {
+        "userId": "gUnkV92PjghXfp8gbv3GMZOaNIK2",
+        "bankAccountNo": "96385",
+        "buyer": "test123 co.",
+        "delivery": {
+            "company": "",
+            "trackingNo": "",
+            "trackingUrl": ""
+        },
+        "email": "ai0911953419@gmail.com",
+        "isClosed": false,
+        "phone": "0911123456",
+        "receiver": {
+            "address": "Taichung",
+            "name": "Allen Liou"
+        },
+        "remark": "",
+        "status": "1",
+        "taxId": "",
+        "totalPrice": 76000,
+        "orderDate": 1711094460000,
+        "orderList": {
+            "AA00001": {
+                "productName": "公司登記實務及案例解析(共三冊)",
+                "qty": 20,
+                "totalPrice": 76000,
+                "unitPrice": 3800
+            }
+        }
+    },
+    "240324111746535": {
+        "userId": "gUnkV92PjghXfp8gbv3GMZOaNIK2",
+        "bankAccountNo": "54321",
+        "buyer": "Allen co.",
+        "delivery": {
+            "company": "",
+            "trackingNo": "",
+            "trackingUrl": ""
+        },
+        "email": "ai0911953419@gmail.com",
+        "isClosed": false,
+        "phone": "0911123456",
+        "receiver": {
+            "address": "Taichung",
+            "name": "Allen Liou"
+        },
+        "remark": "",
+        "status": "2",
+        "taxId": "",
+        "totalPrice": 5200,
+        "orderDate": 1711250220000,
+        "orderList": {
+            "AA00001": {
+                "productName": "公司登記實務及案例解析(共三冊)",
+                "qty": 1,
+                "totalPrice": 5200,
+                "unitPrice": 5200
+            }
+        }
+    },
+    "240326135525392": {
+        "userId": "gUnkV92PjghXfp8gbv3GMZOaNIK2",
+        "bankAccountNo": "96385",
+        "buyer": "Allen co.",
+        "delivery": {
+            "company": "",
+            "trackingNo": "",
+            "trackingUrl": ""
+        },
+        "email": "ai0911953419@gmail.com",
+        "isClosed": false,
+        "phone": "0911123456",
+        "receiver": {
+            "address": "Taichung",
+            "name": "Allen Liou"
+        },
+        "remark": "",
+        "status": "1",
+        "taxId": "",
+        "totalPrice": 10400,
+        "orderDate": 1711432500000,
+        "orderList": {
+            "AA00001": {
+                "productName": "公司登記實務及案例解析(共三冊)",
+                "qty": 2,
+                "totalPrice": 10400,
+                "unitPrice": 5200
+            }
+        }
+    },
+    "240326140136367": {
+        "userId": "gUnkV92PjghXfp8gbv3GMZOaNIK2",
+        "bankAccountNo": "12354",
+        "buyer": "tina co.",
+        "delivery": {
+            "company": "",
+            "trackingNo": "",
+            "trackingUrl": ""
+        },
+        "email": "ai0911953419@gmail.com",
+        "isClosed": false,
+        "phone": "0911123456",
+        "receiver": {
+            "address": "Taichung",
+            "name": "Allen Liou"
+        },
+        "remark": "",
+        "status": "1",
+        "taxId": "",
+        "totalPrice": 5200,
+        "orderDate": 1711432860000,
+        "orderList": {
+            "AA00001": {
+                "productName": "公司登記實務及案例解析(共三冊)",
+                "qty": 1,
+                "totalPrice": 5200,
+                "unitPrice": 5200
+            }
+        }
+    },
+    "240326145955852": {
+        "userId": "gUnkV92PjghXfp8gbv3GMZOaNIK2",
+        "bankAccountNo": "54321",
+        "buyer": "test123 co.",
+        "delivery": {
+            "company": "",
+            "trackingNo": "",
+            "trackingUrl": ""
+        },
+        "email": "ai0911953419@gmail.com",
+        "isClosed": false,
+        "phone": "0911123456",
+        "receiver": {
+            "address": "Taichung",
+            "name": "Allen Liou"
+        },
+        "remark": "",
+        "status": "1",
+        "taxId": "",
+        "totalPrice": 10400,
+        "orderDate": 1711436340000,
+        "orderList": {
+            "AA00001": {
+                "productName": "公司登記實務及案例解析(共三冊)",
+                "qty": 2,
+                "totalPrice": 10400,
+                "unitPrice": 5200
+            }
+        }
+    },
+    "240326161928137": {
+        "userId": "gUnkV92PjghXfp8gbv3GMZOaNIK2",
+        "bankAccountNo": "96385",
+        "buyer": "allen123 co.",
+        "delivery": {
+            "company": "",
+            "trackingNo": "",
+            "trackingUrl": ""
+        },
+        "email": "ai0911953419@gmail.com",
+        "isClosed": false,
+        "phone": "0911123456",
+        "receiver": {
+            "address": "Taichung",
+            "name": "Allen Liou"
+        },
+        "remark": "",
+        "status": "1",
+        "taxId": "",
+        "totalPrice": 15600,
+        "orderDate": 1711441140000,
+        "orderList": {
+            "AA00001": {
+                "productName": "公司登記實務及案例解析(共三冊)",
+                "qty": 3,
+                "totalPrice": 15600,
+                "unitPrice": 5200
+            }
+        }
+    },
+    "240326162130766": {
+        "userId": "gUnkV92PjghXfp8gbv3GMZOaNIK2",
+        "bankAccountNo": "12354",
+        "buyer": "test123 co.",
+        "delivery": {
+            "company": "",
+            "trackingNo": "",
+            "trackingUrl": ""
+        },
+        "email": "ai0911953419@gmail.com",
+        "isClosed": false,
+        "phone": "0911123456",
+        "receiver": {
+            "address": "Taichung",
+            "name": "Allen Liou"
+        },
+        "remark": "",
+        "status": "4",
+        "taxId": "",
+        "totalPrice": 5200,
+        "orderDate": 1711441260000,
+        "orderList": {
+            "AA00001": {
+                "productName": "公司登記實務及案例解析(共三冊)",
+                "qty": 1,
+                "totalPrice": 5200,
+                "unitPrice": 5200
+            }
+        }
+    },
+    "240326165104233": {
+        "userId": "gUnkV92PjghXfp8gbv3GMZOaNIK2",
+        "bankAccountNo": "96385",
+        "buyer": "Allen co.",
+        "delivery": {
+            "company": "",
+            "trackingNo": "",
+            "trackingUrl": ""
+        },
+        "email": "ai0911953419@gmail.com",
+        "isClosed": false,
+        "phone": "0911123456",
+        "receiver": {
+            "address": "Taichung",
+            "name": "Allen Liou"
+        },
+        "remark": "",
+        "status": "1",
+        "taxId": "",
+        "totalPrice": 10400,
+        "orderDate": 1711443060000,
+        "orderList": {
+            "AA00001": {
+                "productName": "公司登記實務及案例解析(共三冊)",
+                "qty": 2,
+                "totalPrice": 10400,
+                "unitPrice": 5200
+            }
+        }
+    },
+    "240326171431412": {
+        "userId": "gUnkV92PjghXfp8gbv3GMZOaNIK2",
+        "bankAccountNo": "96385",
+        "buyer": "Allen co.",
+        "delivery": {
+            "company": "",
+            "trackingNo": "",
+            "trackingUrl": ""
+        },
+        "email": "ai0911953419@gmail.com",
+        "isClosed": false,
+        "phone": "0911123456",
+        "receiver": {
+            "address": "Taichung",
+            "name": "Allen Liou"
+        },
+        "remark": "",
+        "status": "1",
+        "taxId": "",
+        "totalPrice": 15600,
+        "orderDate": 1711444440000,
+        "orderList": {
+            "AA00001": {
+                "productName": "公司登記實務及案例解析(共三冊)",
+                "qty": 3,
+                "totalPrice": 15600,
+                "unitPrice": 5200
+            }
+        }
+    },
+    "240327220209340": {
+        "userId": "gUnkV92PjghXfp8gbv3GMZOaNIK2",
+        "bankAccountNo": "96385",
+        "buyer": "Allen co.",
+        "delivery": {
+            "company": "",
+            "trackingNo": "",
+            "trackingUrl": ""
+        },
+        "email": "ai0911953419@gmail.com",
+        "isClosed": true,
+        "phone": "0911123456",
+        "receiver": {
+            "address": "Taichung",
+            "name": "Allen Liou"
+        },
+        "remark": "",
+        "status": "3",
+        "taxId": "",
+        "totalPrice": 28000,
+        "orderDate": 1711548120000,
+        "orderList": {
+            "AA00001": {
+                "productName": "公司登記實務及案例解析(共三冊)",
+                "qty": 7,
+                "totalPrice": 28000,
+                "unitPrice": 4000
+            }
+        }
+    },
+    "240429212920865": {
+        "userId": "gUnkV92PjghXfp8gbv3GMZOaNIK2",
+        "bankAccountNo": "12345",
+        "buyer": "ai0911953419",
+        "delivery": {
+            "company": "",
+            "trackingNo": "",
+            "trackingUrl": ""
+        },
+        "email": "ai0911953419@gmail.com",
+        "isClosed": false,
+        "phone": "0911123456",
+        "receiver": {
+            "address": "Taichung",
+            "name": "Allen Liou"
+        },
+        "remark": "",
+        "status": "1",
+        "taxId": "12345678",
+        "totalPrice": 23600,
+        "orderDate": 1714397340000,
+        "orderList": {
+            "AA00001": {
+                "discountList": {
+                    "<10": 4000,
+                    "<5": 5200,
+                    ">=10": 3800
+                },
+                "productName": "公司登記實務及案例解析(共三冊)",
+                "promote": 3600,
+                "qty": 5,
+                "totalPrice": 20000,
+                "unitPrice": 4000
+            },
+            "AA00002": {
+                "discountList": {
+                    "<3": 1000,
+                    "<6": 900,
+                    ">=6": 800
+                },
+                "productName": " 公司法：規範與案例（二版）",
+                "promote": 750,
+                "qty": 4,
+                "totalPrice": 3600,
+                "unitPrice": 900
+            }
+        }
+    },
+    "240430210648234": {
+        "userId": "gUnkV92PjghXfp8gbv3GMZOaNIK2",
+        "bankAccountNo": "12345",
+        "buyer": "ai0911953419",
+        "delivery": {
+            "company": "",
+            "trackingNo": "",
+            "trackingUrl": ""
+        },
+        "email": "ai0911953419@gmail.com",
+        "isClosed": false,
+        "phone": "0911123456",
+        "receiver": {
+            "address": "Taichung",
+            "name": "Allen Liou"
+        },
+        "remark": "",
+        "status": "1",
+        "taxId": "12345678",
+        "totalPrice": 12400,
+        "orderDate": 1714482360000,
+        "orderList": {
+            "AA00001": {
+                "discountList": {
+                    "<10": 4000,
+                    "<5": 5200,
+                    ">=10": 3800
+                },
+                "productName": "公司登記實務及案例解析(共三冊)",
+                "promote": 3600,
+                "qty": 2,
+                "totalPrice": 10400,
+                "unitPrice": 5200
+            },
+            "AA00002": {
+                "discountList": {
+                    "<3": 1000,
+                    "<6": 900,
+                    ">=6": 800
+                },
+                "productName": " 公司法：規範與案例（二版）",
+                "promote": 750,
+                "qty": 2,
+                "totalPrice": 2000,
+                "unitPrice": 1000
+            }
+        }
+    },
+    "240507124944680": {
+        "userId": "gUnkV92PjghXfp8gbv3GMZOaNIK2",
+        "bankAccountNo": "98765",
+        "buyer": "test",
+        "delivery": {
+            "company": "",
+            "trackingNo": "",
+            "trackingUrl": ""
+        },
+        "email": "ai0911953419@gmail.com",
+        "isClosed": false,
+        "phone": "0911123456",
+        "receiver": {
+            "address": "Taichung",
+            "name": "Allen Liou"
+        },
+        "remark": "",
+        "status": "1",
+        "taxId": "98765432",
+        "totalPrice": 34400,
+        "orderDate": 1715057340000,
+        "orderList": {
+            "AA00001": {
+                "discountList": {
+                    "<10": 4000,
+                    "<5": 5200,
+                    ">=10": 3800
+                },
+                "productName": "公司登記實務及案例解析(共三冊)",
+                "promote": 3600,
+                "qty": 7,
+                "totalPrice": 28000,
+                "unitPrice": 4000
+            },
+            "AA00002": {
+                "discountList": {
+                    "<3": 1000,
+                    "<6": 900,
+                    ">=6": 800
+                },
+                "productName": " 公司法：規範與案例（二版）",
+                "promote": 750,
+                "qty": 8,
+                "totalPrice": 6400,
+                "unitPrice": 800
+            }
+        }
+    },
+    "240515115528377": {
+        "userId": "gUnkV92PjghXfp8gbv3GMZOaNIK2",
+        "bankAccountNo": "12345",
+        "buyer": "ai0911953419",
+        "delivery": {
+            "company": "",
+            "trackingNo": "",
+            "trackingUrl": ""
+        },
+        "email": "ai0911953419@gmail.com",
+        "isClosed": false,
+        "phone": "0911123456",
+        "receiver": {
+            "address": "Taichung",
+            "name": "Allen Liou"
+        },
+        "remark": "",
+        "status": "1",
+        "taxId": "",
+        "totalPrice": 23500,
+        "orderDate": 1715745300000,
+        "orderList": {
+            "AA00001": {
+                "discountList": {
+                    "<10": 4000,
+                    "<5": 5200,
+                    ">=10": 3800
+                },
+                "productName": "公司登記實務及案例解析(共三冊)",
+                "promote": 3600,
+                "qty": 4,
+                "totalPrice": 20800,
+                "unitPrice": 5200
+            },
+            "AA00002": {
+                "discountList": {
+                    "<3": 1000,
+                    "<6": 900,
+                    ">=6": 800
+                },
+                "productName": " 公司法：規範與案例（二版）",
+                "promote": 750,
+                "qty": 3,
+                "totalPrice": 2700,
+                "unitPrice": 900
+            }
+        }
+    },
+    "241219223540286": {
+        "userId": "gUnkV92PjghXfp8gbv3GMZOaNIK2",
+        "bankAccountNo": "00000",
+        "buyer": "有",
+        "delivery": {
+            "company": "",
+            "trackingNo": "",
+            "trackingUrl": ""
+        },
+        "email": "ai0911953419@gmail.com",
+        "isClosed": false,
+        "phone": "0932613811",
+        "receiver": {
+            "address": "彰化縣社頭鄉山腳路四段100巷72弄5號",
+            "name": "黃湘婷"
+        },
+        "remark": "",
+        "status": "3",
+        "taxId": "123",
+        "totalPrice": 5400,
+        "orderDate": 1734618900000,
+        "orderList": {
+            "AA00002": {
+                "content": [
+                    "公司登記實務及案例解析(增資 · 發行新股篇)【468頁】"
+                ],
+                "imgSrc": "https://firebasestorage.googleapis.com/v0/b/yooooobook-dev.appspot.com/o/Product%2Fbook2.png?alt=media",
+                "productName": "公司登記實務及案例解析(增資 · 發行新股篇)",
+                "qty": 3,
+                "totalPrice": 5400,
+                "unitPrice": 1800
+            }
+        }
+    },
+    "250804201809506": {
+        "userId": "gUnkV92PjghXfp8gbv3GMZOaNIK2",
+        "bankAccountNo": "12356",
+        "buyer": "",
+        "delivery": {
+            "company": "",
+            "trackingNo": "",
+            "trackingUrl": ""
+        },
+        "email": "ai0911953419@gmail.com",
+        "isClosed": false,
+        "phone": "0911234567",
+        "receiver": {
+            "address": "allen address",
+            "name": "allen"
+        },
+        "remark": "",
+        "status": "3",
+        "taxId": "",
+        "totalPrice": 2400,
+        "orderDate": 1754309880000,
+        "orderList": {
+            "AA00004": {
+                "content": [
+                    "減資篇【276頁】"
+                ],
+                "imgSrc": "https://firebasestorage.googleapis.com/v0/b/yooooobook-dev.appspot.com/o/Product%2Fbook5.png?alt=media",
+                "productName": "公司登記實務及案例解析(減資篇)",
+                "qty": 1,
+                "totalPrice": 1800,
+                "unitPrice": 1800
+            },
+            "AA00003": {
+                "content": [
+                    "增資 · 發行新股增補篇【180頁】"
+                ],
+                "imgSrc": "https://firebasestorage.googleapis.com/v0/b/yooooobook-dev.appspot.com/o/Product%2Fbook4-2.png?alt=media",
+                "productName": "公司登記實務及案例解析(增資 · 發行新股增補篇)",
+                "qty": 1,
+                "totalPrice": 600,
+                "unitPrice": 600
+            }
+        }
+    },
+    "250804201933302": {
+        "userId": "gUnkV92PjghXfp8gbv3GMZOaNIK2",
+        "bankAccountNo": "65432",
+        "buyer": "",
+        "delivery": {
+            "company": "",
+            "trackingNo": "",
+            "trackingUrl": ""
+        },
+        "email": "ai0911953419@gmail.com",
+        "isClosed": false,
+        "phone": "0911234567",
+        "receiver": {
+            "address": "allen address",
+            "name": "mydevmailsend"
+        },
+        "remark": "",
+        "status": "1",
+        "taxId": "",
+        "totalPrice": 2400,
+        "orderDate": 1754309940000,
+        "orderList": {
+            "AA00004": {
+                "content": [
+                    "減資篇【276頁】"
+                ],
+                "imgSrc": "https://firebasestorage.googleapis.com/v0/b/yooooobook-dev.appspot.com/o/Product%2Fbook5.png?alt=media",
+                "productName": "公司登記實務及案例解析(減資篇)",
+                "qty": 1,
+                "totalPrice": 1800,
+                "unitPrice": 1800
+            },
+            "AA00003": {
+                "content": [
+                    "增資 · 發行新股增補篇【180頁】"
+                ],
+                "imgSrc": "https://firebasestorage.googleapis.com/v0/b/yooooobook-dev.appspot.com/o/Product%2Fbook4-2.png?alt=media",
+                "productName": "公司登記實務及案例解析(增資 · 發行新股增補篇)",
+                "qty": 1,
+                "totalPrice": 600,
+                "unitPrice": 600
+            }
+        }
+    }
+}

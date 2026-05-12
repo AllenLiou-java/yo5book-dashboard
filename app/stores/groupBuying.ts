@@ -7,6 +7,8 @@ export const useGroupBuyingStore = defineStore('groupBuying', () => {
     const isLoading = ref(false)
     const error = ref<string | null>(null)
 
+    const groupBuying = useGroupBuying()
+
     // 計算屬性 (Getters)
     const totalItems = computed(() => list.value.length)
 
@@ -16,58 +18,50 @@ export const useGroupBuyingStore = defineStore('groupBuying', () => {
         error.value = null
 
         try {
-            // 呼叫我們之前建立的 Server API
-            const { data, success } = await $fetch<{
-                data: GroupBuyingData[]
-                success: boolean
-            }>('/api/admin/groupBuying/list')
+            const { data, success } = await groupBuying.findAll()
 
             if (success) {
                 if (!data || (Array.isArray(data) && data.length === 0)) return
 
                 // 加上status屬性
-                let result: GroupBuyingData[] = data.map((value: GroupBuyingData) => ({
+                list.value = data.map((value: GroupBuyingData) => ({
                     ...value,
                     status: hasExpired(value.endDate) ? 'ended' : 'active'
                 }))
-
-                // 依據builTime欄位 - 降冪排序
-                result = result.sort((a, b) => (b['buildTime'] || 0) - (a['buildTime'] || 0))
-
-                list.value = result
             }
         } catch (err: unknown) {
-            error.value = err instanceof Error ? err.message : '無法取得團購資料'
+            error.value = getErrorMessage(err, '無法取得團購資料')
         } finally {
             isLoading.value = false
         }
     }
 
     const fetchGroupBuyingById = async (gid: string): Promise<GroupBuyingData | undefined> => {
+        // 1. 先確認 list 中是否已經有這筆資料，若有則直接回傳，不觸發 API 與 Loading
+        const existingData = list.value.find((item) => item.gid === gid)
+        if (existingData) return existingData
+
         isLoading.value = true
         error.value = null
 
         try {
-            // 呼叫我們之前建立的 Server API
-            const { data, success } = await $fetch<{
+            const { data, success } = (await groupBuying.findByGroupId(gid)) as {
                 data: GroupBuyingData
                 success: boolean
-            }>(`/api/admin/groupBuying/${gid}`)
+            }
 
             if (success) {
                 if (!data) return
-                data.gid = gid
                 data.status = hasExpired(data.endDate) ? 'ended' : 'active'
 
-                const idx = list.value.findIndex((item) => item.gid === gid)
-                if (idx !== -1) {
-                    list.value[idx] = data
-                } else {
-                    list.value.push(data)
-                }
+                // 2. 因為前面已經確認過不在列表中，所以這裡可以直接 push
+                list.value.push(data)
+
+                // 3. 回傳新取得的資料，以符合 Promise<GroupBuyingData | undefined> 的型別
+                return data
             }
         } catch (err: unknown) {
-            error.value = err instanceof Error ? err.message : '無法取得團購資料'
+            error.value = getErrorMessage(err, '無法取得團購資料')
         } finally {
             isLoading.value = false
         }
@@ -78,28 +72,40 @@ export const useGroupBuyingStore = defineStore('groupBuying', () => {
         error.value = null
 
         try {
-            // 呼叫我們之前建立的 Server API
-            const { success } = await $fetch<{
-                data: string
-                success: boolean
-            }>(`/api/admin/groupBuying/${gid}`, {
-                method: 'POST',
-                body: updateData
-            })
+            const { success } = await groupBuying.update(gid, updateData)
 
             if (success) {
+                if (updateData.endDate) {
+                    updateData.status = hasExpired(updateData.endDate as string)
+                        ? 'ended'
+                        : 'active'
+                }
                 // 將資料更新至state
-                const idx = list.value.findIndex((item) => item.gid === gid)
-                if (idx !== -1) {
-                    if (!list.value[idx]) return
-                    list.value[idx] = {
-                        ...list.value[idx],
-                        ...updateData
-                    }
+                const item = list.value.find((i) => i.gid === gid)
+                if (item) {
+                    Object.assign(item, updateData)
                 }
             }
         } catch (err: unknown) {
-            error.value = err instanceof Error ? err.message : '更新失敗'
+            error.value = getErrorMessage(err, '更新失敗')
+        } finally {
+            isLoading.value = false
+        }
+    }
+
+    const addGroupBuyingItem = async (formState: FormState) => {
+        isLoading.value = true
+        error.value = null
+
+        try {
+            const { data, success } = await groupBuying.create(formState)
+            if (success) {
+                if (data) {
+                    list.value.unshift(data)
+                }
+            }
+        } catch (err: unknown) {
+            error.value = getErrorMessage(err, '新增失敗')
         } finally {
             isLoading.value = false
         }
@@ -111,28 +117,9 @@ export const useGroupBuyingStore = defineStore('groupBuying', () => {
 
         try {
             list.value = list.value.filter((item) => item.gid !== gid)
-            await $fetch('/api/admin/groupBuying/remove', {
-                method: 'POST',
-                body: { groupId: gid }
-            })
+            return await groupBuying.remove(gid)
         } catch (err: unknown) {
-            error.value = err instanceof Error ? err.message : '刪除失敗'
-        } finally {
-            isLoading.value = false
-        }
-    }
-
-    const addGroupBuyingItem = async (formState: FormState) => {
-        isLoading.value = true
-        error.value = null
-
-        try {
-            await $fetch('/api/admin/groupBuying/add', {
-                method: 'POST',
-                body: formState
-            })
-        } catch (err: unknown) {
-            error.value = err instanceof Error ? err.message : '新增失敗'
+            error.value = getErrorMessage(err, '刪除失敗')
         } finally {
             isLoading.value = false
         }
@@ -146,7 +133,7 @@ export const useGroupBuyingStore = defineStore('groupBuying', () => {
         fetchGroupBuying,
         fetchGroupBuyingById,
         updateGroupBuyingById,
-        removeGroupBuyingItem,
-        addGroupBuyingItem
+        addGroupBuyingItem,
+        removeGroupBuyingItem
     }
 })

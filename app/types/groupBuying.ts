@@ -9,8 +9,20 @@ export interface GroupBuyingData {
     bannerUrl: string
     endDate: string
     description: string
-    products: GroupBuyingProduct[]
+    products: GroupBuyingProducts | GroupBuyingProduct[]
 }
+
+// 定義單一產品結構
+export interface GroupBuyingProduct {
+    productId?: string
+    name: string
+    originalPrice: number
+    groupPrice: number
+    isLaunched?: boolean
+}
+
+// products 節點
+export type GroupBuyingProducts = Record<string, GroupBuyingProduct>
 
 // 定義團購表單
 export type FormState = {
@@ -21,13 +33,4 @@ export type FormState = {
     endDate: string
     isLaunched: boolean
     products: GroupBuyingProduct[]
-}
-
-// 定義單一產品結構
-export interface GroupBuyingProduct {
-    productId: string
-    name: string
-    originalPrice: number
-    groupPrice: number
-    isLaunched?: boolean
 }

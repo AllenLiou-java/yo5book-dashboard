@@ -1,38 +1,71 @@
-function getTodayLocalDate(): string {
-    const today = new Date()
-    const year = today.getFullYear()
-    const month = String(today.getMonth() + 1).padStart(2, '0')
-    const day = String(today.getDate()).padStart(2, '0')
-    return `${year}/${month}/${day}`
-}
-
-/**
- * 將格式為 "YYYY/MM/DD" 或 "YYYY-MM-DD" 的字串轉換為 Date 物件
- * @param dateStr - 日期字串 (例如: "2025/10/30")
- * @returns Date 物件
- */
-function parseLocalDate(dateStr: string): Date {
-    const dateArr = dateStr.split(/[/-]/).map(Number)
-
-    const [year, month, day] = dateArr as [number, number, number]
-    return new Date(year, month - 1, day)
-}
-
 /**
  * 傳入到期日，以當日為基點，判斷時否超過到期日
  * @param expiredDate - 傳入到期日 (例如: "2025/10/30")
  * @returns Boolean
  */
 export const hasExpired = (expiredDate: string): boolean => {
-    const today = parseLocalDate(getTodayLocalDate())
-    const closeDay = parseLocalDate(expiredDate)
-    return today > closeDay
+    if (!expiredDate) return false
+
+    // 取得 YYYY-MM-DD 格式的今天日期字串
+    const today = new Date()
+    const todayISO = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
+
+    // 將傳入的日期統一轉為 YYYY-MM-DD 格式以利比較
+    const expiredDateISO = expiredDate.replace(/\//g, '-')
+
+    // 直接比較字串，避免 Date 物件的時區問題。
+    // "2024-05-22" > "2024-05-21" -> true (已過期)
+    // "2024-05-21" > "2024-05-21" -> false (當天未過期)
+    return todayISO > expiredDateISO
 }
 
-export const formatTimestamp = (timestamp: number) => {
-    const date = new Date(timestamp * 1000)
+/**
+ * 傳入timestamp，單位可為「秒」或「毫秒」
+ * @param timestamp - 時間戳記的單位為毫秒，共13位數(例如: "1776158281000")，單位為秒，共10位數(例如: "1776158281")
+ * @returns YYYY-MM-DD（例如：2026-04-14）
+ */
 
-    const formatted = date.toISOString().split('T')[0]
+export const formatDate = (timestamp?: number) => {
+    if (!timestamp) return '-'
 
-    return formatted
+    // 判斷傳入的 timestamp 是秒 (通常為 10 位數) 還是毫秒 (13 位數)，統一轉為毫秒
+    const ms = String(timestamp).length <= 10 ? timestamp * 1000 : timestamp
+
+    const date = new Date(ms)
+    const y = date.getFullYear()
+    const m = String(date.getMonth() + 1).padStart(2, '0')
+    const d = String(date.getDate()).padStart(2, '0')
+
+    return `${y}-${m}-${d}`
+}
+
+/**
+ * 傳入timestamp，單位可為「秒」或「毫秒」
+ * @param timestamp - 時間戳記的單位為毫秒，共13位數(例如: "1776158281000")，單位為秒，共10位數(例如: "1776158281")
+ * @returns YYYY-MM-DD hh:mm（例如：2026-04-14 17:18）
+ */
+export const formatDateTime = (timestamp?: number) => {
+    if (!timestamp) return '-'
+
+    // 判斷傳入的 timestamp 是秒 (通常為 10 位數) 還是毫秒 (13 位數)，統一轉為毫秒
+    const ms = String(timestamp).length <= 10 ? timestamp * 1000 : timestamp
+
+    const date = new Date(ms)
+    const y = date.getFullYear()
+    const m = String(date.getMonth() + 1).padStart(2, '0')
+    const d = String(date.getDate()).padStart(2, '0')
+    const h = String(date.getHours()).padStart(2, '0')
+    const min = String(date.getMinutes()).padStart(2, '0')
+    return `${y}-${m}-${d} ${h}:${min}`
+}
+
+/**
+ * 加入千分位
+ * @param value - 傳入數值
+ * @returns string
+ */
+export const thousandthsFormat = (value: string | number) => {
+    const regex = /\B(?=(\d{3})+(?!\d))/g
+    value = value.toString()
+    return value.replace(regex, ',')
 }

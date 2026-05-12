@@ -3,7 +3,7 @@ export interface UserInfo {
     email: string // email
     emailVerified?: boolean // 帳戶是否驗證
     picture: string // 帳戶頭像
-    userUid: string // 帳戶 ID,
+    userId: string // 帳戶 ID,
     role: 'user' | 'admin' // 帳戶角色
 }
 

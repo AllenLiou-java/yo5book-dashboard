@@ -1,0 +1,293 @@
+{
+    "-OqAH834s5rICk_HkPd8": {
+        "bannerUrl": "https://raw.githubusercontent.com/yooooobook/book_preview/refs/heads/main/campaign/20260101/home_03_pc.jpg",
+        "buildTime": 1776158281,
+        "description": "<h2>test0415</h2><p>hello, test0415!</p><p>welcome to hello world...</p><p></p>",
+        "endDate": "2026-04-15",
+        "isLaunched": true,
+        "products": {
+            "AA00001": {
+                "groupPrice": 4800,
+                "name": "公司登記實務及案例解析(共三冊)",
+                "originalPrice": 5500
+            },
+            "AA00004": {
+                "groupPrice": 1800,
+                "name": "公司登記實務及案例解析(減資篇)",
+                "originalPrice": 2000
+            }
+        },
+        "title": "0415活動",
+        "unitName": "0415公會123"
+    },
+    "-OqKV8kY_B8LvgZxAUPh": {
+        "bannerUrl": "",
+        "buildTime": 1776329727,
+        "description": "<p>0426Hello World</p>",
+        "endDate": "2026-04-30",
+        "isLaunched": true,
+        "products": {
+            "AA00001": {
+                "groupPrice": 5000,
+                "isLaunched": true,
+                "name": "公司登記實務及案例解析(共三冊)",
+                "originalPrice": 5500
+            }
+        },
+
+        "products": [
+            {
+                "productId": "AA00001",
+                "groupPrice": 5000,
+                "isLaunched": true,
+                "name": "公司登記實務及案例解析(共三冊)",
+                "originalPrice": 5500
+            }
+        ],
+        "title": "0426活動",
+        "unitName": "0426公會"
+    },
+    "-OqKVd6zccNlhu3fXjGV": {
+        "bannerUrl": "",
+        "buildTime": 1776329856,
+        "description": "",
+        "endDate": "2026-04-13",
+        "isLaunched": true,
+        "products": {
+            "AA00003": {
+                "groupPrice": 600,
+                "isLaunched": true,
+                "name": "公司登記實務及案例解析(增資發行新股增補篇)",
+                "originalPrice": 800
+            }
+        },
+        "title": "0422活動",
+        "unitName": "0422公會"
+    },
+    "-OqKWEpvW263TjpRRMZ-": {
+        "bannerUrl": "",
+        "buildTime": 1776330014,
+        "description": "",
+        "endDate": "2026-04-30",
+        "isLaunched": true,
+        "products": {
+            "AA00002": {
+                "groupPrice": 1600,
+                "isLaunched": true,
+                "name": "公司登記實務及案例解析(增資 · 發行新股篇)",
+                "originalPrice": 2200
+            }
+        },
+        "title": "0515活動",
+        "unitName": "0515公會321"
+    },
+    "-Oqd051bSlKYo8Ue2H2j": {
+        "bannerUrl": "",
+        "buildTime": 1776657130,
+        "description": "",
+        "endDate": "2026-05-02",
+        "isLaunched": true,
+        "products": {
+            "AA00001": {
+                "groupPrice": 1000,
+                "isLaunched": true,
+                "name": "公司登記實務及案例解析(共三冊)",
+                "originalPrice": 5500
+            }
+        },
+        "title": "0501活動",
+        "unitName": "0501公會"
+    },
+    "-Oqd0BNSO1IlmpCBZkPH": {
+        "bannerUrl": "",
+        "buildTime": 1776657156,
+        "description": "",
+        "endDate": "2026-04-03",
+        "isLaunched": true,
+        "products": {
+            "AA00002": {
+                "groupPrice": 2000,
+                "isLaunched": true,
+                "name": "公司登記實務及案例解析(增資 · 發行新股篇)",
+                "originalPrice": 2200
+            }
+        },
+        "title": "0502活動",
+        "unitName": "0502公會"
+    },
+    "-Oqd0HtLy95zxw9ui3_u": {
+        "bannerUrl": "",
+        "buildTime": 1776657182,
+        "description": "",
+        "endDate": "2026-05-05",
+        "isLaunched": true,
+        "products": {
+            "AA00004": {
+                "groupPrice": 1000,
+                "isLaunched": true,
+                "name": "公司登記實務及案例解析(減資篇)",
+                "originalPrice": 2000
+            }
+        },
+        "title": "0503活動",
+        "unitName": "0503公會"
+    },
+    "-Oqd0NKGD3a0zFOzfsWl": {
+        "bannerUrl": "",
+        "buildTime": 1776657205,
+        "description": "",
+        "endDate": "2026-05-09",
+        "isLaunched": true,
+        "products": {
+            "AA00003": {
+                "groupPrice": 600,
+                "isLaunched": true,
+                "name": "公司登記實務及案例解析(增資發行新股增補篇)",
+                "originalPrice": 800
+            }
+        },
+        "title": "0506活動",
+        "unitName": "0506公會"
+    },
+    "-Oqd0SJx2Q4VVr-liBJa": {
+        "bannerUrl": "",
+        "buildTime": 1776657225,
+        "description": "",
+        "endDate": "2026-04-30",
+        "isLaunched": true,
+        "products": {
+            "AA00002": {
+                "groupPrice": 1600,
+                "isLaunched": true,
+                "name": "公司登記實務及案例解析(增資 · 發行新股篇)",
+                "originalPrice": 2200
+            }
+        },
+        "title": "0508活動",
+        "unitName": "0508公會"
+    },
+    "-Oqd0ZHFPPU45muKzd9J": {
+        "bannerUrl": "",
+        "buildTime": 1776657254,
+        "description": "",
+        "endDate": "2026-05-02",
+        "isLaunched": true,
+        "products": {
+            "AA00002": {
+                "groupPrice": 1200,
+                "isLaunched": true,
+                "name": "公司登記實務及案例解析(增資 · 發行新股篇)",
+                "originalPrice": 2200
+            }
+        },
+        "title": "0510活動",
+        "unitName": "0510公會"
+    },
+    "-Oqd0foazOnEktUbz74A": {
+        "bannerUrl": "",
+        "buildTime": 1776657284,
+        "description": "",
+        "endDate": "2026-07-01",
+        "isLaunched": true,
+        "products": {
+            "AA00001": {
+                "groupPrice": 3600,
+                "isLaunched": true,
+                "name": "公司登記實務及案例解析(共三冊)",
+                "originalPrice": 5500
+            }
+        },
+        "title": "0512活動",
+        "unitName": "0512公會"
+    },
+    "-Oqd0mmZI66gxyVsVHJh": {
+        "bannerUrl": "",
+        "buildTime": 1776657313,
+        "description": "",
+        "endDate": "2026-06-26",
+        "isLaunched": true,
+        "products": {
+            "AA00002": {
+                "groupPrice": 1800,
+                "name": "公司登記實務及案例解析(增資 · 發行新股篇)",
+                "originalPrice": 2200
+            },
+            "AA00001": {
+                "groupPrice": 3800,
+                "name": "公司登記實務及案例解析(共三冊)",
+                "originalPrice": 5500
+            },
+            "AA00003": {
+                "groupPrice": 600,
+                "name": "公司登記實務及案例解析(增資發行新股增補篇)",
+                "originalPrice": 800
+            }
+        },
+        "title": "0522活動",
+        "unitName": "0522公會"
+    },
+    "-OqeyIvhLZ4BVgFnKE6z": {
+        "bannerUrl": "https://raw.githubusercontent.com/yooooobook/book_preview/refs/heads/main/campaign/20260101/home_03_pc.jpg",
+        "buildTime": 1776689954,
+        "description": "<h1>XXX公會 您好</h1><p>Hello World</p><p></p>",
+        "endDate": "2026-05-07",
+        "isLaunched": false,
+        "products": {
+            "AA00001": {
+                "groupPrice": 5000,
+                "name": "公司登記實務及案例解析(共三冊)",
+                "originalPrice": 5500
+            },
+            "AA00003": {
+                "groupPrice": 600,
+                "name": "公司登記實務及案例解析(增資發行新股增補篇)",
+                "originalPrice": 800
+            },
+            "AA00004": {
+                "groupPrice": 1600,
+                "name": "公司登記實務及案例解析(減資篇)",
+                "originalPrice": 2000
+            }
+        },
+        "title": "XXXtest活動",
+        "unitName": "XXXtest公會"
+    },
+    "-Os-KoD9vyJd8pfrTltR": {
+        "bannerUrl": "",
+        "buildTime": 1778122180159,
+        "description": "<h1>Hello World</h1><p></p>",
+        "endDate": "2026-05-07",
+        "isLaunched": true,
+        "products": {
+            "AA00001": {
+                "groupPrice": 5200,
+                "name": "公司登記實務及案例解析(共三冊)",
+                "originalPrice": 5500
+            },
+            "AA00004": {
+                "groupPrice": 1800,
+                "name": "公司登記實務及案例解析(減資篇)",
+                "originalPrice": 2000
+            }
+        },
+        "title": "0507活動",
+        "unitName": "0507公會"
+    },
+    "-Os4jhRqni96U1-WQ_KW": {
+        "bannerUrl": "https://raw.githubusercontent.com/yooooobook/book_preview/refs/heads/main/campaign/20260101/home_03_pc.jpg",
+        "buildTime": 1778212854806,
+        "description": "",
+        "endDate": "2026-05-02",
+        "isLaunched": true,
+        "products": {
+            "AA00002": {
+                "groupPrice": 1200,
+                "isLaunched": true,
+                "name": "公司登記實務及案例解析(增資 · 發行新股篇)",
+                "originalPrice": 2200
+            }
+        },
+        "title": "0501活動",
+        "unitName": "0501公會"
+    }
+}

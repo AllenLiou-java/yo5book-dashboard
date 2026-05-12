@@ -1,20 +1,5 @@
 <template>
-    <!-- <div
-        class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100"
-    >
-        <div class="flex h-screen">
-            <AppSidebar2 />
-
-            <div class="grow overflow-hidden">
-                <AppHeader />
-
-                <div class="overflow-y-auto">
-                    <slot />
-                </div>
-            </div>
-        </div>
-    </div> -->
-    <div class="flex flex-1">
+    <div class="flex">
         <USidebar
             v-model:open="open"
             collapsible="icon"
@@ -82,7 +67,7 @@
             </template>
         </USidebar>
 
-        <div class="flex flex-1 flex-col">
+        <div class="flex-1 overflow-auto">
             <div
                 class="border-default flex h-(--ui-header-height) shrink-0 items-center border-b px-4"
             >
@@ -94,8 +79,7 @@
                     @click="toggleSidebar"
                 />
             </div>
-
-            <div class="flex-1">
+            <div class="dark:bg-background-dark/50 min-h-screen bg-slate-50 p-8">
                 <slot />
             </div>
         </div>
@@ -109,88 +93,87 @@ const open = ref(true)
 
 const colorMode = useColorMode()
 
+const BASE_MENU_ITEMS: NavigationMenuItem[] = [
+    {
+        label: '控制台',
+        icon: 'i-lucide-layout-dashboard',
+        to: '/admin/dashboard'
+    },
+    {
+        label: '團購管理',
+        icon: 'i-lucide-shopping-bag',
+        defaultOpen: true,
+        children: [
+            {
+                label: '新增團購',
+                icon: 'i-lucide-circle-plus',
+                to: '/admin/groupBuying/create'
+            },
+            {
+                label: '團購列表',
+                icon: 'i-lucide-users',
+                to: '/admin/groupBuying?page=1'
+            }
+        ]
+    },
+    {
+        label: '訂單管理',
+        icon: 'i-lucide-list-ordered',
+        defaultOpen: true,
+        children: [
+            {
+                label: '團購訂單',
+                icon: 'i-lucide-users',
+                to: '/admin/orders/group?page=1'
+            },
+            {
+                label: '個人訂單',
+                icon: 'i-lucide-user',
+                to: '/admin/orders/personal?page=1'
+            }
+        ]
+    },
+    {
+        label: '存貨管理',
+        icon: 'i-lucide-notebook-pen',
+        to: '/admin/inventory'
+    },
+    {
+        label: '業務管理',
+        icon: 'i-lucide-briefcase',
+        defaultOpen: true,
+        children: [
+            {
+                label: '客戶管理',
+                icon: 'i-lucide-user',
+                to: '/admin/customers'
+            }
+        ]
+    },
+    {
+        label: '設定',
+        icon: 'i-lucide-settings',
+        defaultOpen: true,
+        children: [
+            {
+                label: 'General',
+                icon: 'i-lucide-house'
+            }
+        ]
+    }
+]
+
 function getItems(state: 'collapsed' | 'expanded') {
-    return [
-        {
-            label: '控制台',
-            icon: 'i-lucide-layout-dashboard',
-            to: '/admin/dashboard'
-        },
-        {
-            label: '團購管理',
-            icon: 'i-lucide-shopping-bag',
-            defaultOpen: true,
-            children:
-                state === 'expanded'
-                    ? [
-                          {
-                              label: '新增團購',
-                              icon: 'i-lucide-circle-plus',
-                              to: '/admin/groupBuying/create'
-                          },
-                          {
-                              label: '團購列表',
-                              icon: 'i-lucide-users',
-                              to: '/admin/groupBuying'
-                          }
-                      ]
-                    : []
-        },
-        {
-            label: '訂單管理',
-            icon: 'i-lucide-list-ordered',
-            defaultOpen: true,
-            children:
-                state === 'expanded'
-                    ? [
-                          {
-                              label: '團購訂單',
-                              icon: 'i-lucide-users',
-                              to: '/admin/orders/group'
-                          },
-                          {
-                              label: '個人訂單',
-                              icon: 'i-lucide-user',
-                              to: '/admin/orders/personal'
-                          }
-                      ]
-                    : []
-        },
-        {
-            label: '存貨管理',
-            icon: 'i-lucide-notebook-pen',
-            to: '/admin/inventory'
-        },
-        {
-            label: '業務管理',
-            icon: 'i-lucide-briefcase',
-            defaultOpen: true,
-            children:
-                state === 'expanded'
-                    ? [
-                          {
-                              label: '客戶管理',
-                              icon: 'i-lucide-user',
-                              to: '/admin/customers'
-                          }
-                      ]
-                    : []
-        },
-        {
-            label: '設定',
-            icon: 'i-lucide-settings',
-            defaultOpen: true,
-            children:
-                state === 'expanded'
-                    ? [
-                          {
-                              label: 'General',
-                              icon: 'i-lucide-house'
-                          }
-                      ]
-                    : []
+    const isExpanded = state === 'expanded'
+
+    return BASE_MENU_ITEMS.map((item) => {
+        if (!item.children) return item
+
+        return {
+            ...item,
+            children: isExpanded ? item.children : []
         }
-    ] satisfies NavigationMenuItem[]
+    })
 }
 
 const user = ref({
@@ -201,7 +184,7 @@ const user = ref({
     // }
 })
 
-const toast = useToast()
+const toastStore = useToastStore()
 const overlay = useOverlay()
 const modal = overlay.create(LazyModalBasic)
 
@@ -222,35 +205,22 @@ const userItems = computed<DropdownMenuItem[][]>(() => [
             label: '外觀',
             icon: 'i-lucide-sun-moon',
             children: [
-                {
-                    label: 'Light',
-                    icon: 'i-lucide-sun',
-                    type: 'checkbox',
-                    checked: colorMode.value === 'light',
-                    onUpdateChecked(checked: boolean) {
-                        if (checked) {
-                            colorMode.preference = 'light'
-                        }
-                    },
-                    onSelect(e: Event) {
-                        e.preventDefault()
+                { label: 'Light', icon: 'i-lucide-sun', value: 'light' },
+                { label: 'Dark', icon: 'i-lucide-moon', value: 'dark' }
+            ].map((theme) => ({
+                label: theme.label,
+                icon: theme.icon,
+                type: 'checkbox',
+                checked: colorMode.value === theme.value,
+                onUpdateChecked(checked: boolean) {
+                    if (checked) {
+                        colorMode.preference = theme.value
                     }
                 },
-                {
-                    label: 'Dark',
-                    icon: 'i-lucide-moon',
-                    type: 'checkbox',
-                    checked: colorMode.value === 'dark',
-                    onUpdateChecked(checked: boolean) {
-                        if (checked) {
-                            colorMode.preference = 'dark'
-                        }
-                    },
-                    onSelect(e: Event) {
-                        e.preventDefault()
-                    }
+                onSelect(e: Event) {
+                    e.preventDefault()
                 }
-            ]
+            }))
         }
     ],
     [
@@ -258,23 +228,19 @@ const userItems = computed<DropdownMenuItem[][]>(() => [
             label: '登出',
             icon: 'i-lucide-log-out',
             async onSelect(e: Event) {
+                e.preventDefault() // 必須同步呼叫，避免下拉選單被預設行為強制關閉
+
                 const instance = modal.open({
                     title: '確定要登出嗎？',
                     submitLabel: '確定登出',
                     cancelLabel: '取消'
                 })
 
-                const shouldIncrement = await instance.result
+                const isConfirmed = await instance.result
 
-                if (shouldIncrement) {
-                    e.preventDefault()
+                if (isConfirmed) {
                     useAuthStore().logout()
-                    toast.add({
-                        title: '登出成功',
-                        color: 'success',
-                        id: 'modal-success'
-                    })
-                    return
+                    toastStore.success('登出成功')
                 }
             }
         }

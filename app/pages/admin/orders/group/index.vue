@@ -1,137 +1,130 @@
 <template>
-    <main class="dark:bg-background-dark/50 min-h-screen bg-slate-50 p-8">
-        <div class="mx-auto flex max-w-7xl flex-col gap-6">
-            <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-                <div>
-                    <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">
-                        團購活動列表
-                    </h1>
-
-                    <p class="text-sm text-slate-500">管理與監控所有進行中及歷史團購活動。</p>
-                </div>
-                <NuxtLink
-                    to="/admin/groupBuying/create"
-                    class="bg-primary hover:bg-primary/90 shadow-primary/20 flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition-all"
-                >
-                    <span class="material-symbols-outlined text-lg">add_circle</span>
-                    新增團購活動
-                </NuxtLink>
+    <div class="mx-auto flex max-w-7xl flex-col gap-6">
+        <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">團購訂單列表</h1>
+                <p class="text-sm text-slate-500">管理與監控所有團購訂單。</p>
             </div>
-
-            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <!-- Tabs 篩選 -->
-                <div
-                    class="flex w-fit gap-1 rounded-xl border border-slate-200 bg-white p-1.5 dark:border-slate-800 dark:bg-slate-900"
-                >
-                    <button
-                        v-for="tab in tabs"
-                        :key="tab.value"
-                        :class="[
-                            'rounded-lg px-6 py-2 text-sm font-semibold transition-colors',
-                            currentTab === tab.value
-                                ? 'bg-primary text-white'
-                                : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800'
-                        ]"
-                        @click="currentTab = tab.value"
-                    >
-                        {{ tab.label }}
-                    </button>
-                </div>
-
-                <!-- 搜尋列 -->
-                <div class="w-full sm:w-72">
-                    <UInput
-                        v-model="searchUnitName"
-                        icon="i-lucide-search"
-                        placeholder="搜尋團購單位..."
-                    >
-                        <template #trailing>
-                            <UButton
-                                color="neutral"
-                                variant="ghost"
-                                size="sm"
-                                icon="i-lucide-x"
-                                aria-label="Clear input"
-                                @click="searchUnitName = ''"
-                            />
-                        </template>
-                    </UInput>
-                </div>
-            </div>
-
-            <div
-                class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900"
+            <NuxtLink
+                to="/admin/groupBuying/create"
+                class="bg-primary hover:bg-primary/90 shadow-primary/20 flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition-all"
             >
-                <UTable :data="paginatedActivities" :columns="tableColumns">
-                    <template #unit-cell="{ row }">
-                        <div class="flex items-center gap-3">
-                            <span class="font-medium text-slate-700 dark:text-slate-200">
-                                {{ row.original.unitName }}
-                            </span>
-                        </div>
-                    </template>
+                <span class="material-symbols-outlined text-lg">add_circle</span>
+                新增團購活動
+            </NuxtLink>
+        </div>
 
-                    <template #title-cell="{ row }">
-                        <span class="text-slate-600 dark:text-slate-400">{{
-                            row.original.title
-                        }}</span>
-                    </template>
-
-                    <template #buildTime-cell="{ row }">
-                        <span
-                            v-if="row.original.buildTime"
-                            :class="['rounded-full px-3 py-1 text-xs font-medium']"
-                        >
-                            {{ formatTimestamp(row.original.buildTime) }}
-                        </span>
-                    </template>
-
-                    <template #endDate-cell="{ row }">
-                        <span
-                            :class="[
-                                'rounded-full px-3 py-1 text-xs font-medium',
-                                getStatusBadgeClass(row.original.status)
-                            ]"
-                        >
-                            {{ row.original.endDate }}
-                        </span>
-                    </template>
-
-                    <template #actions-cell="{ row }">
-                        <NuxtLink :to="`/admin/orders/group/${row.original.gid}`">
-                            <UButton icon="i-lucide-table-of-contents" variant="ghost"></UButton>
-                        </NuxtLink>
-                    </template>
-                </UTable>
-
-                <div
-                    class="flex items-center justify-between border-t border-slate-200 bg-slate-50 px-6 py-4 dark:border-slate-800 dark:bg-slate-800/30"
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <!-- Tabs 篩選 -->
+            <div
+                class="flex w-fit gap-1 rounded-xl border border-slate-200 bg-white p-1.5 dark:border-slate-800 dark:bg-slate-900"
+            >
+                <button
+                    v-for="tab in tabs"
+                    :key="tab.value"
+                    :class="[
+                        'rounded-lg px-6 py-2 text-sm font-semibold transition-colors',
+                        currentTab === tab.value
+                            ? 'bg-primary text-white'
+                            : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800'
+                    ]"
+                    @click="currentTab = tab.value"
                 >
-                    <p class="text-sm text-slate-500">
-                        顯示第
-                        <span class="font-semibold">{{
-                            filteredActivities.length
-                                ? pagination.pageIndex * pagination.pageSize + 1
-                                : 0
-                        }}</span>
-                        到
-                        <span class="font-semibold">{{
-                            Math.min(
-                                (pagination.pageIndex + 1) * pagination.pageSize,
-                                filteredActivities.length
-                            )
-                        }}</span>
-                        筆結果
-                    </p>
-                    <UPagination
-                        v-model:page="page"
-                        :total="filteredActivities.length"
-                        :items-per-page="pagination.pageSize"
-                    />
-                </div>
+                    {{ tab.label }}
+                </button>
+            </div>
+
+            <!-- 搜尋列 -->
+            <div class="w-full sm:w-72">
+                <UInput
+                    v-model="searchUnitName"
+                    icon="i-lucide-search"
+                    placeholder="搜尋團購單位..."
+                >
+                    <template #trailing>
+                        <UButton
+                            color="neutral"
+                            variant="ghost"
+                            size="sm"
+                            icon="i-lucide-x"
+                            aria-label="Clear input"
+                            @click="searchUnitName = ''"
+                        />
+                    </template>
+                </UInput>
             </div>
         </div>
-    </main>
+
+        <div
+            class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900"
+        >
+            <UTable :data="paginatedActivities" :columns="tableColumns">
+                <template #unit-cell="{ row }">
+                    <div class="flex items-center gap-3">
+                        <span class="font-medium text-slate-700 dark:text-slate-200">
+                            {{ row.original.unitName }}
+                        </span>
+                    </div>
+                </template>
+
+                <template #title-cell="{ row }">
+                    <span class="text-slate-600 dark:text-slate-400">{{ row.original.title }}</span>
+                </template>
+
+                <template #buildTime-cell="{ row }">
+                    <span
+                        v-if="row.original.buildTime"
+                        :class="['rounded-full px-3 py-1 text-xs font-medium']"
+                    >
+                        {{ formatDate(row.original.buildTime) }}
+                    </span>
+                </template>
+
+                <template #endDate-cell="{ row }">
+                    <span
+                        :class="[
+                            'rounded-full px-3 py-1 text-xs font-medium',
+                            getStatusBadgeClass(row.original.status)
+                        ]"
+                    >
+                        {{ row.original.endDate }}
+                    </span>
+                </template>
+
+                <template #actions-cell="{ row }">
+                    <NuxtLink :to="`/admin/orders/group/${row.original.gid}`">
+                        <UButton icon="i-lucide-table-of-contents" variant="ghost"></UButton>
+                    </NuxtLink>
+                </template>
+            </UTable>
+
+            <div
+                class="flex items-center justify-between border-t border-slate-200 bg-slate-50 px-6 py-4 dark:border-slate-800 dark:bg-slate-800/30"
+            >
+                <p class="text-sm text-slate-500">
+                    顯示第
+                    <span class="font-semibold">{{
+                        filteredActivities.length
+                            ? pagination.pageIndex * pagination.pageSize + 1
+                            : 0
+                    }}</span>
+                    到
+                    <span class="font-semibold">{{
+                        Math.min(
+                            (pagination.pageIndex + 1) * pagination.pageSize,
+                            filteredActivities.length
+                        )
+                    }}</span>
+                    筆結果
+                </p>
+                <UPagination
+                    v-model:page="page"
+                    :total="filteredActivities.length"
+                    :items-per-page="pagination.pageSize"
+                />
+            </div>
+        </div>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -170,21 +163,20 @@ const tableColumns = [
 ]
 
 const groupBuyingStore = useGroupBuyingStore()
-const { error } = storeToRefs(groupBuyingStore)
+const { error: groupBuyingError } = storeToRefs(groupBuyingStore)
 
-// 使用 useAsyncData 確保在伺服器端渲染時也能初始化資料
-await useAsyncData('initGroupBuying', async () => {
+await callOnce('initGroupBuying', async () => {
     await groupBuyingStore.fetchGroupBuying()
-    return true
 })
 
-const toast = useToast()
+const toastStore = useToastStore()
+
 watch(
-    () => error.value,
-    (val) => {
+    () => groupBuyingError.value,
+    (errorMsg) => {
         if (import.meta.server) return
-        if (val) {
-            toast.add({ title: String(val), color: 'error', id: 'modal-error' })
+        if (errorMsg) {
+            toastStore.error(String(errorMsg))
         }
     },
     { immediate: true }

@@ -1,3 +1,33 @@
+interface BaseProduct {
+    productId?: string
+    name: string
+    imgSrc: string
+    launched: boolean
+}
+
+// 對應products_simple
+export interface ProductSimple extends BaseProduct {
+    isNew: boolean
+    isOnSale: boolean
+    price: Price
+}
+
+export interface ProductDetail extends BaseProduct {
+    isFromGroup?: boolean
+
+    bookIntroduction: BookIntroduction
+
+    content: string[]
+
+    erratum: ErratumItem[] | ''
+
+    notice: string[] | ''
+
+    plans?: Plan[] | '' // 未來刪除此屬性
+
+    price: Price
+}
+
 export interface BookIntroduction {
     detail: string[]
     overview: string[]
@@ -40,36 +70,6 @@ export interface Plan {
     isShow: boolean
     priceList: PriceListItem[]
     type: 'person' | 'group'
-}
-
-interface BaseProduct {
-    productId: string
-    name: string
-    imgSrc: string
-    launched: boolean
-}
-
-export interface ProductDetail extends BaseProduct {
-    isFromGroup?: boolean
-
-    bookIntroduction: BookIntroduction
-
-    content: string[]
-
-    erratum: ErratumItem[] | ''
-
-    notice: string[] | ''
-
-    plans?: Plan[] | '' // 未來刪除此屬性
-
-    price: Price
-}
-
-// 對應products_simple
-export interface ProductSimple extends BaseProduct {
-    isNew: boolean
-    isOnSale: boolean
-    price: Price
 }
 
 export type ProductDetailMap = Record<string, ProductDetail>

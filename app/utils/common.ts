@@ -69,3 +69,39 @@ export const thousandthsFormat = (value: string | number) => {
     value = value.toString()
     return value.replace(regex, ',')
 }
+
+/**
+ * 產生訂單專用的日期字串 (格式：YYYY/MM/DD HH:mm)
+ * @param date - 可選，傳入指定的 Date 物件，預設為當下時間 (new Date())
+ * @returns 格式化後的日期字串
+ */
+export const orderDateCreater = (date: Date = new Date()): string => {
+    const pad = (n: number) => String(n).padStart(2, '0')
+
+    const year = date.getFullYear()
+    const month = pad(date.getMonth() + 1)
+    const day = pad(date.getDate())
+    const hour = pad(date.getHours())
+    const minutes = pad(date.getMinutes())
+
+    return `${year}/${month}/${day} ${hour}:${minutes}`
+}
+
+/**
+ * 產生訂單 ID (格式：YYMMDDHHmmss + 3位隨機數)
+ * @param date - 可選，傳入指定的 Date 物件，預設為當下時間 (new Date())
+ * @returns 產生後的訂單 ID 字串
+ */
+export const orderIdCreater = (date: Date = new Date()): string => {
+    const pad = (n: number) => String(n).padStart(2, '0')
+
+    const year = String(date.getFullYear()).slice(2)
+    const month = pad(date.getMonth() + 1)
+    const day = pad(date.getDate())
+    const hour = pad(date.getHours())
+    const minutes = pad(date.getMinutes())
+    const seconds = pad(date.getSeconds())
+    const random = Math.floor(Math.random() * 900 + 100) // 100–999
+
+    return `${year}${month}${day}${hour}${minutes}${seconds}${random}`
+}

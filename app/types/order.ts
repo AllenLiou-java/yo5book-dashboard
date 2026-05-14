@@ -8,7 +8,6 @@ export interface OrderData {
     buyer: string
     delivery: Delivery
     email: string
-    isClosed: boolean
     orderDate: number
     orderList: OrderItem[]
     phone: string
@@ -19,6 +18,7 @@ export interface OrderData {
     totalPrice: number
     userId?: string
     orderId?: string
+    isClosed?: boolean
     oderDate?: string
     isFromGroup?: boolean
 }
@@ -43,3 +43,5 @@ export interface OrderItem {
     content?: string[]
     imgSrc?: string
 }
+
+// productId、name、price.discount

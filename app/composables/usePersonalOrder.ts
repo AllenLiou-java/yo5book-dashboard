@@ -1,13 +1,11 @@
-import { OrderService } from '~/domain/services/OrderService'
 import { PersonalOrderRepository } from '~/domain/repositories/OrderRepository'
 import type { OrderData } from '~/types/order'
 
 export const usePersonalOrder = () => {
-    const orderService = new OrderService()
     const orderRepository = new PersonalOrderRepository()
 
-    const createOrder = (data: Partial<OrderData>) => {
-        return orderService.createOrder(data)
+    const create = (data: OrderData) => {
+        return orderRepository.create(data)
     }
 
     const findAll = () => {
@@ -23,7 +21,7 @@ export const usePersonalOrder = () => {
     }
 
     return {
-        createOrder,
+        create,
         findAll,
         findByOrderId,
         update

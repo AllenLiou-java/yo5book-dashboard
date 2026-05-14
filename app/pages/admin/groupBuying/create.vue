@@ -8,17 +8,15 @@
         </div>
 
         <UForm :schema="schema" :state="state" class="space-y-8 md:w-full" @submit="onSubmit">
-            <section
-                class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900"
-            >
-                <div class="border-b border-slate-100 p-6 dark:border-slate-800">
+            <UCard :ui="{ header: 'bg-primary text-white' }">
+                <template #header>
                     <h3 class="flex items-center gap-2 text-lg font-semibold">
-                        <UIcon name="i-heroicons-information-circle" class="text-primary h-5 w-5" />
+                        <UIcon name="i-heroicons-information-circle" class="h-5 w-5 text-white" />
                         基本資訊
                     </h3>
-                </div>
+                </template>
 
-                <div class="grid grid-cols-1 gap-6 p-6 md:grid-cols-2">
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                     <UFormField label="團購單位" name="unitName" required>
                         <UInput
                             v-model="state.unitName"
@@ -29,7 +27,7 @@
                         <template #error="{ error }">
                             <span
                                 v-if="error"
-                                class="mt-1 flex items-center gap-1 text-xs text-red-500 dark:text-red-400"
+                                class="text-error mt-1 flex items-center gap-1 text-xs dark:text-red-400"
                             >
                                 <UIcon name="i-heroicons-exclamation-circle" />
                                 {{ error }}
@@ -85,83 +83,70 @@
                         />
                     </div>
                 </div>
-            </section>
+            </UCard>
 
-            <section
-                class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900"
-            >
-                <div
-                    class="flex items-center justify-between border-b border-slate-100 p-6 dark:border-slate-800"
-                >
-                    <h3 class="flex items-center gap-2 text-lg font-semibold">
-                        <UIcon name="i-heroicons-archive-box" class="text-primary h-5 w-5" />
-                        商品清單
-                    </h3>
+            <UCard :ui="{ header: 'bg-primary text-white' }">
+                <template #header>
+                    <div class="flex items-center justify-between">
+                        <h3 class="flex items-center gap-2 text-lg font-semibold">
+                            <UIcon name="i-heroicons-archive-box" class="h-5 w-5 text-white" />
+                            商品清單
+                        </h3>
+                    </div>
+                </template>
+
+                <UTable :data="state.products" :columns="tableColumns">
+                    <template #productId-cell="{ row }">
+                        <USelect
+                            v-model="state.products[row.index]!.productId"
+                            class="min-w-90"
+                            :items="getItems(row.index)"
+                            size="lg"
+                            placeholder="請選擇商品"
+                            @update:model-value="onProductSelect($event as string, row.index)"
+                        />
+                    </template>
+
+                    <template #originalPrice-cell="{ row }">
+                        <span
+                            v-if="state.products[row.index]"
+                            class="text-slate-600 dark:text-slate-400"
+                        >
+                            {{ state.products[row.index]!.originalPrice }}
+                        </span>
+                    </template>
+                    <template #groupPrice-cell="{ row }">
+                        <UInput
+                            v-model.number="state.products[row.index]!.groupPrice"
+                            type="number"
+                            placeholder="輸入團購價"
+                            variant="outline"
+                            size="lg"
+                            class="text-primary min-w-25 font-semibold"
+                        />
+                    </template>
+                    <template #actions-cell="{ row }">
+                        <UButton
+                            color="error"
+                            variant="soft"
+                            icon="i-heroicons-trash"
+                            :disabled="state.products.length <= 1"
+                            @click="removeProduct(row.index)"
+                        />
+                    </template>
+                </UTable>
+
+                <div class="flex justify-center bg-slate-50/50 p-6 dark:bg-slate-800/30">
                     <UButton
-                        color="primary"
-                        variant="ghost"
-                        icon="i-heroicons-plus-circle"
-                        label="新增商品"
-                        class="font-bold"
+                        label="新增商品行"
+                        icon="i-heroicons-plus"
+                        variant="outline"
+                        class="border-dashed"
                         :disabled="isAddProductDisabled"
                         @click="addProduct"
                     />
                 </div>
-
-                <div>
-                    <UTable :data="state.products" :columns="tableColumns">
-                        <template #productId-cell="{ row }">
-                            <USelect
-                                v-model="state.products[row.index]!.productId"
-                                class="min-w-90"
-                                :items="getItems(row.index)"
-                                size="lg"
-                                placeholder="請選擇商品"
-                                @update:model-value="onProductSelect($event as string, row.index)"
-                            />
-                        </template>
-
-                        <template #originalPrice-cell="{ row }">
-                            <span
-                                v-if="state.products[row.index]"
-                                class="text-slate-600 dark:text-slate-400"
-                            >
-                                {{ state.products[row.index]!.originalPrice }}
-                            </span>
-                        </template>
-                        <template #groupPrice-cell="{ row }">
-                            <UInput
-                                v-model.number="state.products[row.index]!.groupPrice"
-                                type="number"
-                                placeholder="輸入團購價"
-                                variant="outline"
-                                size="lg"
-                                class="text-primary min-w-25 font-semibold"
-                            />
-                        </template>
-                        <template #actions-cell="{ row }">
-                            <UButton
-                                color="error"
-                                variant="soft"
-                                icon="i-heroicons-trash"
-                                :disabled="state.products.length <= 1"
-                                @click="removeProduct(row.index)"
-                            />
-                        </template>
-                    </UTable>
-
-                    <div class="flex justify-center bg-slate-50/50 p-6 dark:bg-slate-800/30">
-                        <UButton
-                            label="新增商品行"
-                            icon="i-heroicons-plus"
-                            variant="outline"
-                            class="border-dashed"
-                            :disabled="isAddProductDisabled"
-                            @click="addProduct"
-                        />
-                    </div>
-                </div>
-            </section>
+            </UCard>
 
             <div class="flex items-center justify-end gap-4 pb-12">
                 <UButton

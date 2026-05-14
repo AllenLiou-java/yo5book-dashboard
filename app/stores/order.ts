@@ -104,6 +104,31 @@ export const useOrderStore = defineStore('order', () => {
         }
     }
 
+    const createPersonalOrder = async (orderData: Partial<OrderData>) => {
+        isLoading.value = true
+        error.value = null
+        // 使用 as OrderData 斷言，符合 personalOrder.create 要求的參數型別
+        const submitData = { ...orderData } as OrderData
+
+        try {
+            const orderId = orderIdCreater()
+            submitData.orderId = orderId
+            submitData.orderDate = Date.now()
+            submitData.isClosed = false
+
+            const { data, success } = await personalOrder.create(submitData)
+
+            // 確保成功且 data 確實存在才放入列表
+            if (success && data) {
+                personalOrderList.value.push(data)
+            }
+        } catch (err: unknown) {
+            error.value = getErrorMessage(err, '新增失敗')
+        } finally {
+            isLoading.value = false
+        }
+    }
+
     return {
         personalOrderList,
         isLoading,
@@ -112,6 +137,7 @@ export const useOrderStore = defineStore('order', () => {
         fetchPersonalOrders,
         updatePersonalOrder,
         updatePersonalOrderStatus,
-        getPersonalOrderById
+        getPersonalOrderById,
+        createPersonalOrder
     }
 })

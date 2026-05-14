@@ -1,22 +1,36 @@
-import type { OrderData } from '~/types/order'
+import type { OrderItem } from '~/types/order'
+import type { ApiResponse } from '~/types/api'
 import { PersonalOrderRepository } from '#server/repositories/OrderRepository'
 
 // 新增/建立個人訂單
-export default defineEventHandler(async (event) => {
-    const body = await readBody<{ orderId?: string; data?: OrderData }>(event)
-    const orderId = body?.orderId
-    const orderDetail = body?.data
-
-    if (!orderId || !orderDetail) {
-        throw createError({
-            statusCode: 400,
-            statusMessage: '參數不完整'
-        })
-    }
-
+export default defineEventHandler(async (event): Promise<ApiResponse<object>> => {
     try {
+        const body = await readBody(event)
+        const bodyData = body?.data
+        const { orderId, ...orderDetail } = bodyData
+
+        // 轉換orderDetail中的orderList
+        orderDetail.orderList = orderDetail.orderList
+            .sort((a: OrderItem, b: OrderItem) =>
+                (a.productId || '').localeCompare(b.productId || '')
+            )
+            .reduce((acc: Record<string, Omit<OrderItem, 'productId'>>, item: OrderItem) => {
+                const { productId, ...rest } = item as Required<OrderItem>
+
+                acc[productId] = rest
+
+                return acc
+            }, {})
+
+        if (!orderId || !orderDetail) {
+            throw createError({
+                statusCode: 400,
+                statusMessage: '參數不完整'
+            })
+        }
+
         // 寫入訂單資料
-        await PersonalOrderRepository.create(orderId, orderDetail)
+        await PersonalOrderRepository.create(orderId, bodyData)
 
         return {
             success: true,

@@ -18,4 +18,13 @@ export class PersonalOrderRepository {
             }
         })
     }
+
+    create(data: OrderData) {
+        return $fetch<Promise<ApiResponse<OrderData>>>('/api/admin/orders/personal', {
+            method: 'POST',
+            body: {
+                data
+            }
+        })
+    }
 }

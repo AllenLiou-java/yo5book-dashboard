@@ -5,33 +5,44 @@
                 <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">個人訂單列表</h1>
                 <p class="text-sm text-slate-500">共 {{ personalOrderList.length }} 筆訂單</p>
             </div>
-            <div class="flex w-full flex-col flex-wrap gap-2 sm:w-auto sm:flex-row">
-                <UButton
-                    color="neutral"
-                    variant="outline"
-                    icon="i-lucide-download"
-                    @click="handleExport"
-                >
-                    匯出
-                </UButton>
-                <USelect v-model="searchField" :items="searchOptions" class="w-full sm:w-40" />
-                <UInput
-                    v-model="searchKeyword"
-                    icon="i-lucide-search"
-                    placeholder="輸入關鍵字..."
-                    class="w-full sm:w-82"
-                >
-                    <template v-if="searchKeyword?.length" #trailing>
-                        <UButton
-                            color="neutral"
-                            variant="link"
-                            size="sm"
-                            icon="i-lucide-circle-x"
-                            aria-label="Clear input"
-                            @click="searchKeyword = ''"
-                        />
-                    </template>
-                </UInput>
+            <div class="flex w-full flex-col flex-wrap gap-4 sm:w-auto">
+                <div class="flex w-full gap-4 sm:w-auto">
+                    <USelect v-model="searchField" :items="searchOptions" class="w-full sm:w-40" />
+                    <UInput
+                        v-model="searchKeyword"
+                        icon="i-lucide-search"
+                        placeholder="輸入關鍵字..."
+                        class="w-full sm:w-82"
+                    >
+                        <template v-if="searchKeyword?.length" #trailing>
+                            <UButton
+                                color="neutral"
+                                variant="link"
+                                size="sm"
+                                icon="i-lucide-circle-x"
+                                aria-label="Clear input"
+                                @click="searchKeyword = ''"
+                            />
+                        </template>
+                    </UInput>
+                </div>
+                <div class="flex justify-end gap-4">
+                    <UButton
+                        color="neutral"
+                        variant="outline"
+                        icon="i-lucide-download"
+                        @click="handleExport"
+                    >
+                        匯出
+                    </UButton>
+                    <UButton
+                        to="/admin/orders/personal/create"
+                        color="primary"
+                        icon="i-lucide-plus"
+                    >
+                        新增訂單
+                    </UButton>
+                </div>
             </div>
         </div>
 

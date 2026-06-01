@@ -1,0 +1,491 @@
+{
+    "-ObaZmmxdLT6BeueV1ra": {
+        "251017134124195": {
+            "bankAccountNo": "98765",
+            "buyer": "allen co",
+            "delivery": {
+                "company": "",
+                "trackingNo": "",
+                "trackingUrl": ""
+            },
+            "email": "mydevmailsend@gmail.com",
+            "isClosed": false,
+            "isFromGroup": true,
+            "oderDate": "2025/10/17 13:41",
+            "orderId": "251017134124195",
+            "orderList": [
+                {
+                    "content": [
+                        "有限公司篇【532頁】",
+                        "股份有限公司篇【964頁】",
+                        "應備文件詳析篇【296頁】"
+                    ],
+                    "imgSrc": "https://firebasestorage.googleapis.com/v0/b/yooooobook-dev.appspot.com/o/Product%2Fbooks.png?alt=media",
+                    "productId": "AA00001",
+                    "productName": "公司登記實務及案例解析(共三冊)",
+                    "qty": 1,
+                    "totalPrice": 3600,
+                    "unitPrice": 3600
+                },
+                {
+                    "content": ["減資篇【276頁】"],
+                    "imgSrc": "https://firebasestorage.googleapis.com/v0/b/yooooobook-dev.appspot.com/o/Product%2Fbook5.png?alt=media",
+                    "productId": "AA00004",
+                    "productName": "公司登記實務及案例解析(減資篇)",
+                    "qty": 2,
+                    "totalPrice": 3000,
+                    "unitPrice": 1500
+                }
+            ],
+            "phone": "0911234567",
+            "receiver": {
+                "address": "allen address",
+                "name": "allen_admin"
+            },
+            "remark": "",
+            "status": "1",
+            "taxId": "87654321",
+            "totalPrice": 6600
+        },
+        "251017144212381": {
+            "bankAccountNo": "85236",
+            "buyer": "test co",
+            "delivery": {
+                "company": "",
+                "trackingNo": "",
+                "trackingUrl": ""
+            },
+            "email": "mydevmailsend@gmail.com",
+            "isClosed": false,
+            "isFromGroup": true,
+            "oderDate": "2025/10/17 14:42",
+            "orderId": "251017144212381",
+            "orderList": [
+                {
+                    "content": ["增資 · 發行新股增補篇【180頁】"],
+                    "imgSrc": "https://firebasestorage.googleapis.com/v0/b/yooooobook-dev.appspot.com/o/Product%2Fbook4-2.png?alt=media",
+                    "productId": "AA00003",
+                    "productName": "公司登記實務及案例解析(增資 · 發行新股增補篇)",
+                    "qty": 2,
+                    "totalPrice": 1000,
+                    "unitPrice": 500
+                }
+            ],
+            "phone": "0911234567",
+            "receiver": {
+                "address": "allen address",
+                "name": "allen_admin"
+            },
+            "remark": "",
+            "status": "1",
+            "taxId": "78532146",
+            "totalPrice": 1000
+        },
+        "251017203730831": {
+            "bankAccountNo": "96325",
+            "buyer": "",
+            "delivery": {
+                "company": "",
+                "trackingNo": "",
+                "trackingUrl": ""
+            },
+            "email": "mydevmailsend@gmail.com",
+            "isClosed": false,
+            "isFromGroup": true,
+            "oderDate": "2025/10/17 20:37",
+            "orderId": "251017203730831",
+            "orderList": [
+                {
+                    "content": [
+                        "有限公司篇【532頁】",
+                        "股份有限公司篇【964頁】",
+                        "應備文件詳析篇【296頁】"
+                    ],
+                    "imgSrc": "https://firebasestorage.googleapis.com/v0/b/yooooobook-dev.appspot.com/o/Product%2Fbooks.png?alt=media",
+                    "productId": "AA00001",
+                    "productName": "公司登記實務及案例解析(共三冊)",
+                    "qty": 2,
+                    "totalPrice": 7200,
+                    "unitPrice": 3600
+                }
+            ],
+            "phone": "0911234567",
+            "receiver": {
+                "address": "test address",
+                "name": "Vic Test"
+            },
+            "remark": "",
+            "status": "1",
+            "taxId": "",
+            "totalPrice": 7200
+        },
+        "251020093352732": {
+            "bankAccountNo": "65896",
+            "buyer": "signup co",
+            "delivery": {
+                "company": "",
+                "trackingNo": "",
+                "trackingUrl": ""
+            },
+            "email": "mydevmailsend@gmail.com",
+            "isClosed": false,
+            "isFromGroup": true,
+            "oderDate": "2025/10/20 09:33",
+            "orderId": "251020093352732",
+            "orderList": [
+                {
+                    "content": [
+                        "有限公司篇【532頁】",
+                        "股份有限公司篇【964頁】",
+                        "應備文件詳析篇【296頁】"
+                    ],
+                    "imgSrc": "https://firebasestorage.googleapis.com/v0/b/yooooobook-dev.appspot.com/o/Product%2Fbooks.png?alt=media",
+                    "productId": "AA00001",
+                    "productName": "公司登記實務及案例解析(共三冊)",
+                    "qty": 1,
+                    "totalPrice": 3600,
+                    "unitPrice": 3600
+                },
+                {
+                    "content": ["減資篇【276頁】"],
+                    "imgSrc": "https://firebasestorage.googleapis.com/v0/b/yooooobook-dev.appspot.com/o/Product%2Fbook5.png?alt=media",
+                    "productId": "AA00004",
+                    "productName": "公司登記實務及案例解析(減資篇)",
+                    "qty": 1,
+                    "totalPrice": 1500,
+                    "unitPrice": 1500
+                }
+            ],
+            "phone": "0911234567",
+            "receiver": {
+                "address": "allen address",
+                "name": "mydevmailsend"
+            },
+            "remark": "",
+            "status": "1",
+            "taxId": "12345678",
+            "totalPrice": 5100
+        },
+        "251020212825887": {
+            "bankAccountNo": "89745",
+            "buyer": "test co",
+            "delivery": {
+                "company": "",
+                "trackingNo": "",
+                "trackingUrl": ""
+            },
+            "email": "mydevmailsend@gmail.com",
+            "isClosed": false,
+            "isFromGroup": true,
+            "oderDate": "2025/10/20 21:28",
+            "orderId": "251020212825887",
+            "orderList": [
+                {
+                    "content": ["增資 · 發行新股增補篇【180頁】"],
+                    "imgSrc": "https://firebasestorage.googleapis.com/v0/b/yooooobook-dev.appspot.com/o/Product%2Fbook4-2.png?alt=media",
+                    "productId": "AA00003",
+                    "productName": "公司登記實務及案例解析(增資 · 發行新股增補篇)",
+                    "qty": 1,
+                    "totalPrice": 500,
+                    "unitPrice": 500
+                },
+                {
+                    "content": ["減資篇【276頁】"],
+                    "imgSrc": "https://firebasestorage.googleapis.com/v0/b/yooooobook-dev.appspot.com/o/Product%2Fbook5.png?alt=media",
+                    "productId": "AA00004",
+                    "productName": "公司登記實務及案例解析(減資篇)",
+                    "qty": 1,
+                    "totalPrice": 1500,
+                    "unitPrice": 1500
+                }
+            ],
+            "phone": "0911234567",
+            "receiver": {
+                "address": "allen address",
+                "name": "mydevmailsend"
+            },
+            "remark": "",
+            "status": "1",
+            "taxId": "87654321",
+            "totalPrice": 2000
+        },
+        "251021114038826": {
+            "bankAccountNo": "85214",
+            "buyer": "",
+            "delivery": {
+                "company": "",
+                "trackingNo": "",
+                "trackingUrl": ""
+            },
+            "email": "mydevmailsend@gmail.com",
+            "isClosed": false,
+            "isFromGroup": true,
+            "oderDate": "2025/10/21 11:40",
+            "orderId": "251021114038826",
+            "orderList": [
+                {
+                    "content": ["增資 · 發行新股篇【468頁】"],
+                    "imgSrc": "https://firebasestorage.googleapis.com/v0/b/yooooobook-dev.appspot.com/o/Product%2Fbook4-1.png?alt=media",
+                    "productId": "AA00002",
+                    "productName": "公司登記實務及案例解析(增資 · 發行新股篇)",
+                    "qty": 2,
+                    "totalPrice": 3000,
+                    "unitPrice": 1500
+                },
+                {
+                    "content": ["減資篇【276頁】"],
+                    "imgSrc": "https://firebasestorage.googleapis.com/v0/b/yooooobook-dev.appspot.com/o/Product%2Fbook5.png?alt=media",
+                    "productId": "AA00004",
+                    "productName": "公司登記實務及案例解析(減資篇)",
+                    "qty": 2,
+                    "totalPrice": 3000,
+                    "unitPrice": 1500
+                }
+            ],
+            "phone": "0911234567",
+            "receiver": {
+                "address": "allen address",
+                "name": "mydevmailsend"
+            },
+            "remark": "",
+            "status": "1",
+            "taxId": "",
+            "totalPrice": 6000
+        },
+        "251021114643794": {
+            "bankAccountNo": "00000",
+            "buyer": "",
+            "delivery": {
+                "company": "",
+                "trackingNo": "",
+                "trackingUrl": ""
+            },
+            "email": "mydevmailsend@gmail.com",
+            "isClosed": false,
+            "isFromGroup": true,
+            "oderDate": "2025/10/21 11:46",
+            "orderId": "251021114643794",
+            "orderList": [
+                {
+                    "content": [
+                        "有限公司篇【532頁】",
+                        "股份有限公司篇【964頁】",
+                        "應備文件詳析篇【296頁】"
+                    ],
+                    "imgSrc": "https://firebasestorage.googleapis.com/v0/b/yooooobook-dev.appspot.com/o/Product%2Fbooks.png?alt=media",
+                    "productId": "AA00001",
+                    "productName": "公司登記實務及案例解析(共三冊)",
+                    "qty": 1,
+                    "totalPrice": 3600,
+                    "unitPrice": 3600
+                }
+            ],
+            "phone": "0911234567",
+            "receiver": {
+                "address": "allen address",
+                "name": "mydevmailsend"
+            },
+            "remark": "",
+            "status": "1",
+            "taxId": "",
+            "totalPrice": 3600
+        },
+        "251021115334105": {
+            "bankAccountNo": "11111",
+            "buyer": "",
+            "delivery": {
+                "company": "",
+                "trackingNo": "",
+                "trackingUrl": ""
+            },
+            "email": "mydevmailsend@gmail.com",
+            "isClosed": false,
+            "isFromGroup": true,
+            "oderDate": "2025/10/21 11:53",
+            "orderId": "251021115334105",
+            "orderList": [
+                {
+                    "content": ["減資篇【276頁】"],
+                    "imgSrc": "https://firebasestorage.googleapis.com/v0/b/yooooobook-dev.appspot.com/o/Product%2Fbook5.png?alt=media",
+                    "productId": "AA00004",
+                    "productName": "公司登記實務及案例解析(減資篇)",
+                    "qty": 2,
+                    "totalPrice": 3000,
+                    "unitPrice": 1500
+                }
+            ],
+            "phone": "0911234567",
+            "receiver": {
+                "address": "allen address",
+                "name": "mydevmailsend"
+            },
+            "remark": "",
+            "status": "1",
+            "taxId": "",
+            "totalPrice": 3000
+        },
+        "251021140244659": {
+            "bankAccountNo": "11111",
+            "buyer": "",
+            "delivery": {
+                "company": "",
+                "trackingNo": "",
+                "trackingUrl": ""
+            },
+            "email": "mydevmailsend@gmail.com",
+            "isClosed": false,
+            "isFromGroup": true,
+            "oderDate": "2025/10/21 14:02",
+            "orderId": "251021140244659",
+            "orderList": [
+                {
+                    "content": [
+                        "有限公司篇【532頁】",
+                        "股份有限公司篇【964頁】",
+                        "應備文件詳析篇【296頁】"
+                    ],
+                    "imgSrc": "https://firebasestorage.googleapis.com/v0/b/yooooobook-dev.appspot.com/o/Product%2Fbooks.png?alt=media",
+                    "productId": "AA00001",
+                    "productName": "公司登記實務及案例解析(共三冊)",
+                    "qty": 1,
+                    "totalPrice": 3600,
+                    "unitPrice": 3600
+                }
+            ],
+            "phone": "0911234567",
+            "receiver": {
+                "address": "allen address",
+                "name": "mydevmailsend"
+            },
+            "remark": "",
+            "status": "1",
+            "taxId": "",
+            "totalPrice": 3600
+        },
+        "251021140956739": {
+            "bankAccountNo": "11111",
+            "buyer": "",
+            "delivery": {
+                "company": "",
+                "trackingNo": "",
+                "trackingUrl": ""
+            },
+            "email": "ai0911953419@gmail.com",
+            "isClosed": false,
+            "isFromGroup": true,
+            "oderDate": "2025/10/21 14:09",
+            "orderId": "251021140956739",
+            "orderList": [
+                {
+                    "content": [
+                        "有限公司篇【532頁】",
+                        "股份有限公司篇【964頁】",
+                        "應備文件詳析篇【296頁】"
+                    ],
+                    "imgSrc": "https://firebasestorage.googleapis.com/v0/b/yooooobook-dev.appspot.com/o/Product%2Fbooks.png?alt=media",
+                    "productId": "AA00001",
+                    "productName": "公司登記實務及案例解析(共三冊)",
+                    "qty": 1,
+                    "totalPrice": 3600,
+                    "unitPrice": 3600
+                }
+            ],
+            "phone": "0911953419",
+            "receiver": {
+                "address": "協和村山腳路四段100巷72弄5號",
+                "name": "劉富展"
+            },
+            "remark": "",
+            "status": "1",
+            "taxId": "",
+            "totalPrice": 3600
+        },
+        "251023105729991": {
+            "bankAccountNo": "11111",
+            "buyer": "",
+            "delivery": {
+                "company": "",
+                "trackingNo": "",
+                "trackingUrl": ""
+            },
+            "email": "mydevmailsend@gmail.com",
+            "isClosed": false,
+            "isFromGroup": true,
+            "oderDate": "2025/10/23 10:57",
+            "orderId": "251023105729991",
+            "orderList": [
+                {
+                    "content": [
+                        "有限公司篇【532頁】",
+                        "股份有限公司篇【964頁】",
+                        "應備文件詳析篇【296頁】"
+                    ],
+                    "imgSrc": "https://firebasestorage.googleapis.com/v0/b/yooooobook-dev.appspot.com/o/Product%2Fbooks.png?alt=media",
+                    "productId": "AA00001",
+                    "productName": "公司登記實務及案例解析(共三冊)",
+                    "qty": 1,
+                    "totalPrice": 3600,
+                    "unitPrice": 3600
+                }
+            ],
+            "phone": "0911953419",
+            "receiver": {
+                "address": "協和村山腳路四段100巷72弄5號",
+                "name": "劉富展"
+            },
+            "remark": "",
+            "status": "1",
+            "taxId": "",
+            "totalPrice": 3600
+        }
+    },
+    "-Omlmw-rfrxUzonYOunA": {
+        "260303194712223": {
+            "bankAccountNo": "00000",
+            "buyer": "allen co",
+            "delivery": {
+                "company": "",
+                "trackingNo": "",
+                "trackingUrl": ""
+            },
+            "email": "mydevmailsend@gmail.com",
+            "isClosed": false,
+            "isFromGroup": true,
+            "oderDate": "2026/03/03 19:47",
+            "orderId": "260303194712223",
+            "orderList": [
+                {
+                    "content": [
+                        "有限公司篇【532頁】",
+                        "股份有限公司篇【964頁】",
+                        "應備文件詳析篇【296頁】"
+                    ],
+                    "imgSrc": "https://raw.githubusercontent.com/yooooobook/book_preview/refs/heads/main/book_cover/books.png",
+                    "productId": "AA00001",
+                    "productName": "公司登記實務及案例解析(共三冊)",
+                    "qty": 1,
+                    "totalPrice": 4500,
+                    "unitPrice": 4500
+                },
+                {
+                    "content": ["增資 · 發行新股篇【468頁】"],
+                    "imgSrc": "https://raw.githubusercontent.com/yooooobook/book_preview/refs/heads/main/book_cover/book4-1.png",
+                    "productId": "AA00002",
+                    "productName": "公司登記實務及案例解析(增資 · 發行新股篇)",
+                    "qty": 1,
+                    "totalPrice": 1800,
+                    "unitPrice": 1800
+                }
+            ],
+            "phone": "0911234567",
+            "receiver": {
+                "address": "allen address",
+                "name": "測試"
+            },
+            "remark": "",
+            "status": "1",
+            "taxId": "12345678",
+            "totalPrice": 6300
+        }
+    }
+}

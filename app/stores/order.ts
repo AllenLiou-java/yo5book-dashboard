@@ -3,6 +3,7 @@ import type { OrderData } from '~/types/order'
 
 export const useOrderStore = defineStore('order', () => {
     const personalOrderList = ref<OrderData[]>([])
+    const groupOrderList = ref<Record<string, OrderData[]>>({})
     const isLoading = ref(false)
     const error = ref<string | null>(null)
     const statusOptions = ref([
@@ -14,8 +15,9 @@ export const useOrderStore = defineStore('order', () => {
     ])
 
     const personalOrder = usePersonalOrder()
+    const groupOrder = useGroupOrder()
 
-    const fetchPersonalOrders = async () => {
+    const getPersonalOrders = async () => {
         isLoading.value = true
         error.value = null
 
@@ -115,12 +117,152 @@ export const useOrderStore = defineStore('order', () => {
             submitData.orderId = orderId
             submitData.orderDate = Date.now()
             submitData.isClosed = false
+            const adminUser = useCookie<{ id: string | undefined; email: string } | null>(
+                'admin_user'
+            )
+            if (adminUser) {
+                submitData.userId = adminUser.value?.id || ''
+                submitData.remark = '管理員新增訂單'
+            }
 
             const { data, success } = await personalOrder.create(submitData)
 
             // 確保成功且 data 確實存在才放入列表
             if (success && data) {
-                personalOrderList.value.push(data)
+                personalOrderList.value.unshift(submitData)
+            }
+        } catch (err: unknown) {
+            error.value = getErrorMessage(err, '新增失敗')
+        } finally {
+            isLoading.value = false
+        }
+    }
+
+    const getGroupOrderById = async (groupId: string) => {
+        isLoading.value = true
+        error.value = null
+
+        try {
+            const { data, success } = await groupOrder.findByGroupId(groupId)
+
+            if (success) {
+                groupOrderList.value[groupId] = data
+            }
+        } catch (err: unknown) {
+            error.value = getErrorMessage(err, '無法取得訂單資料列表')
+        } finally {
+            isLoading.value = false
+        }
+    }
+
+    const getGroupOrderDetailById = async (groupId: string, orderId: string) => {
+        isLoading.value = true
+        error.value = null
+
+        try {
+            const { data, success } = await groupOrder.findByOrderId(groupId, orderId)
+
+            if (success) {
+                return data
+            }
+        } catch (err: unknown) {
+            error.value = getErrorMessage(err, '無法取得訂單資料列表')
+        } finally {
+            isLoading.value = false
+        }
+    }
+
+    const updateGroupOrderStatus = async (groupId: string, orderId: string, status: string) => {
+        isLoading.value = true
+        error.value = null
+
+        try {
+            await groupOrder.update(groupId, orderId, { status })
+            const index = groupOrderList.value[groupId]?.findIndex(
+                (item) => item.orderId === orderId
+            )
+            const targetList = groupOrderList.value[groupId]
+            if (targetList && index !== undefined && index !== -1 && targetList[index]) {
+                targetList[index].status = status
+            }
+        } catch (err: unknown) {
+            error.value = getErrorMessage(err, '更新狀態失敗')
+        } finally {
+            isLoading.value = false
+        }
+    }
+
+    const updateGroupOrder = async (
+        groupId: string,
+        orderId: string,
+        updatedData: Partial<OrderData>
+    ) => {
+        isLoading.value = true
+        error.value = null
+
+        try {
+            await groupOrder.update(groupId, orderId, updatedData)
+            // 將updatedData更新至 groupOrderList中指定對應資料
+            const index = groupOrderList.value[groupId]?.findIndex(
+                (item) => item.orderId === orderId
+            )
+            if (index !== undefined && index !== -1 && groupOrderList.value[groupId]?.[index]) {
+                const target = groupOrderList.value[groupId]![index]!
+
+                for (const [key, value] of Object.entries(updatedData)) {
+                    const k = key as keyof OrderData
+                    if (
+                        value !== null &&
+                        typeof value === 'object' &&
+                        !Array.isArray(value) &&
+                        target[k] !== null &&
+                        typeof target[k] === 'object'
+                    ) {
+                        // 針對巢狀物件 (如 receiver, delivery) 進行物件合併，保留未更新的屬性
+                        Object.assign(target[k] as object, value)
+                    } else {
+                        // 一般基本型別 (如 status, remark) 直接覆蓋
+                        Object.assign(target, { [k]: value })
+                    }
+                }
+            }
+        } catch (err: unknown) {
+            error.value = getErrorMessage(err, '更新狀態失敗')
+        } finally {
+            isLoading.value = false
+        }
+    }
+
+    const createGroupOrder = async (groupId: string, orderData: Partial<OrderData>) => {
+        isLoading.value = true
+        error.value = null
+        // 使用 as OrderData 斷言，符合 personalOrder.create 要求的參數型別
+        const submitData = { ...orderData } as OrderData
+
+        try {
+            const orderId = orderIdCreater()
+            submitData.orderId = orderId
+            submitData.orderDate = Date.now()
+            submitData.isClosed = false
+
+            const adminUser = useCookie<{ id: string | undefined; email: string } | null>(
+                'admin_user'
+            )
+            if (adminUser) {
+                submitData.userId = adminUser.value?.id || ''
+                submitData.remark = '管理員新增訂單'
+            }
+
+            const { data, success } = await groupOrder.create(groupId, submitData)
+
+            // 確保成功且 data 確實存在才放入列表
+            if (success && data) {
+                if (!groupOrderList.value[groupId]) {
+                    groupOrderList.value[groupId] = []
+                } else {
+                    submitData.groupId = groupId
+                    groupOrderList.value[groupId].unshift(submitData)
+                }
             }
         } catch (err: unknown) {
             error.value = getErrorMessage(err, '新增失敗')
@@ -131,13 +273,19 @@ export const useOrderStore = defineStore('order', () => {
 
     return {
         personalOrderList,
+        groupOrderList,
         isLoading,
         error,
         statusOptions,
-        fetchPersonalOrders,
+        getPersonalOrders,
         updatePersonalOrder,
         updatePersonalOrderStatus,
         getPersonalOrderById,
-        createPersonalOrder
+        createPersonalOrder,
+        getGroupOrderById,
+        getGroupOrderDetailById,
+        updateGroupOrderStatus,
+        updateGroupOrder,
+        createGroupOrder
     }
 })

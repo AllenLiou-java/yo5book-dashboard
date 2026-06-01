@@ -28,3 +28,36 @@ export class PersonalOrderRepository {
         })
     }
 }
+
+export class GroupOrderRepository {
+    findByGroupId(groupId: string) {
+        return $fetch<Promise<ApiResponse<OrderData[]>>>(`/api/admin/orders/group/${groupId}`)
+    }
+
+    findByOrderId(groupId: string, orderId: string) {
+        return $fetch<Promise<ApiResponse<OrderData>>>(
+            `/api/admin/orders/group/${groupId}/${orderId}`
+        )
+    }
+
+    update(groupId: string, orderId: string, data: Partial<OrderData>) {
+        return $fetch<Promise<ApiResponse<OrderData>>>(
+            `/api/admin/orders/group/${groupId}/${orderId}`,
+            {
+                method: 'PATCH',
+                body: {
+                    data
+                }
+            }
+        )
+    }
+
+    create(groupId: string, data: OrderData) {
+        return $fetch<Promise<ApiResponse<OrderData>>>(`/api/admin/orders/group/${groupId}`, {
+            method: 'POST',
+            body: {
+                data
+            }
+        })
+    }
+}

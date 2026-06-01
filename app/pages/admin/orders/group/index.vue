@@ -5,13 +5,6 @@
                 <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">團購訂單列表</h1>
                 <p class="text-sm text-slate-500">管理與監控所有團購訂單。</p>
             </div>
-            <NuxtLink
-                to="/admin/groupBuying/create"
-                class="bg-primary hover:bg-primary/90 shadow-primary/20 flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition-all"
-            >
-                <span class="material-symbols-outlined text-lg">add_circle</span>
-                新增團購活動
-            </NuxtLink>
         </div>
 
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -56,9 +49,17 @@
         </div>
 
         <div
-            class="rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900"
+            class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900"
         >
-            <UTable :data="paginatedActivities" :columns="tableColumns">
+            <UTable
+                :data="paginatedActivities"
+                :columns="tableColumns"
+                :ui="{
+                    base: 'min-w-full table-auto',
+                    th: 'text-white bg-primary dark:bg-blue-900',
+                    tr: 'data-[expanded=true]:bg-elevated/50 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors'
+                }"
+            >
                 <template #unit-cell="{ row }">
                     <div class="flex items-center gap-3">
                         <span class="font-medium text-slate-700 dark:text-slate-200">
@@ -92,8 +93,12 @@
                 </template>
 
                 <template #actions-cell="{ row }">
-                    <NuxtLink :to="`/admin/orders/group/${row.original.gid}`">
-                        <UButton icon="i-lucide-table-of-contents" variant="ghost"></UButton>
+                    <NuxtLink
+                        :to="`/admin/orders/group/${row.original.gid}?page=${page}&unitName=${row.original.unitName}&endDate=${row.original.endDate}`"
+                    >
+                        <CommonTooltip text="點擊前往">
+                            <UButton icon="i-lucide-table-of-contents" variant="ghost"></UButton>
+                        </CommonTooltip>
                     </NuxtLink>
                 </template>
             </UTable>
@@ -156,6 +161,7 @@ const tableColumns = [
         meta: { class: { th: 'text-center', td: 'text-center' } }
     },
     {
+        accessorKey: 'actions',
         id: 'actions',
         header: '訂單列表',
         meta: { class: { th: 'text-center', td: 'text-center' } }

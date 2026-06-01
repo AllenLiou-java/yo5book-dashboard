@@ -1,6 +1,6 @@
 import type { OrderItem } from '~/types/order'
 import type { ApiResponse } from '~/types/api'
-import { PersonalOrderRepository } from '#server/repositories/OrderRepository'
+import { GroupOrderRepository } from '#server/repositories/OrderRepository'
 
 // 新增/建立個人訂單
 export default defineEventHandler(async (event): Promise<ApiResponse<object>> => {
@@ -8,8 +8,9 @@ export default defineEventHandler(async (event): Promise<ApiResponse<object>> =>
         const body = await readBody(event)
         const bodyData = body?.data
         const { orderId, ...orderDetail } = bodyData
+        const groupId = getRouterParam(event, 'groupId')
 
-        if (!orderId || !orderDetail) {
+        if (!orderId || !groupId || !orderDetail) {
             throw createError({
                 statusCode: 400,
                 statusMessage: '參數不完整'
@@ -30,7 +31,7 @@ export default defineEventHandler(async (event): Promise<ApiResponse<object>> =>
             }, {})
 
         // 寫入訂單資料
-        await PersonalOrderRepository.create(orderId, bodyData)
+        await GroupOrderRepository.create(groupId, orderId, bodyData)
 
         return {
             success: true,

@@ -40,3 +40,30 @@ export const PersonalOrderRepository = {
     //     await db.ref(`personalOrders/${orderId}`).remove()
     // }
 }
+
+export const GroupOrderRepository = {
+    // 使用 OrderData 型別
+    async create(groupId: string, orderId: string, data: OrderData): Promise<void> {
+        const cleanData = JSON.parse(JSON.stringify(data))
+        await db.ref(`groupOrders/${groupId}/${orderId}`).set(cleanData)
+    },
+
+    async findByGroupId(groupId: string): Promise<Record<string, OrderData>> {
+        const snapshot = await db.ref(`groupOrders/${groupId}`).get()
+        return snapshot.val() || {}
+    },
+
+    async findByOrderId(groupId: string, orderId: string): Promise<OrderData> {
+        const snapshot = await db.ref(`groupOrders/${groupId}/${orderId}`).get()
+        return snapshot.val() || {}
+    },
+
+    async update(groupId: string, orderId: string, data: Partial<OrderData>) {
+        const flatData = flattenObject(data)
+        await db.ref(`groupOrders/${groupId}/${orderId}`).update(flatData)
+    }
+
+    // async delete(orderId: string) {
+    //     await db.ref(`groupOrders${groupId}/${orderId}`).remove()
+    // }
+}

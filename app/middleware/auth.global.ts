@@ -3,6 +3,7 @@ export default defineNuxtRouteMiddleware((to) => {
 
     // 如果使用者未登入，且目標路由是後台頁面，強制導向登入頁
     if (to.path.startsWith('/admin') && !authStore.isLoggedIn) {
+        authStore.logout()
         return navigateTo('/login')
     }
 

@@ -55,9 +55,17 @@
         </div>
 
         <div
-            class="flex-1 rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900"
+            class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900"
         >
-            <UTable :data="paginatedActivities" :columns="tableColumns">
+            <UTable
+                :data="paginatedActivities"
+                :columns="tableColumns"
+                :ui="{
+                    base: 'min-w-full table-auto',
+                    th: 'text-white bg-primary dark:bg-blue-900',
+                    tr: 'data-[expanded=true]:bg-elevated/50 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors'
+                }"
+            >
                 <template #gid-cell="{ row }">
                     <div class="flex items-center justify-center gap-2">
                         <span class="font-mono text-sm text-slate-600 dark:text-slate-400">

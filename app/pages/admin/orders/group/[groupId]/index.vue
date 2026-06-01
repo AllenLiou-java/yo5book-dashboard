@@ -2,26 +2,46 @@
     <div class="mx-auto flex max-w-7xl flex-col gap-6">
         <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <div>
-                <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">個人訂單列表</h1>
-                <p class="text-sm text-slate-500">共 {{ personalOrderList.length }} 筆訂單</p>
+                <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">團體訂單列表</h1>
+                <div class="mt-2 mb-4">
+                    <p class="text-sm text-slate-500">
+                        <span class="text-slate-800">團購單位：</span>{{ unitName || '-' }}
+                    </p>
+                    <p class="text-sm text-slate-500">
+                        <span class="text-slate-800"> 截止日期： </span>{{ endDate || '-' }}
+                    </p>
+                </div>
+                <p class="text-sm text-slate-500">共 {{ filteredOrders.length }} 筆訂單</p>
             </div>
             <div class="flex w-full flex-col flex-wrap gap-4 sm:w-auto">
-                <div class="flex justify-end gap-4">
+                <div class="flex justify-between gap-4">
+                    <div class="flex justify-end gap-4">
+                        <UButton
+                            color="neutral"
+                            variant="outline"
+                            icon="i-lucide-download"
+                            @click="handleExport"
+                        >
+                            匯出
+                        </UButton>
+                        <UButton
+                            :to="{
+                                path: `/admin/orders/group/${groupId}/create`,
+                                query: { page, unitName, endDate }
+                            }"
+                            color="primary"
+                            icon="i-lucide-plus"
+                        >
+                            新增訂單
+                        </UButton>
+                    </div>
                     <UButton
-                        color="neutral"
+                        :to="{ path: '/admin/orders/group', query: { page } }"
+                        label="上一頁"
                         variant="outline"
-                        icon="i-lucide-download"
-                        @click="handleExport"
-                    >
-                        匯出
-                    </UButton>
-                    <UButton
-                        to="/admin/orders/personal/create"
                         color="primary"
-                        icon="i-lucide-plus"
-                    >
-                        新增訂單
-                    </UButton>
+                        icon="lucide:arrow-left-from-line"
+                    />
                 </div>
                 <div class="flex w-full gap-4 sm:w-auto">
                     <USelect v-model="searchField" :items="searchOptions" class="w-full sm:w-40" />
@@ -113,20 +133,6 @@
                         :class="{ 'editing-expanded-active': editingRowId === row.id }"
                     >
                         <div class="flex flex-col gap-6">
-                            <h3
-                                class="mb-3 flex items-center gap-2 font-bold text-slate-900 dark:text-slate-100"
-                            >
-                                會員ID：{{ row.original.userId }}
-                                <CommonTooltip v-if="row.original.userId" text="複製會員ID">
-                                    <UButton
-                                        icon="i-lucide-copy"
-                                        size="xs"
-                                        color="neutral"
-                                        variant="ghost"
-                                        @click="copyUserId(row.original.userId)"
-                                    />
-                                </CommonTooltip>
-                            </h3>
                             <!-- 訂單列表 -->
                             <div>
                                 <h3 class="mb-3 font-bold text-slate-900 dark:text-slate-100">
@@ -262,12 +268,19 @@ import type { OrderData } from '~/types/order'
 const route = useRoute()
 const router = useRouter()
 
-const orderStore = useOrderStore()
-const { personalOrderList, error, statusOptions } = storeToRefs(orderStore)
-const { updatePersonalOrderStatus } = orderStore
+const unitName = computed(() => route.query.unitName as string)
+const endDate = computed(() => route.query.endDate as string)
 
-await callOnce('initOrders', async () => {
-    await orderStore.getPersonalOrders()
+const groupId = computed(() => route.params.groupId as string)
+
+const orderStore = useOrderStore()
+const { groupOrderList, error, statusOptions } = storeToRefs(orderStore)
+const { updateGroupOrderStatus } = orderStore
+
+await callOnce(`initGroupOrders-${groupId.value}`, async () => {
+    if (groupId.value) {
+        await orderStore.getGroupOrderById(groupId.value)
+    }
 })
 
 const UButton = resolveComponent('UButton')
@@ -299,7 +312,7 @@ function startEditing(row: { id: string; original: OrderData }) {
 }
 
 async function handleSaveStatus(row: { id: string; original: OrderData }) {
-    const { orderId } = row.original
+    const { orderId, groupId } = row.original
     const updatedStatus = editingStatus.value
 
     if (updatedStatus === row.original.status) {
@@ -307,8 +320,8 @@ async function handleSaveStatus(row: { id: string; original: OrderData }) {
         return
     }
 
-    if (orderId && updatedStatus) {
-        await updatePersonalOrderStatus(orderId, updatedStatus)
+    if (orderId && groupId && updatedStatus) {
+        await updateGroupOrderStatus(groupId, orderId, updatedStatus)
         if (error.value) {
             editingRowId.value = null // 關閉編輯模式
             toastStore.error('更新失敗', error.value)
@@ -319,16 +332,6 @@ async function handleSaveStatus(row: { id: string; original: OrderData }) {
         editingRowId.value = null // 關閉編輯模式
 
         toastStore.success('更新成功')
-    }
-}
-
-async function copyUserId(userId: string) {
-    if (!userId) return
-    try {
-        await navigator.clipboard.writeText(userId)
-        toastStore.success('會員ID已複製')
-    } catch {
-        toastStore.error('複製失敗')
     }
 }
 
@@ -376,8 +379,7 @@ const searchOptions = [
     { label: '收件人', value: 'name' },
     { label: '聯絡電話', value: 'phone' },
     { label: '電子信箱', value: 'email' },
-    { label: '帳號後五碼', value: 'bankAccountNo' },
-    { label: '會員ID', value: 'userId' }
+    { label: '帳號後五碼', value: 'bankAccountNo' }
 ]
 
 // 分頁設定
@@ -391,15 +393,20 @@ const page = computed({
 })
 
 const filteredOrders = computed(() => {
-    const keyword = searchKeyword.value?.trim().toLowerCase()
-    if (!keyword) return personalOrderList.value
+    // 1. 使用可選串聯與預設值簡化陣列賦值
+    const groupOrder = groupOrderList.value?.[groupId.value] || []
 
-    return personalOrderList.value.filter((order) => {
+    const keyword = searchKeyword.value?.trim().toLowerCase()
+    if (!keyword) return groupOrder
+
+    return groupOrder.filter((order) => {
+        // 2. 針對 receiver 內的欄位與一般層級欄位做動態取值 (自動支援 groupId 等未定義在 switch 的欄位)
         const targetValue =
             searchField.value === 'address' || searchField.value === 'name'
                 ? order.receiver?.[searchField.value]
                 : order[searchField.value as keyof OrderData]
 
+        // 3. 轉為字串並統一轉小寫比對 (防呆處理 null / undefined)
         return String(targetValue ?? '')
             .toLowerCase()
             .includes(keyword)
@@ -531,7 +538,6 @@ const columns: TableColumn<OrderData>[] = [
     },
     {
         id: 'actions',
-        header: '操作',
         meta: {
             class: {
                 td: 'text-right'
@@ -571,12 +577,12 @@ function getRowItems(row: { id: string; original: OrderData }) {
             label: '編輯',
             icon: 'i-lucide-edit',
             async onSelect() {
-                const { orderId } = row.original
+                const { groupId, orderId } = row.original
 
                 await navigateTo({
-                    path: `/admin/orders/personal/${orderId}`,
+                    path: `/admin/orders/group/${groupId}/${orderId}`,
                     query: {
-                        page: page.value,
+                        ...route.query,
                         action: 'edit'
                     }
                 })
@@ -586,11 +592,12 @@ function getRowItems(row: { id: string; original: OrderData }) {
             label: '詳情',
             icon: 'i-lucide-file-text',
             async onSelect() {
-                const { orderId } = row.original
+                const { groupId, orderId } = row.original
+
                 await navigateTo({
-                    path: `/admin/orders/personal/${orderId}`,
+                    path: `/admin/orders/group/${groupId}/${orderId}`,
                     query: {
-                        page: page.value,
+                        ...route.query,
                         action: 'view'
                     }
                 })

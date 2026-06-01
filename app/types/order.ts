@@ -17,6 +17,7 @@ export interface OrderData {
     taxId: string
     totalPrice: number
     userId?: string
+    groupId?: string
     orderId?: string
     isClosed?: boolean
     oderDate?: string

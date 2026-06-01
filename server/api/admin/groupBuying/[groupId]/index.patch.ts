@@ -1,4 +1,5 @@
 import type { ApiResponse } from '~/types/api'
+import type { GroupBuyingProduct } from '~/types/groupBuying'
 import { GroupBuyingRepository } from '#server/repositories/GroupBuyingRepository'
 
 export default defineEventHandler(async (event): Promise<ApiResponse<object>> => {
@@ -19,6 +20,23 @@ export default defineEventHandler(async (event): Promise<ApiResponse<object>> =>
     }
 
     try {
+        // 將 products轉換成 orderId:{...}
+        if (body.products) {
+            body.products = body.products.reduce(
+                (
+                    acc: Record<string, Omit<GroupBuyingProduct, 'productId'>>,
+                    item: GroupBuyingProduct
+                ) => {
+                    const { productId, ...rest } = item
+                    if (productId) {
+                        acc[productId] = rest
+                    }
+                    return acc
+                },
+                {}
+            )
+        }
+
         await GroupBuyingRepository.update(groupId, body)
 
         return {

@@ -87,6 +87,14 @@
                         <span class="font-medium text-slate-700 dark:text-slate-200">
                             {{ row.original.unitName }}
                         </span>
+                        <CommonTooltip text="複製團購單位">
+                            <UButton
+                                icon="i-lucide-copy"
+                                size="xs"
+                                variant="ghost"
+                                @click="copyGid(row.original.unitName)"
+                            />
+                        </CommonTooltip>
                     </div>
                 </template>
 
@@ -316,7 +324,7 @@ const copyGid = async (gid: string | undefined) => {
     if (!gid) return
     try {
         await navigator.clipboard.writeText(gid)
-        toastStore.success('複製成功', '已將團購單位代號複製到剪貼簿')
+        toastStore.success('複製成功', '已複製到剪貼簿')
     } catch {
         toastStore.error('複製失敗', '無法複製到剪貼簿')
     }

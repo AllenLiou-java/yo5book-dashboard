@@ -77,14 +77,24 @@
                     </UFormField>
 
                     <UFormField label="宣傳圖片 URL" name="bannerUrl" class="md:col-span-2">
-                        <UInput
-                            v-if="!isReadonly"
-                            v-model="state.bannerUrl"
-                            class="w-full"
-                            icon="i-heroicons-link"
-                            placeholder="https://example.com/banner.jpg"
-                            size="lg"
-                        />
+                        <div v-if="!isReadonly">
+                            <ClientOnly>
+                                <ImageUploader
+                                    :current-image="state.bannerUrl"
+                                    target-folder-name="eventPhoto"
+                                    @upload-data="uploadBannerUrl"
+                                ></ImageUploader>
+                            </ClientOnly>
+
+                            <!-- <UInput
+                                v-model="state.bannerUrl"
+                                class="w-full"
+                                icon="i-heroicons-link"
+                                placeholder="https://example.com/banner.jpg"
+                                size="lg"
+                            /> -->
+                        </div>
+
                         <div v-else-if="state.bannerUrl" class="py-2">
                             <img
                                 :src="state.bannerUrl"
@@ -281,7 +291,7 @@ const route = useRoute()
 const id = computed(() => route.params.id as string)
 const page = computed(() => route.query.page || 1)
 
-type stateProduct = {
+type StateProduct = {
     productId: string
     name: string
     originalPrice: number
@@ -289,7 +299,7 @@ type stateProduct = {
 }
 
 // ✅ 預設商品
-const defaultProduct = (): stateProduct => ({
+const defaultProduct = (): StateProduct => ({
     productId: '',
     name: '',
     originalPrice: 0,
@@ -318,14 +328,15 @@ await callOnce(`initGroupBuying-${id.value}`, async () => {
 
     const data = JSON.parse(JSON.stringify(rawData))
 
-    state.value.unitName = data.unitName ?? ''
-    state.value.title = data.title ?? ''
-    state.value.bannerUrl = data.bannerUrl ?? ''
-    state.value.description = data.description ?? ''
-    state.value.endDate = data.endDate ?? ''
-    state.value.isLaunched = data.isLaunched ?? true
-    state.value.products =
-        data.products && data.products.length > 0 ? data.products : [defaultProduct()]
+    Object.assign(state.value, {
+        unitName: data.unitName ?? '',
+        title: data.title ?? '',
+        bannerUrl: data.bannerUrl ?? '',
+        description: data.description ?? '',
+        endDate: data.endDate ?? '',
+        isLaunched: data.isLaunched ?? true,
+        products: data.products && data.products.length > 0 ? data.products : [defaultProduct()]
+    })
 })
 
 watch(
@@ -359,45 +370,30 @@ const tableColumns = [
     }
 ]
 
-const isReadonly = computed(() => {
-    if (route.query.action === 'edit') {
-        return false
-    } else {
-        return true
-    }
-})
+const isReadonly = computed(() => route.query.action !== 'edit')
 
 // 建立「已選 productId 清單」
-const selectedProductIds = computed(() =>
-    state.value.products.map((p) => p.productId).filter((id) => Boolean(id))
+const selectedProductIds = computed(
+    () => new Set(state.value.products.map((p) => p.productId).filter((id) => Boolean(id)))
+)
+
+const baseProductOptions = computed(() =>
+    productSimpleList.value.map((item: ProductSimple) => ({
+        value: item.productId,
+        label: item.name
+    }))
 )
 
 // 改寫 items（重點）
 const getItems = (currentIndex: number) => {
     const currentId = state.value.products[currentIndex]?.productId
 
-    return productSimpleList.value.map((item: ProductSimple) => {
-        const isSelected = selectedProductIds.value.includes(item.productId)
-
-        return {
-            value: item.productId,
-            label: item.name,
-
-            // ✅ 如果是「別列已選」，就 disable
-            disabled: isSelected && item.productId !== currentId
-        }
-    })
-}
-
-const products = computed(() => {
-    return productSimpleList.value.map((item: ProductSimple) => ({
-        imgSrc: item.imgSrc,
-        name: item.name,
-        originalPrice: item.price.originalPrice,
-        productId: item.productId,
-        selected: false
+    return baseProductOptions.value.map((option) => ({
+        ...option,
+        // ✅ 如果是「別列已選」，就 disable
+        disabled: selectedProductIds.value.has(option.value) && option.value !== currentId
     }))
-})
+}
 
 // 商品清單操作
 const addProduct = () => {
@@ -411,11 +407,12 @@ const removeProduct = (index: number) => {
 }
 
 const onProductSelect = (productId: string, index: number) => {
-    const selected = products.value.find((p) => p.productId === productId)
+    // const selected = products.value.find((p) => p.productId === productId)
+    const selected = productSimpleList.value.find((p: ProductSimple) => p.productId === productId)
 
     if (selected && state.value.products[index]) {
         state.value.products[index].name = selected.name
-        state.value.products[index].originalPrice = selected.originalPrice
+        state.value.products[index].originalPrice = selected.price.originalPrice
         state.value.products[index].groupPrice = 0
     }
 }
@@ -459,26 +456,20 @@ function resetRollbackState() {
     rollbackState.value = null
 }
 
-function isEqualProducts(oldProducts: stateProduct[], newProducts: stateProduct[]) {
+function isEqualProducts(oldProducts: StateProduct[], newProducts: StateProduct[]) {
     if (oldProducts.length !== newProducts.length) return false
 
-    const oldMap = new Map(oldProducts.map((p) => [p.productId, p]))
-    const newMap = new Map(newProducts.map((p) => [p.productId, p]))
-
-    for (const [id, oldItem] of oldMap) {
-        const newItem = newMap.get(id)
+    return oldProducts.every((oldItem, index) => {
+        const newItem = newProducts[index]
         if (!newItem) return false
 
-        if (
-            oldItem.name !== newItem.name ||
-            oldItem.originalPrice !== newItem.originalPrice ||
-            oldItem.groupPrice !== newItem.groupPrice
-        ) {
-            return false
-        }
-    }
-
-    return true
+        return (
+            oldItem.productId === newItem.productId &&
+            oldItem.name === newItem.name &&
+            oldItem.originalPrice === newItem.originalPrice &&
+            oldItem.groupPrice === newItem.groupPrice
+        )
+    })
 }
 
 // 檢查出異動欄位資料
@@ -495,7 +486,7 @@ function getDiff(oldObj: Record<string, unknown>, newObj: Record<string, unknown
         const newVal = newObj?.[key]
 
         if (key === 'products') {
-            if (!isEqualProducts(oldVal as stateProduct[], newVal as stateProduct[])) {
+            if (!isEqualProducts(oldVal as StateProduct[], newVal as StateProduct[])) {
                 diff[key] = newVal
             }
         }
@@ -547,5 +538,14 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         }
     })
     resetRollbackState()
+}
+
+const uploadBannerUrl = (fileId: string) => {
+    if (!fileId) {
+        state.value.bannerUrl = ''
+        return
+    }
+
+    state.value.bannerUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w500`
 }
 </script>

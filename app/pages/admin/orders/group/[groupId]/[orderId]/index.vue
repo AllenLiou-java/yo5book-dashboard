@@ -318,10 +318,7 @@ const columns = [
     { accessorKey: 'totalPrice', header: '總金額' }
 ]
 
-const orderListArray = computed(() => {
-    if (!orderDetail.value?.orderList) return []
-    return Object.values(orderDetail.value.orderList)
-})
+const orderListArray = computed(() => Object.values(orderDetail.value?.orderList || {}))
 
 const rollbackState = ref<OrderData | null>(null)
 

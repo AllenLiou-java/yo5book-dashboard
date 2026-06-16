@@ -280,13 +280,7 @@ const route = useRoute()
 const toastStore = useToastStore()
 const page = computed(() => route.query.page || 1)
 
-const isReadonly = computed(() => {
-    if (route.query.action === 'edit') {
-        return false
-    } else {
-        return true
-    }
-})
+const isReadonly = computed(() => route.query.action !== 'edit')
 
 // 改用 useState 來取代 ref，確保 SSR 與 Client 端共享同一份狀態，避免 Hydration mismatch
 const orderDetail = useState<OrderData | null>(
@@ -313,10 +307,7 @@ const columns = [
     { accessorKey: 'totalPrice', header: '總金額' }
 ]
 
-const orderListArray = computed(() => {
-    if (!orderDetail.value?.orderList) return []
-    return Object.values(orderDetail.value.orderList)
-})
+const orderListArray = computed(() => Object.values(orderDetail.value?.orderList || {}))
 
 const rollbackState = ref<OrderData | null>(null)
 

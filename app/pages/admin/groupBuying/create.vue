@@ -44,7 +44,7 @@
                         />
                     </UFormField>
 
-                    <UFormField label="宣傳圖片 URL" name="bannerUrl" class="md:col-span-2">
+                    <!-- <UFormField label="宣傳圖片 URL" name="bannerUrl" class="md:col-span-2">
                         <UInput
                             v-model="state.bannerUrl"
                             class="w-full"
@@ -52,6 +52,16 @@
                             placeholder="https://example.com/banner.jpg"
                             size="lg"
                         />
+                    </UFormField> -->
+
+                    <UFormField label="宣傳圖片 URL" name="bannerUrl" class="md:col-span-2">
+                        <ClientOnly>
+                            <ImageUploader
+                                :current-image="state.bannerUrl"
+                                target-folder-name="eventPhoto"
+                                @upload-data="uploadBannerUrl"
+                            ></ImageUploader>
+                        </ClientOnly>
                     </UFormField>
 
                     <UFormField label="活動描述 URL" name="description" class="md:col-span-2">
@@ -320,6 +330,14 @@ const onProductSelect = (productId: string, index: number) => {
         state.products[index].originalPrice = selected.originalPrice
         state.products[index].groupPrice = 0
     }
+}
+
+const uploadBannerUrl = (fileId: string) => {
+    if (!fileId) {
+        state.bannerUrl = ''
+        return
+    }
+    state.bannerUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w500`
 }
 
 // 4. 提交表單

@@ -14,7 +14,6 @@
                     alt="Modern Architectural Glass"
                     class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                     src="/images/city.jpg"
-                    provider="ipx"
                     format="webp"
                     quality="80"
                     loading="lazy"

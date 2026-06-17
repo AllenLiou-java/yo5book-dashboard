@@ -141,15 +141,17 @@
 
                         <UButton
                             type="submit"
-                            :disabled="isSubmitting"
-                            :loading="isSubmitting"
+                            :disabled="isSubmitting || isRedirecting"
+                            :loading="isSubmitting || isRedirecting"
                             block
                             size="xl"
                             class="bg-primary shadow-primary/20 hover:bg-primary-container flex w-full items-center justify-center gap-3 rounded px-6 py-4 text-sm font-bold tracking-widest text-white uppercase shadow-xl transition-all duration-200 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70"
                         >
-                            <span v-if="!isSubmitting">登入</span>
+                            <span v-if="!(isSubmitting || isRedirecting)">登入</span>
                             <template #trailing>
-                                <span v-if="!isSubmitting" class="material-symbols-outlined text-lg"
+                                <span
+                                    v-if="!(isSubmitting || isRedirecting)"
+                                    class="material-symbols-outlined text-lg"
                                     >arrow_forward</span
                                 >
                             </template>
@@ -179,6 +181,7 @@ definePageMeta({
 
 const authStore = useAuthStore()
 const show = ref(false)
+const isRedirecting = ref(false)
 
 const errorMessage = ref('')
 
@@ -219,10 +222,12 @@ const onLogin = handleSubmit(async (values) => {
 
         if (response.success) {
             authStore.setAdmin(response.user, response.token)
+            isRedirecting.value = true
             await navigateTo('/admin')
         }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
+        isRedirecting.value = false
         errorMessage.value = error.data?.message || '登入失敗，請稍後再試'
     }
 })

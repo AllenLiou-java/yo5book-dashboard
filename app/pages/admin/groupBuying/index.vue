@@ -181,10 +181,6 @@
 <script setup lang="ts">
 import { LazyModalBasic } from '#components'
 
-definePageMeta({
-    layout: 'admin'
-})
-
 const route = useRoute()
 const router = useRouter()
 

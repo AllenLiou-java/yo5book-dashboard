@@ -68,7 +68,6 @@ export default defineNuxtConfig({
         googlePrivateKey: ''
     },
     routeRules: {
-        '/': { redirect: '/login' },
-        '/admin/**': { appLayout: 'admin' }
+        '/': { redirect: '/login' }
     }
 })

@@ -172,6 +172,11 @@
 import { useForm, useField } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as zod from 'zod'
+
+definePageMeta({
+    layout: 'login'
+})
+
 const authStore = useAuthStore()
 const show = ref(false)
 

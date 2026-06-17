@@ -11,9 +11,4 @@ export default defineNuxtRouteMiddleware((to) => {
     if (to.path === '/login' && authStore.isLoggedIn) {
         return navigateTo('/admin')
     }
-
-    // 3. 處理根路徑 / 自動導向
-    if (to.path === '/') {
-        return navigateTo(authStore.token ? '/admin' : '/login')
-    }
 })

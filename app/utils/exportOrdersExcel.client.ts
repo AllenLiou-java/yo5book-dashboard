@@ -1,5 +1,7 @@
-import { saveAs } from 'file-saver'
+import fileSaver from 'file-saver'
 import type { OrderData, OrderItem } from '~/types/order'
+
+const { saveAs } = fileSaver
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 declare const XLSX: any

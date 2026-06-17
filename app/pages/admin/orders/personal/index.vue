@@ -107,14 +107,22 @@
                         }}</span>
                     </div>
                 </template>
+                <template #orderDate-cell="{ row }">
+                    <ClientOnly>
+                        <span>{{ formatDateTime(row.original.orderDate) }}</span>
+                        <template #fallback>
+                            <span>{{ row.original.orderDate ? '...' : '-' }}</span>
+                        </template>
+                    </ClientOnly>
+                </template>
                 <template #expanded="{ row }">
                     <div
                         class="expanded-content-wrapper bg-slate-50 p-4 dark:bg-slate-800/50"
                         :class="{ 'editing-expanded-active': editingRowId === row.id }"
                     >
                         <div class="flex flex-col gap-6">
-                            <h3
-                                class="mb-3 flex items-center gap-2 font-bold text-slate-900 dark:text-slate-100"
+                            <div
+                                class="mb-3 flex items-center gap-2 text-lg font-bold text-slate-900 dark:text-slate-100"
                             >
                                 會員ID：{{ row.original.userId }}
                                 <CommonTooltip v-if="row.original.userId" text="複製會員ID">
@@ -126,7 +134,7 @@
                                         @click="copyUserId(row.original.userId)"
                                     />
                                 </CommonTooltip>
-                            </h3>
+                            </div>
                             <!-- 訂單列表 -->
                             <div>
                                 <h3 class="mb-3 font-bold text-slate-900 dark:text-slate-100">
@@ -134,7 +142,11 @@
                                 </h3>
 
                                 <UTable
-                                    :data="Object.values(row.original.orderList) || []"
+                                    :data="
+                                        row.original.orderList
+                                            ? Object.values(row.original.orderList)
+                                            : []
+                                    "
                                     :columns="orderListColumns"
                                     :ui="{
                                         base: 'min-w-0 table-auto',
@@ -485,10 +497,7 @@ const columns: TableColumn<OrderData>[] = [
     },
     {
         accessorKey: 'orderDate',
-        header: '訂單日期',
-        cell: ({ row }) => {
-            return formatDateTime(row.original.orderDate)
-        }
+        header: '訂單日期'
     },
     {
         accessorKey: 'orderId',

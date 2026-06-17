@@ -127,6 +127,14 @@
                         }}</span>
                     </div>
                 </template>
+                <template #orderDate-cell="{ row }">
+                    <ClientOnly>
+                        <span>{{ formatDateTime(row.original.orderDate) }}</span>
+                        <template #fallback>
+                            <span>{{ row.original.orderDate ? '...' : '-' }}</span>
+                        </template>
+                    </ClientOnly>
+                </template>
                 <template #expanded="{ row }">
                     <div
                         class="expanded-content-wrapper bg-slate-50 p-4 dark:bg-slate-800/50"
@@ -492,10 +500,7 @@ const columns: TableColumn<OrderData>[] = [
     },
     {
         accessorKey: 'orderDate',
-        header: '訂單日期',
-        cell: ({ row }) => {
-            return formatDateTime(row.original.orderDate)
-        }
+        header: '訂單日期'
     },
     {
         accessorKey: 'orderId',

@@ -148,7 +148,11 @@
                                 </h3>
 
                                 <UTable
-                                    :data="Object.values(row.original.orderList) || []"
+                                    :data="
+                                        row.original.orderList
+                                            ? Object.values(row.original.orderList)
+                                            : []
+                                    "
                                     :columns="orderListColumns"
                                     :ui="{
                                         base: 'min-w-0 table-auto',

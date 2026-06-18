@@ -1,5 +1,5 @@
 <template>
-    <div class="mx-auto flex max-w-7xl flex-col gap-6">
+    <div class="summary-board-container">
         <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <div>
                 <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">個人訂單列表</h1>
@@ -634,7 +634,6 @@ const deliveryColumns = [
 </script>
 
 <style scoped>
-/* 當有處於編輯狀態或展開的列時，將表格內其他列加上遮罩效果並停用點擊 */
 :deep(tbody:has(.editing-active) > tr),
 :deep(tbody:has(tr[data-expanded='true']) > tr) {
     opacity: 0.3;

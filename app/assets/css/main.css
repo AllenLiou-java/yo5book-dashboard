@@ -43,3 +43,8 @@
         'GRAD' 0,
         'opsz' 24;
 }
+
+/* 當有處於編輯狀態或展開的列時，將表格內其他列加上遮罩效果並停用點擊 */
+.summary-board-container {
+    @apply mx-auto flex flex-col gap-6;
+}

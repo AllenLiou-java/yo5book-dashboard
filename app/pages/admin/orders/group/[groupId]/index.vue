@@ -1,5 +1,5 @@
 <template>
-    <div class="mx-auto flex max-w-7xl flex-col gap-6">
+    <div class="summary-board-container">
         <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
             <div>
                 <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">團體訂單列表</h1>

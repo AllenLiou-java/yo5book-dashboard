@@ -1,5 +1,10 @@
 <template>
-    <UForm :schema="schema" :state="state" class="w-96 space-y-4" @submit="onSubmit">
+    <UForm
+        :schema="schema"
+        :state="state"
+        class="flex max-w-96 flex-col space-y-4"
+        @submit="onSubmit"
+    >
         <div v-if="currentImage" class="relative">
             <span
                 class="material-symbols-outlined absolute -top-2 -right-2 cursor-pointer rounded-full border bg-black p-1 text-white"
@@ -24,7 +29,15 @@
             />
         </UFormField>
 
-        <UButton :loading="isUploading" type="submit" label="圖片上傳" color="primary" />
+        <UButton
+            class="self-center"
+            :loading="isUploading"
+            type="submit"
+            label="圖片上傳"
+            color="neutral"
+            :disabled="isUploading"
+            size="lg"
+        />
     </UForm>
 </template>
 

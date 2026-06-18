@@ -545,7 +545,6 @@ const uploadBannerUrl = (fileId: string) => {
         state.value.bannerUrl = ''
         return
     }
-
     state.value.bannerUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w500`
 }
 </script>

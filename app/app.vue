@@ -1,5 +1,6 @@
 <template>
     <div>
+        <CustomLoading />
         <!-- Markup shared across all pages, ex: NavBar -->
         <UApp>
             <NuxtLayout>

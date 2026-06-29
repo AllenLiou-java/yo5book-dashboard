@@ -248,7 +248,7 @@ const userItems = computed<DropdownMenuItem[][]>(() => [
 ])
 
 const toggleSidebar = () => {
-    ;(document.activeElement as HTMLElement)?.blur()
+    // ;(document.activeElement as HTMLElement)?.blur()
     open.value = !open.value
 }
 </script>

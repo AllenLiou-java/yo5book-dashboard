@@ -337,7 +337,7 @@ const uploadBannerUrl = (fileId: string) => {
         state.bannerUrl = ''
         return
     }
-    state.bannerUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w500`
+    state.bannerUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w1800`
 }
 
 // 4. 提交表單

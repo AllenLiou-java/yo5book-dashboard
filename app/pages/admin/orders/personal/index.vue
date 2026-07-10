@@ -252,6 +252,9 @@
                             :items="pageCountOptions"
                             :options="pageCountOptions"
                             class="w-20"
+                            :content="{
+                                side: 'top'
+                            }"
                         />
                         <span class="text-sm text-slate-500">筆 / 頁</span>
                     </div>
@@ -394,7 +397,13 @@ const searchOptions = [
 
 // 分頁設定
 const pageCount = ref(10)
-const pageCountOptions = [10, 20, 40, 100]
+const pageCountOptions = [
+    { label: '10', value: 10 },
+    { label: '20', value: 20 },
+    { label: '40', value: 40 },
+    { label: '100', value: 100 },
+    { label: '全部', value: 99999 }
+]
 
 // 使用 computed 雙向綁定 URL Query 與分頁狀態
 const page = computed({

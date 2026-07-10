@@ -39,7 +39,9 @@ export default defineNuxtConfig({
                 '@vue/devtools-kit',
                 'zod',
                 '@vee-validate/zod',
-                '@tiptap/extension-text-align'
+                '@tiptap/extension-text-align',
+                'file-saver',
+                'xlsx-js-style'
             ]
         }
     },

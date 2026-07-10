@@ -337,11 +337,7 @@ const uploadBannerUrl = (fileId: string) => {
         state.bannerUrl = ''
         return
     }
-<<<<<<< HEAD
     state.bannerUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w1440`
-=======
-    state.bannerUrl = `https://drive.google.com/thumbnail?id=${fileId}&sz=w1800`
->>>>>>> bugfix/mobile-sidebar-autoclose
 }
 
 // 4. 提交表單

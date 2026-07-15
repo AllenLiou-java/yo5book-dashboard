@@ -172,26 +172,12 @@ export const useOrderStore = defineStore('order', () => {
         }
     }
 
-    const updateGroupOrderStatus = async (groupId: string, orderId: string, status: string) => {
-        isLoading.value = true
-        error.value = null
-
-        try {
-            await groupOrder.update(groupId, orderId, { status })
-            const index = groupOrderList.value[groupId]?.findIndex(
-                (item) => item.orderId === orderId
-            )
-            const targetList = groupOrderList.value[groupId]
-            if (targetList && index !== undefined && index !== -1 && targetList[index]) {
-                targetList[index].status = status
-            }
-        } catch (err: unknown) {
-            error.value = getErrorMessage(err, '更新狀態失敗')
-        } finally {
-            isLoading.value = false
-        }
-    }
-
+    /**
+     * 通用的更新團體訂單單一欄位的方法
+     * @param groupId - 團購 ID
+     * @param orderId - 訂單 ID
+     * @param updatedData - 一個包含要更新的鍵值對的物件，例如 { status: '2' } 或 { bankAccountNo: '12345' }
+     */
     const updateGroupOrder = async (
         groupId: string,
         orderId: string,
@@ -227,7 +213,7 @@ export const useOrderStore = defineStore('order', () => {
                 }
             }
         } catch (err: unknown) {
-            error.value = getErrorMessage(err, '更新狀態失敗')
+            error.value = getErrorMessage(err, '更新資料失敗')
         } finally {
             isLoading.value = false
         }
@@ -284,7 +270,6 @@ export const useOrderStore = defineStore('order', () => {
         createPersonalOrder,
         getGroupOrderById,
         getGroupOrderDetailById,
-        updateGroupOrderStatus,
         updateGroupOrder,
         createGroupOrder
     }

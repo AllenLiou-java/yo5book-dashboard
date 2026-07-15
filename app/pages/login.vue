@@ -198,8 +198,8 @@ const validationSchema = toTypedSchema(
 const { handleSubmit, errors, isSubmitting } = useForm({
     validationSchema,
     initialValues: {
-        email: 'ai0911953419@gmail.com',
-        password: '12345678',
+        email: '',
+        password: '', //12345678
         rememberMe: false
     }
 })

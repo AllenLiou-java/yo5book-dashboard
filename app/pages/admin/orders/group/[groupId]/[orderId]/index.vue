@@ -252,10 +252,39 @@
                     </h2>
                 </template>
                 <UTable :data="orderListArray" :columns="columns" class="w-full">
+                    <template #unitPrice-cell="{ row }">
+                        <span class="text-slate-600 dark:text-slate-400">
+                            {{ thousandthsFormat((row.original as OrderItem).unitPrice) }}
+                        </span>
+                    </template>
+                    <template #qty-cell="{ row }">
+                        <UInput
+                            v-if="!isReadonly"
+                            v-model.number="orderDetail!.orderList[row.index]!.qty"
+                            type="number"
+                            min="1"
+                            size="lg"
+                            class="w-24"
+                            @update:model-value="updateOrderItemTotalPrice(row.index)"
+                        />
+                        <span v-else>{{ thousandthsFormat((row.original as OrderItem).qty) }}</span>
+                    </template>
                     <template #totalPrice-cell="{ row }">
-                        {{ thousandthsFormat((row.original as OrderItem).totalPrice) }}
+                        <span class="text-primary font-semibold">
+                            {{ thousandthsFormat((row.original as OrderItem).totalPrice) }}
+                        </span>
                     </template>
                 </UTable>
+                <div
+                    class="flex items-center justify-end border-t border-slate-200 p-6 dark:border-slate-800"
+                >
+                    <span class="text-lg font-medium text-slate-700 dark:text-slate-300"
+                        >合計金額：</span
+                    >
+                    <span class="text-primary ml-4 text-2xl font-bold">
+                        $ {{ thousandthsFormat(orderDetail?.totalPrice || 0) }}
+                    </span>
+                </div>
             </UCard>
 
             <!-- 底部操作按鈕 -->
@@ -314,6 +343,7 @@ await callOnce(`fetchGroupOrderDetail-${orderId.value}`, async () => {
 
 const columns = [
     { accessorKey: 'productName', header: '商品名稱' },
+    { accessorKey: 'unitPrice', header: '單價' },
     { accessorKey: 'qty', header: '訂購數' },
     { accessorKey: 'totalPrice', header: '總金額' }
 ]
@@ -374,6 +404,27 @@ async function copyTrackingNo(trackingNo?: string) {
     } catch {
         toastStore.error('複製失敗')
     }
+}
+
+function updateOrderItemTotalPrice(index: number) {
+    if (!orderDetail.value) return
+    const item = orderDetail.value.orderList[index]
+    if (item) {
+        // 確保數量不小於 1
+        const qty = Math.max(1, item.qty || 1)
+        item.qty = qty
+        item.totalPrice = (item.unitPrice || 0) * qty
+    }
+    updateOrderGrandTotal()
+}
+
+function updateOrderGrandTotal() {
+    if (!orderDetail.value) return
+    const grandTotal = orderDetail.value.orderList.reduce(
+        (sum, item) => sum + (item.totalPrice || 0),
+        0
+    )
+    orderDetail.value.totalPrice = grandTotal
 }
 
 // 檢查出異動欄位資料

@@ -74,7 +74,9 @@ export async function exportOrdersExcel(orders: OrderData[]): Promise<void> {
      */
     const XLSX = await import('xlsx-js-style')
 
-    const productNames = getUniqueProductNames(orders)
+    const ordersSorted = orders.sort((a, b) => (a.orderDate || 0) - (b.orderDate || 0))
+
+    const productNames = getUniqueProductNames(ordersSorted)
 
     // 每一項商品會在訂單列表中建立一個數量欄位
     const orderHeaders = [...ORDER_FIXED_HEADERS, ...productNames]
@@ -83,7 +85,7 @@ export async function exportOrdersExcel(orders: OrderData[]): Promise<void> {
     // 工作表一：訂單列表
     // ==========================================
 
-    const exportData: ExcelRow[] = orders.map((order) => {
+    const exportData: ExcelRow[] = ordersSorted.map((order) => {
         const orderProductStats = getOrderProductStats(order, productNames)
 
         const productText = getOrderItems(order)
@@ -165,7 +167,7 @@ export async function exportOrdersExcel(orders: OrderData[]): Promise<void> {
 
     const summaryStats = createEmptyProductStats(productNames)
 
-    orders.forEach((order) => {
+    ordersSorted.forEach((order) => {
         getOrderItems(order).forEach((item) => {
             const productName = item.productName
             const qty = toNumber(item.qty)
@@ -415,7 +417,7 @@ function getUniqueProductNames(orders: OrderData[]): string[] {
     /*
      * Set 會保留商品第一次出現的順序。
      */
-    return [...new Set(productNames)]
+    return [...new Set(productNames)].sort((a, b) => a.localeCompare(b))
 }
 
 function createEmptyProductStats(productNames: string[]): Record<string, number> {

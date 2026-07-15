@@ -26,9 +26,9 @@ export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig()
     const jwtSecret = config.jwtSecret || process.env.JWT_SECRET || 'default_secret'
 
-    // 2. 簽發 JWT Token (這裡設定 1 天過期)
+    // 2. 簽發 JWT Token (這裡設定 2hours過期)
     const token = jwt.sign({ id: adminData.id, email: adminData.email }, jwtSecret, {
-        expiresIn: '1h'
+        expiresIn: '2h'
     })
 
     return {

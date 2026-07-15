@@ -14,6 +14,8 @@ export const useProductStore = defineStore('product', () => {
 
     // 動作 (Actions)
     const fetchProductsSimple = async () => {
+        console.log('fetchProductsSimple')
+
         isLoading.value = true
         error.value = null
 

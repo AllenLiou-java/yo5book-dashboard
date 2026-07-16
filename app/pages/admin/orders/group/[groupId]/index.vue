@@ -155,7 +155,7 @@
                         <USelect v-model="editingStatus" :items="statusOptions" class="w-48" />
                     </div>
                     <div v-else class="flex items-center gap-2">
-                        <span>{{
+                        <span class="w-48">{{
                             statusNameMap[String(row.original.status || '')] ||
                             String(row.original.status || '') ||
                             '無'
@@ -170,11 +170,11 @@
                         <UInput
                             v-model="editingBankAccountNo"
                             placeholder="帳號後五碼"
-                            class="w-32"
+                            class="w-19"
                         />
                     </div>
                     <div v-else class="flex items-center gap-2">
-                        <span>{{ row.original.bankAccountNo || '-' }}</span>
+                        <span class="w-19">{{ row.original.bankAccountNo || '-' }}</span>
                     </div>
                 </template>
                 <template #remark-cell="{ row }">
@@ -184,15 +184,23 @@
                     >
                         <UInput v-model="editingRemark" placeholder="備註" class="w-48" />
                     </div>
-                    <div v-else class="flex items-center gap-2">
-                        <span>{{ row.original.remark || '-' }}</span>
-                    </div>
+                    <CommonTooltip
+                        v-else-if="row.original.remark"
+                        :text="row.original.remark"
+                        :ui="{ popper: { strategy: 'absolute' } }"
+                    >
+                        <span class="truncate">{{
+                            (row.original.remark || '').substring(0, 15) +
+                            ((row.original.remark || '').length > 15 ? '...' : '')
+                        }}</span>
+                    </CommonTooltip>
+                    <span v-else>-</span>
                 </template>
                 <template #orderDate-cell="{ row }">
                     <ClientOnly>
-                        <span>{{ formatDateTime(row.original.orderDate) }}</span>
+                        {{ formatDateTime(row.original.orderDate) }}
                         <template #fallback>
-                            <span>{{ row.original.orderDate ? '...' : '-' }}</span>
+                            {{ row.original.orderDate ? '...' : '-' }}
                         </template>
                     </ClientOnly>
                 </template>
@@ -744,16 +752,13 @@ const columns: TableColumn<OrderData>[] = [
     },
     {
         accessorKey: 'orderDate',
-        header: '訂單日期'
+        header: '訂單日期',
+        meta: { class: { th: 'text-center w-38', td: 'text-center' } }
     },
     {
         accessorKey: 'orderId',
-        header: '訂單號碼'
-    },
-    {
-        accessorKey: 'status',
-        header: '訂單狀態',
-        meta: { class: { th: 'text-center', td: 'text-center' } }
+        header: '訂單號碼',
+        meta: { class: { th: 'text-center w-39', td: 'text-center' } }
     },
     {
         accessorKey: 'receiver.address',
@@ -774,6 +779,11 @@ const columns: TableColumn<OrderData>[] = [
         accessorKey: 'email',
         header: '電子信箱',
         cell: ({ row }) => row.original.email || '-'
+    },
+    {
+        accessorKey: 'status',
+        header: '訂單狀態',
+        meta: { class: { th: 'text-center', td: 'text-center' } }
     },
     {
         accessorKey: 'bankAccountNo',

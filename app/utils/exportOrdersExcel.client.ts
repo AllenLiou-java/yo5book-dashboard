@@ -79,7 +79,7 @@ export async function exportOrdersExcel(orders: OrderData[]): Promise<void> {
     const productNames = getUniqueProductNames(ordersSorted)
 
     // 每一項商品會在訂單列表中建立一個數量欄位
-    const orderHeaders = [...ORDER_FIXED_HEADERS, ...productNames]
+    const orderHeaders = [...ORDER_FIXED_HEADERS, ...productNames, '備註']
 
     // ==========================================
     // 工作表一：訂單列表
@@ -105,13 +105,7 @@ export async function exportOrdersExcel(orders: OrderData[]): Promise<void> {
             訂單日期: formatDate(order.orderDate),
             訂單號碼: order.orderId || '',
             [PRODUCT_DETAIL_HEADER]: productText,
-
-            /*
-             * 保留 number 型別。
-             * Excel 裡才能正確排序、篩選及加總。
-             */
             合計: toNumber(order.totalPrice),
-
             收件人姓名: order.receiver?.name || '',
             收件人電話: order.phone || '',
             收件地址: order.receiver?.address || '',
@@ -120,6 +114,7 @@ export async function exportOrdersExcel(orders: OrderData[]): Promise<void> {
             發票型式: order.taxId?.length ? '三聯' : '二聯',
             發票抬頭: order.buyer || '',
             統一編號: formatTaxId(order.taxId),
+            備註: order.remark || '',
             ...orderProductStats
         }
     })
@@ -141,7 +136,9 @@ export async function exportOrdersExcel(orders: OrderData[]): Promise<void> {
         // 動態商品數量欄位
         ...productNames.map((productName) => ({
             wch: calculateColumnWidth(productName, 12, 28)
-        }))
+        })),
+
+        { wch: 30 } // 備註
     ]
 
     const orderNumberFormats: Record<string, string> = {

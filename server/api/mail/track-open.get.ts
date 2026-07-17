@@ -28,6 +28,7 @@ export default defineEventHandler(async (event) => {
         }
     }
 
+    setHeader(event, 'Content-Length', transparentGif.length)
     // 4. 設定正確的 HTTP Header，告訴信箱這是一張圖片，且「禁止快取」
     setHeader(event, 'Content-Type', 'image/gif')
     setHeader(event, 'Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')

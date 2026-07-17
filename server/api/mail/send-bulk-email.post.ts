@@ -3,8 +3,9 @@
 import { readMultipartFormData, createError } from 'h3'
 import nodemailer from 'nodemailer'
 import admin from 'firebase-admin'
+const config = useRuntimeConfig()
 
-const baseUrl = process.env.BASE_URL || 'http://localhost:3000'
+const baseUrl = config.webUrl || 'http://localhost:3000'
 
 // 【關鍵優化 1】：將 transporter 移到 defineEventHandler 外面！
 // 這樣整個 Nuxt 伺服器生命週期內，只會建立一個連線池，不會每次打 API 都重新連線
@@ -136,7 +137,7 @@ export default defineEventHandler(async (event) => {
             errors.push({ email: recipient.email, error: err.message })
             // 若寄信失敗，可以去 Firebase 把狀態改回 'failed'
             await db
-                .ref(`email_campaigns/${trackId}`)
+                .ref(`emailCampaigns/${trackId}`)
                 .update({ status: 'failed', error: err.message })
         }
     }

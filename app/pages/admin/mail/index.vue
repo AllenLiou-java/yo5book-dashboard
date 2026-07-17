@@ -45,7 +45,7 @@
                         >
                     </div>
                     <!-- 若您的 Nuxt UI 版本支援 UProgress，可開啟下方註解使用 -->
-                    <UProgress :value="progress.current" :max="progress.total" />
+                    <!-- <UProgress :value="progress.current" :max="progress.total" /> -->
                 </div>
 
                 <!-- 提交按鈕 -->
@@ -146,7 +146,7 @@ const sendEmails = async () => {
 
         // HTML 檔保持原本的上傳檔案
         formData.append('html', htmlFile.value)
-        // 收件人清單只傳遞這「50人」的 JSON 字串
+        // 收件人清單只傳遞這「25人」的 JSON 字串
         formData.append('recipients', JSON.stringify(batch))
 
         try {

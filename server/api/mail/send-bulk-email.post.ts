@@ -2,6 +2,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { readMultipartFormData, createError } from 'h3'
 import nodemailer from 'nodemailer'
+import admin from 'firebase-admin'
+
+const baseUrl = process.env.BASE_URL || 'http://localhost:3000'
 
 // 【關鍵優化 1】：將 transporter 移到 defineEventHandler 外面！
 // 這樣整個 Nuxt 伺服器生命週期內，只會建立一個連線池，不會每次打 API 都重新連線
@@ -70,12 +73,41 @@ export default defineEventHandler(async (event) => {
 
     console.log(`\n--- 開始處理本批次: ${recipients.length} 封信 ---`)
 
+    // 產生一個活動批次 ID (以當下時間為準，讓同一批發出的信能歸類在一起)
+    const campaignId = Date.now().toString()
+
     for (const recipient of recipients) {
         if (!recipient.email) continue
 
         let customizedHtml = htmlContent.replace(/{{mail}}/g, recipient.email || '')
-        const uniqueId = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`
-        customizedHtml += `<div style="display: none; max-height: 0px; overflow: hidden; opacity: 0; color: transparent; font-size: 1px; line-height: 1px; mso-hide: all;">SystemRef: ${uniqueId}</div>`
+
+        // 1. 產生這封信專屬的 Track ID (我們將 Email 裡的 @ 和 . 替換掉當作 Key)
+        const safeEmailKey = recipient.email.replace(/[.#$[\]]/g, '_')
+        const trackId = `${campaignId}/${safeEmailKey}`
+
+        // 2. 建立追蹤像素圖片標籤
+        const trackingPixelUrl = `${baseUrl}/api/track-open?id=${trackId}`
+        const trackingPixelHtml = `<img src="${trackingPixelUrl}" width="1" height="1" style="display:none; border:0;" alt="" />`
+
+        // 將追蹤圖片加入 HTML 底部
+        customizedHtml += trackingPixelHtml
+
+        // 3. 在寄出前，先將初始狀態寫入 Firebase Realtime Database
+        try {
+            await db.ref(`emailCampaigns/${trackId}`).set({
+                email: recipient.email,
+                name: recipient.name || '未知',
+                sentAt: admin.database.ServerValue.TIMESTAMP,
+                opened: false, // 預設未開信
+                openedAt: null
+            })
+        } catch (dbErr) {
+            console.error('寫入 Firebase 失敗', dbErr)
+        }
+
+        // let customizedHtml = htmlContent.replace(/{{mail}}/g, recipient.email || '')
+        // const uniqueId = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`
+        // customizedHtml += `<div style="display: none; max-height: 0px; overflow: hidden; opacity: 0; color: transparent; font-size: 1px; line-height: 1px; mso-hide: all;">SystemRef: ${uniqueId}</div>`
         const randomSubject = subjectList[Math.floor(Math.random() * subjectList.length)]
 
         // 【關鍵優化 2】：針對「單封信件」的發送進行測量
@@ -102,6 +134,10 @@ export default defineEventHandler(async (event) => {
             console.error(`> 失敗: ${recipient.email} - ${err.message}\n`)
             failedCount++
             errors.push({ email: recipient.email, error: err.message })
+            // 若寄信失敗，可以去 Firebase 把狀態改回 'failed'
+            await db
+                .ref(`email_campaigns/${trackId}`)
+                .update({ status: 'failed', error: err.message })
         }
     }
 

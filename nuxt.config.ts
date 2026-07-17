@@ -68,7 +68,8 @@ export default defineNuxtConfig({
         jwtSecret: '',
         googleClientEmail: '',
         googlePrivateKey: '',
-        gmailAppPassword: ''
+        gmailAppPassword: '',
+        webUrl: ''
     },
     routeRules: {
         '/': { redirect: '/login' },

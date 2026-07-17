@@ -151,6 +151,18 @@ const BASE_MENU_ITEMS: NavigationMenuItem[] = [
         ]
     },
     {
+        label: '信件管理',
+        icon: 'i-tabler-mail',
+        defaultOpen: true,
+        children: [
+            {
+                label: '群體發信',
+                icon: 'i-lucide-mails',
+                to: '/admin/mail'
+            }
+        ]
+    },
+    {
         label: '設定',
         icon: 'i-lucide-settings',
         defaultOpen: true,

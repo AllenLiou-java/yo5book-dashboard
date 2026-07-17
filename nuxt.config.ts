@@ -67,9 +67,12 @@ export default defineNuxtConfig({
         firebaseApiUrl: '',
         jwtSecret: '',
         googleClientEmail: '',
-        googlePrivateKey: ''
+        googlePrivateKey: '',
+        gmailAppPassword: ''
     },
     routeRules: {
-        '/': { redirect: '/login' }
+        '/': { redirect: '/login' },
+        // @ts-expect-error: Vercel preset supports maxDuration but Nitro types currently miss it
+        '/api/send-bulk-email': { maxDuration: 300 } // 針對群發 API 放寬時間限制，注意：Vercel Pro 的預設 Serverless 上限是 300 秒 (5分鐘)
     }
 })

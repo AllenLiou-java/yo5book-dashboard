@@ -87,7 +87,7 @@ export default defineEventHandler(async (event) => {
         const trackId = `${campaignId}/${safeEmailKey}`
 
         // 2. 建立追蹤像素圖片標籤
-        const trackingPixelUrl = `${baseUrl}/api/track-open?id=${trackId}`
+        const trackingPixelUrl = `${baseUrl}/api/mail/track-open?id=${trackId}`
         const trackingPixelHtml = `<img src="${trackingPixelUrl}" width="1" height="1" style="display:none; border:0;" alt="" />`
 
         // 將追蹤圖片加入 HTML 底部

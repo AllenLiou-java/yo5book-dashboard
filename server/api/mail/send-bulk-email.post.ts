@@ -74,12 +74,15 @@ export default defineEventHandler(async (event) => {
     const day = String(date.getDate()).padStart(2, '0')
     const campaignId = `${campaignType}${year}${month}${day}-${idType}-${orgType}`
 
+    const hhmm =
+        String(date.getHours()).padStart(2, '0') + String(date.getMinutes()).padStart(2, '0')
+
     for (const recipient of recipients) {
         if (!recipient.email) continue
 
         // 1. 產生這封信專屬的 Track ID (我們將 Email 裡的 @ 和 . 替換掉當作 Key)
         const safeEmailKey = recipient.email.replace(/[.#$[\]]/g, '_')
-        const trackId = `${campaignId}/${safeEmailKey}`
+        const trackId = `${campaignId}/${safeEmailKey}/${hhmm}`
 
         // 2. 建立追蹤像素圖片標籤
         const trackingPixelUrl = `${baseUrl}/api/mail/track-open?id=${trackId}`
@@ -93,15 +96,7 @@ export default defineEventHandler(async (event) => {
 
         // 3. 在寄出前，先將初始狀態寫入 Firebase Realtime Database
         try {
-            // await db.ref(`emailCampaigns/${trackId}`).set({
-            //     email: recipient.email,
-            //     name: recipient.name || '未知',
-            //     sentAt: dbServerValue.TIMESTAMP,
-            //     opened: false, // 預設未開信
-            //     openedAt: null
-            // })
-
-            await db.ref(`emailCampaigns/${trackId}`).push({
+            await db.ref(`emailCampaigns/${trackId}`).set({
                 subject: randomSubject,
                 email: recipient.email,
                 name: recipient.name || '未知',

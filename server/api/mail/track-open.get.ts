@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
             const ref = db.ref(`emailCampaigns/${trackId}`)
             await ref.update({
                 opened: true,
-                openedAt: admin.database.ServerValue.TIMESTAMP
+                openedAt: dbServerValue.TIMESTAMP
             })
         } catch (error) {
             console.error('更新開信狀態失敗:', error)

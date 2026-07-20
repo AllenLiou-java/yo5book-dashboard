@@ -16,3 +16,5 @@ if (!admin.apps.length) {
 }
 
 export const db = admin.database()
+
+export const dbServerValue = admin.database.ServerValue

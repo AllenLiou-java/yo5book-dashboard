@@ -11,6 +11,16 @@
             </template>
 
             <form class="space-y-6" @submit.prevent="sendEmails">
+                <UFormField label="活動類型" required>
+                    <UInputMenu v-model="campaignType" :items="campaignTypeOptions" />
+                </UFormField>
+                <UFormField label="身分類型" required>
+                    <UInputMenu v-model="idType" :items="idTypeOptions" />
+                </UFormField>
+                <UFormField label="組織類型" required>
+                    <UInputMenu v-model="orgType" :items="orgTypeOptions" />
+                </UFormField>
+
                 <!-- HTML 檔案上傳 -->
                 <UFormField label="1. 上傳 HTML 信件內容 (支援 {{name}}、{{email}} 變數)" required>
                     <UInput
@@ -82,6 +92,27 @@ const htmlFile = ref(null)
 const parsedJson = ref([])
 const loading = ref(false)
 
+const campaignTypeOptions = ref([
+    { label: '新書上市', value: 'NB' },
+    { label: '優惠活動', value: 'PR' },
+    { label: '團購活動', value: 'GB' }
+])
+
+const idTypeOptions = ref([
+    { label: '會計師', value: 'CPA' },
+    { label: '記帳士相關', value: 'CPB' },
+    { label: '其他', value: 'OTHER' }
+])
+
+const orgTypeOptions = ref([
+    { label: '個人事務所', value: 'Firm' },
+    { label: '公會團體', value: 'Assn' }
+])
+
+const campaignType = ref(campaignTypeOptions.value[0])
+const idType = ref(idTypeOptions.value[0])
+const orgType = ref(orgTypeOptions.value[0])
+
 // 進度與提示狀態
 const progress = ref({ current: 0, total: 0 })
 const alert = ref({ show: false, title: '', message: '', color: 'gray', icon: '' })
@@ -148,6 +179,10 @@ const sendEmails = async () => {
         formData.append('html', htmlFile.value)
         // 收件人清單只傳遞這「25人」的 JSON 字串
         formData.append('recipients', JSON.stringify(batch))
+
+        formData.append('campaignType', campaignType.value.value)
+        formData.append('idType', idType.value.value)
+        formData.append('orgType', orgType.value.value)
 
         try {
             const res = await $fetch('/api/mail/send-bulk-email', {

@@ -257,6 +257,16 @@ export const useOrderStore = defineStore('order', () => {
         }
     }
 
+    /**
+     * 重設 store 狀態
+     */
+    const reset = () => {
+        personalOrderList.value = []
+        groupOrderList.value = {}
+        isLoading.value = false
+        error.value = null
+    }
+
     return {
         personalOrderList,
         groupOrderList,
@@ -271,6 +281,7 @@ export const useOrderStore = defineStore('order', () => {
         getGroupOrderById,
         getGroupOrderDetailById,
         updateGroupOrder,
-        createGroupOrder
+        createGroupOrder,
+        reset
     }
 })

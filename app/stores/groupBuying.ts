@@ -125,6 +125,15 @@ export const useGroupBuyingStore = defineStore('groupBuying', () => {
         }
     }
 
+    /**
+     * 重設 store 狀態
+     */
+    const reset = () => {
+        list.value = []
+        isLoading.value = false
+        error.value = null
+    }
+
     return {
         list,
         isLoading,
@@ -134,6 +143,7 @@ export const useGroupBuyingStore = defineStore('groupBuying', () => {
         fetchGroupBuyingById,
         updateGroupBuyingById,
         addGroupBuyingItem,
-        removeGroupBuyingItem
+        removeGroupBuyingItem,
+        reset
     }
 })

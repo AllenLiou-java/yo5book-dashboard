@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import { computed } from 'vue'
 import { useCookie } from '#app'
+import { useOrderStore } from '~/stores/order'
+import { useGroupBuyingStore } from '~/stores/groupBuying'
 
 export const useAuthStore = defineStore('auth', () => {
     const token = useCookie<string | null>('admin_token', {
@@ -25,9 +27,17 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     function logout() {
+        const orderStore = useOrderStore()
+        const groupBuyingStore = useGroupBuyingStore()
+
         admin.value = null
         // 將 cookie 的 value 設為 null，Nuxt 會自動清除該 Cookie
         token.value = null
+
+        // 登出時重設訂單與團購資料 store 的狀態
+        orderStore.reset()
+        groupBuyingStore.reset()
+
         // 可以在這裡處理路由跳轉
         navigateTo('/login')
     }

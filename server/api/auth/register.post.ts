@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
     // 檢查 Email 是否已被註冊
     const snapshot = await adminsRef.orderByChild('email').equalTo(email).once('value')
     if (snapshot.exists()) {
-        throw createError({ statusCode: 400, statusMessage: '此信箱已註冊為管理員' })
+        throw createError({ statusCode: 400, message: '此信箱已註冊為管理員' })
     }
 
     // 使用 bcrypt-ts 加密密碼 (Salt rounds 設為 10)

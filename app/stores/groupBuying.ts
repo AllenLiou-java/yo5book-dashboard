@@ -45,10 +45,7 @@ export const useGroupBuyingStore = defineStore('groupBuying', () => {
         error.value = null
 
         try {
-            const { data, success } = (await groupBuying.findByGroupId(gid)) as {
-                data: GroupBuyingData
-                success: boolean
-            }
+            const { data, success } = await groupBuying.findByGroupId(gid)
 
             if (success) {
                 if (!data) return

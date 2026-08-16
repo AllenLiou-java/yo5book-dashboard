@@ -6,7 +6,7 @@ export default defineEventHandler(async (event): Promise<ApiResponse<object>> =>
     if (!groupId || typeof groupId !== 'string') {
         throw createError({
             statusCode: 400,
-            statusMessage: '無效的 groupId'
+            message: '無效的 groupId'
         })
     }
 
@@ -21,7 +21,7 @@ export default defineEventHandler(async (event): Promise<ApiResponse<object>> =>
     } catch (error: unknown) {
         throw createError({
             statusCode: 500,
-            statusMessage: error instanceof Error ? error.message : 'Internal Server Error'
+            message: error instanceof Error ? error.message : 'Internal Server Error'
         })
     }
 })

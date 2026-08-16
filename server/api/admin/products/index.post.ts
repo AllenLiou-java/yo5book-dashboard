@@ -9,7 +9,7 @@ export default defineEventHandler(async (event): Promise<ApiResponse<string>> =>
         if (!body) {
             throw createError({
                 statusCode: 400,
-                statusMessage: 'Missing request body'
+                message: 'Missing request body'
             })
         }
         // 待調整------------------------------------
@@ -38,7 +38,7 @@ export default defineEventHandler(async (event): Promise<ApiResponse<string>> =>
     } catch (error: unknown) {
         throw createError({
             statusCode: 500,
-            statusMessage: error instanceof Error ? error.message : 'Internal Server Error'
+            message: error instanceof Error ? error.message : 'Internal Server Error'
         })
     }
 })

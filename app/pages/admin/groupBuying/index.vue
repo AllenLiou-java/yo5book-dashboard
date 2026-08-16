@@ -229,7 +229,7 @@ watch(
     (errorMsg) => {
         if (import.meta.server) return
         if (errorMsg) {
-            toastStore.error('刪除團購活動', errorMsg)
+            toastStore.error(errorMsg)
         }
     },
     { immediate: true }
@@ -309,9 +309,9 @@ const handleDelete = async (gid: string | undefined) => {
         }
 
         if (success) {
-            toastStore.success('刪除團購活動', message)
+            toastStore.success('刪除團購活動成功', message)
         } else {
-            toastStore.error('刪除團購活動', message)
+            toastStore.error('刪除團購活動失敗', message)
         }
     }
 }

@@ -7,7 +7,7 @@ export default defineEventHandler(async (event): Promise<ApiResponse<object>> =>
     if (!groupId || typeof groupId !== 'string') {
         throw createError({
             statusCode: 400,
-            statusMessage: 'Invalid groupId'
+            message: 'Invalid groupId'
         })
     }
 
@@ -15,7 +15,7 @@ export default defineEventHandler(async (event): Promise<ApiResponse<object>> =>
     if (!body || typeof body !== 'object') {
         throw createError({
             statusCode: 400,
-            statusMessage: 'Invalid body'
+            message: 'Invalid body'
         })
     }
 
@@ -47,7 +47,7 @@ export default defineEventHandler(async (event): Promise<ApiResponse<object>> =>
     } catch (error: unknown) {
         throw createError({
             statusCode: 500,
-            statusMessage: error instanceof Error ? error.message : 'Internal Server Error'
+            message: error instanceof Error ? error.message : 'Internal Server Error'
         })
     }
 })

@@ -9,6 +9,7 @@
 export const getErrorMessage = (err: unknown, defaultMessage: string): string => {
     // 嘗試將錯誤斷言為包含 API 回應資料的結構 ($fetch 拋出的錯誤特徵)
     const fetchError = err as { data?: { message?: string; statusMessage?: string } }
+
     // 優先取得 API 回傳的錯誤訊息 (message) 或狀態訊息 (statusMessage)
     const serverMsg = fetchError.data?.message || fetchError.data?.statusMessage
 

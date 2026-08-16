@@ -14,7 +14,7 @@ export default defineEventHandler(async (): Promise<ApiResponse<Record<string, M
     } catch (error: unknown) {
         throw createError({
             statusCode: 500,
-            statusMessage: error instanceof Error ? error.message : 'Internal Server Error'
+            message: error instanceof Error ? error.message : 'Internal Server Error'
         })
     }
 })

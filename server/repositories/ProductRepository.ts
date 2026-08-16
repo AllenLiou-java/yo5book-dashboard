@@ -5,8 +5,8 @@ export const ProductSimpleRepository = {
         const snapshot = await db.ref(`products_simple`).get()
         return snapshot.val() || {}
     },
-    async findByGroupId(groupId: string): Promise<ProductSimple> {
-        const snapshot = await db.ref(`products_simple/${groupId}`).get()
+    async findByProductId(productId: string): Promise<ProductSimple> {
+        const snapshot = await db.ref(`products_simple/${productId}`).get()
         return snapshot.val() || {}
     },
     async update(groupId: string, data: Partial<ProductSimple>) {

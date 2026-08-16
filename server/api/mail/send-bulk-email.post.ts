@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
     // 測量：API 接收到資料與解析的耗時
     // console.time('Phase-1-資料解析')
     const formData = await readMultipartFormData(event)
-    if (!formData) throw createError({ statusCode: 400, statusMessage: '沒有收到資料' })
+    if (!formData) throw createError({ statusCode: 400, message: '沒有收到資料' })
 
     let htmlContent = ''
     let recipients: { email: string; name?: string }[] = []
@@ -38,7 +38,7 @@ export default defineEventHandler(async (event) => {
             try {
                 recipients = JSON.parse(field.data.toString('utf-8'))
             } catch (e) {
-                throw createError({ statusCode: 400, statusMessage: '名單解析失敗' })
+                throw createError({ statusCode: 400, message: '名單解析失敗' })
             }
         } else if (field.name === 'campaignType') {
             campaignType = field.data.toString('utf-8')
@@ -61,7 +61,7 @@ export default defineEventHandler(async (event) => {
         await transporter.verify()
     } catch (err) {
         // console.error('SMTP 連線失敗:', err)
-        throw createError({ statusCode: 500, statusMessage: '無法連線至郵件伺服器' })
+        throw createError({ statusCode: 500, message: '無法連線至郵件伺服器' })
     }
     // console.timeEnd('Phase-2-SMTP伺服器驗證')
 

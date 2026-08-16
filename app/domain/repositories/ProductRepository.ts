@@ -1,31 +1,34 @@
 import type { ProductSimple } from '~/types/product'
 import type { ApiResponse } from '~/types/api'
 
+// Helper type for the request fetcher function
+type RequestFetch = <T>(...args: Parameters<typeof $fetch>) => Promise<T>
+
 export class ProductSimpleRepository {
-    findAll() {
-        return $fetch<Promise<ApiResponse<ProductSimple[]>>>('/api/admin/products')
+    findAll(requestFetch: RequestFetch) {
+        return requestFetch<ApiResponse<ProductSimple[]>>('/api/admin/products')
     }
 
-    findByGroupId(productId: string) {
-        return $fetch<Promise<ApiResponse<ProductSimple>>>(`/api/admin/products/${productId}`)
+    findByProductId(requestFetch: RequestFetch, productId: string) {
+        return requestFetch<ApiResponse<ProductSimple>>(`/api/admin/products/${productId}`)
     }
 
-    update(productId: string, data: Partial<ProductSimple>) {
-        return $fetch(`/api/admin/products/${productId}`, {
+    update(requestFetch: RequestFetch, productId: string, data: Partial<ProductSimple>) {
+        return requestFetch<ApiResponse<ProductSimple>>(`/api/admin/products/${productId}`, {
             method: 'PATCH',
             body: data
         })
     }
 
-    create(data: ProductSimple) {
-        return $fetch<Promise<ApiResponse<string>>>('/api/admin/products', {
+    create(requestFetch: RequestFetch, data: ProductSimple) {
+        return requestFetch<ApiResponse<string>>('/api/admin/products', {
             method: 'POST',
             body: data
         })
     }
 
-    delete(productId: string) {
-        return $fetch(`/api/admin/products/${productId}`, {
+    delete(requestFetch: RequestFetch, productId: string) {
+        return requestFetch<ApiResponse<null>>(`/api/admin/products/${productId}`, {
             method: 'DELETE'
         })
     }

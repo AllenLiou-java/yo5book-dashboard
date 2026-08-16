@@ -322,8 +322,9 @@ const rollbackState = ref<FormState | null>(null)
 
 await callOnce(`initGroupBuying-${id.value}`, async () => {
     await productStore.fetchProductsSimple()
-    await groupBuyingStore.fetchGroupBuyingById(id.value)
-    const rawData = groupBuyingStore.list.find((item) => item.gid === id.value)
+
+    const rawData = await groupBuyingStore.fetchGroupBuyingById(id.value)
+
     if (!rawData) return
 
     const data = JSON.parse(JSON.stringify(rawData))

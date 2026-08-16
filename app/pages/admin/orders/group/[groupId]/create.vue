@@ -248,9 +248,10 @@ const productSimpleList = useState<GroupBuyingProduct[]>(
 )
 
 await callOnce(`initGroupOrderDetail-${groupId.value}`, async () => {
-    // await productStore.fetchProductsSimple()
     const data = await groupBuyingStore.fetchGroupBuyingById(groupId.value)
+
     if (!data) return
+
     // 將 fetch 取回的資料深拷貝，避免 input v-model 編輯時改到 Store 的原始資料
     const dataCopy = JSON.parse(JSON.stringify(data))
     productSimpleList.value = dataCopy.products || []

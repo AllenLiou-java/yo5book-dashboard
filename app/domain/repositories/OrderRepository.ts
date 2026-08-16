@@ -1,17 +1,20 @@
 import type { OrderData } from '~/types/order'
 import type { ApiResponse } from '~/types/api'
 
+// Helper type for the request fetcher function
+type RequestFetch = <T>(...args: Parameters<typeof $fetch>) => Promise<T>
+
 export class PersonalOrderRepository {
-    findAll() {
-        return $fetch<Promise<ApiResponse<OrderData[]>>>('/api/admin/orders/personal')
+    findAll(requestFetch: RequestFetch) {
+        return requestFetch<ApiResponse<OrderData[]>>('/api/admin/orders/personal')
     }
 
-    findByOrderId(orderId: string) {
-        return $fetch<Promise<ApiResponse<OrderData>>>(`/api/admin/orders/personal/${orderId}`)
+    findByOrderId(requestFetch: RequestFetch, orderId: string) {
+        return requestFetch<ApiResponse<OrderData>>(`/api/admin/orders/personal/${orderId}`)
     }
 
-    update(orderId: string, data: Partial<OrderData>) {
-        return $fetch<Promise<ApiResponse<OrderData>>>(`/api/admin/orders/personal/${orderId}`, {
+    update(requestFetch: RequestFetch, orderId: string, data: Partial<OrderData>) {
+        return requestFetch<ApiResponse<OrderData>>(`/api/admin/orders/personal/${orderId}`, {
             method: 'PATCH',
             body: {
                 data
@@ -19,8 +22,8 @@ export class PersonalOrderRepository {
         })
     }
 
-    create(data: OrderData) {
-        return $fetch<Promise<ApiResponse<OrderData>>>('/api/admin/orders/personal', {
+    create(requestFetch: RequestFetch, data: OrderData) {
+        return requestFetch<ApiResponse<OrderData>>('/api/admin/orders/personal', {
             method: 'POST',
             body: {
                 data
@@ -30,18 +33,16 @@ export class PersonalOrderRepository {
 }
 
 export class GroupOrderRepository {
-    findByGroupId(groupId: string) {
-        return $fetch<Promise<ApiResponse<OrderData[]>>>(`/api/admin/orders/group/${groupId}`)
+    findByGroupId(requestFetch: RequestFetch, groupId: string) {
+        return requestFetch<ApiResponse<OrderData[]>>(`/api/admin/orders/group/${groupId}`)
     }
 
-    findByOrderId(groupId: string, orderId: string) {
-        return $fetch<Promise<ApiResponse<OrderData>>>(
-            `/api/admin/orders/group/${groupId}/${orderId}`
-        )
+    findByOrderId(requestFetch: RequestFetch, groupId: string, orderId: string) {
+        return requestFetch<ApiResponse<OrderData>>(`/api/admin/orders/group/${groupId}/${orderId}`)
     }
 
-    update(groupId: string, orderId: string, data: Partial<OrderData>) {
-        return $fetch<Promise<ApiResponse<OrderData>>>(
+    update(requestFetch: RequestFetch, groupId: string, orderId: string, data: Partial<OrderData>) {
+        return requestFetch<ApiResponse<OrderData>>(
             `/api/admin/orders/group/${groupId}/${orderId}`,
             {
                 method: 'PATCH',
@@ -52,8 +53,8 @@ export class GroupOrderRepository {
         )
     }
 
-    create(groupId: string, data: OrderData) {
-        return $fetch<Promise<ApiResponse<OrderData>>>(`/api/admin/orders/group/${groupId}`, {
+    create(requestFetch: RequestFetch, groupId: string, data: OrderData) {
+        return requestFetch<ApiResponse<OrderData>>(`/api/admin/orders/group/${groupId}`, {
             method: 'POST',
             body: {
                 data

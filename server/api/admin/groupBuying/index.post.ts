@@ -9,7 +9,7 @@ export default defineEventHandler(async (event): Promise<ApiResponse<GroupBuying
         if (!body) {
             throw createError({
                 statusCode: 400,
-                statusMessage: 'Missing request body'
+                message: 'Missing request body'
             })
         }
 
@@ -48,7 +48,7 @@ export default defineEventHandler(async (event): Promise<ApiResponse<GroupBuying
     } catch (error: unknown) {
         throw createError({
             statusCode: 500,
-            statusMessage: error instanceof Error ? error.message : 'Internal Server Error'
+            message: error instanceof Error ? error.message : 'Internal Server Error'
         })
     }
 })

@@ -123,7 +123,7 @@
                                         :aria-label="show ? 'Hide password' : 'Show password'"
                                         :aria-pressed="show"
                                         aria-controls="password"
-                                        @click="show = !show"
+                                        @click="triggerPasswordVisible"
                                     />
                                 </template>
                             </UInput>
@@ -176,7 +176,8 @@ import { toTypedSchema } from '@vee-validate/zod'
 import * as zod from 'zod'
 
 definePageMeta({
-    layout: 'login'
+    layout: 'login',
+    middleware: 'auth'
 })
 
 const authStore = useAuthStore()
@@ -198,8 +199,8 @@ const validationSchema = toTypedSchema(
 const { handleSubmit, errors, isSubmitting } = useForm({
     validationSchema,
     initialValues: {
-        email: '',
-        password: '', //12345678
+        email: 'ai0911953419@gmail.com',
+        password: '12345678', //12345678
         rememberMe: false
     }
 })
@@ -211,26 +212,28 @@ const { value: rememberMe } = useField<boolean>('rememberMe')
 
 // 4. 提交處理
 const onLogin = handleSubmit(async (values) => {
+    errorMessage.value = '' // 重置錯誤訊息
+    isRedirecting.value = true // 開始處理登入，進入載入狀態
+
     try {
-        const response = await $fetch('/api/auth/login', {
-            method: 'POST',
-            body: {
-                email: values.email,
-                password: values.password
-            }
+        // 呼叫 store 中的 login action，將 API 請求封裝在 store 內
+        await authStore.login({
+            email: values.email,
+            password: values.password
         })
 
-        if (response.success) {
-            authStore.setAdmin(response.user, response.token)
-            isRedirecting.value = true
-            await navigateTo('/admin')
-        }
+        // 登入成功，導向後台
+        await navigateTo('/admin')
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
         isRedirecting.value = false
-        errorMessage.value = error.data?.message || '登入失敗，請稍後再試'
+        errorMessage.value = error.data?.message || error.message || '登入失敗，請稍後再試'
     }
 })
+
+const triggerPasswordVisible = () => {
+    show.value = !show.value
+}
 </script>
 
 <style scoped>

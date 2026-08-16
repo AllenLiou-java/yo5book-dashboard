@@ -79,14 +79,16 @@
                     @click="toggleSidebar"
                 />
             </div>
-            <div class="dark:bg-background-dark/50 min-h-screen bg-slate-50 p-8">
+            <!-- <div class="dark:bg-background-dark/50 min-h-screen bg-slate-50 p-8">
                 <slot />
-            </div>
+            </div> -->
+            <slot />
         </div>
     </div>
 </template>
 <script setup lang="ts">
 import { LazyModalBasic } from '#components'
+
 import type { DropdownMenuItem, NavigationMenuItem } from '@nuxt/ui'
 
 const open = ref(true)

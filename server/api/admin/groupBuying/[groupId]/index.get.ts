@@ -4,6 +4,7 @@ import { GroupBuyingRepository } from '#server/repositories/GroupBuyingRepositor
 
 export default defineEventHandler(async (event): Promise<ApiResponse<GroupBuyingData>> => {
     const groupId = getRouterParam(event, 'groupId')
+
     if (!groupId) {
         throw createError({
             statusCode: 400,
@@ -32,7 +33,7 @@ export default defineEventHandler(async (event): Promise<ApiResponse<GroupBuying
     } catch (error: unknown) {
         throw createError({
             statusCode: 500,
-            statusMessage: error instanceof Error ? error.message : 'Internal Server Error'
+            message: error instanceof Error ? error.message : 'Internal Server Error'
         })
     }
 })

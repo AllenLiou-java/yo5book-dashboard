@@ -329,15 +329,18 @@ const orderDetail = useState<OrderData | null>(`orderDetailState-${orderId.value
 
 await callOnce(`fetchGroupOrderDetail-${orderId.value}`, async () => {
     if (!orderId.value || !groupId.value) return
+
     const rawData = await orderStore.getGroupOrderDetailById(groupId.value, orderId.value)
     if (!rawData) return
 
     // 將 fetch 取回的資料深拷貝，避免 input v-model 編輯時改到 Store 的原始資料
     const data = JSON.parse(JSON.stringify(rawData))
+
     // 預防資料無 receiver 結構時報錯
     if (!data.receiver) {
         data.receiver = { name: '', address: '' }
     }
+
     orderDetail.value = data
 })
 

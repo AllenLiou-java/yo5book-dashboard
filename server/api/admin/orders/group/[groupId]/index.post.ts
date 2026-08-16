@@ -13,7 +13,7 @@ export default defineEventHandler(async (event): Promise<ApiResponse<object>> =>
         if (!orderId || !groupId || !orderDetail) {
             throw createError({
                 statusCode: 400,
-                statusMessage: '參數不完整'
+                message: '參數不完整'
             })
         }
 
@@ -41,7 +41,7 @@ export default defineEventHandler(async (event): Promise<ApiResponse<object>> =>
     } catch (error: unknown) {
         throw createError({
             statusCode: 500,
-            statusMessage: error instanceof Error ? error.message : 'Internal Server Error'
+            message: error instanceof Error ? error.message : 'Internal Server Error'
         })
     }
 })

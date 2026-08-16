@@ -1,31 +1,34 @@
 import type { GroupBuyingData, FormState } from '~/types/groupBuying'
 import type { ApiResponse } from '~/types/api'
 
+// Helper type for the request fetcher function
+type RequestFetch = <T>(...args: Parameters<typeof $fetch>) => Promise<T>
+
 export class GroupBuyingRepository {
-    findAll() {
-        return $fetch<Promise<ApiResponse<GroupBuyingData[]>>>('/api/admin/groupBuying')
+    findAll(requestFetch: RequestFetch) {
+        return requestFetch<ApiResponse<GroupBuyingData[]>>('/api/admin/groupBuying')
     }
 
-    findByGroupId(groupId: string) {
-        return $fetch<Promise<ApiResponse<GroupBuyingData>>>(`/api/admin/groupBuying/${groupId}`)
+    findByGroupId(requestFetch: RequestFetch, groupId: string) {
+        return requestFetch<ApiResponse<GroupBuyingData>>(`/api/admin/groupBuying/${groupId}`)
     }
 
-    update(groupId: string, data: Partial<GroupBuyingData>) {
-        return $fetch<Promise<ApiResponse<GroupBuyingData>>>(`/api/admin/groupBuying/${groupId}`, {
+    update(requestFetch: RequestFetch, groupId: string, data: Partial<GroupBuyingData>) {
+        return requestFetch<ApiResponse<GroupBuyingData>>(`/api/admin/groupBuying/${groupId}`, {
             method: 'PATCH',
             body: data
         })
     }
 
-    create(data: FormState) {
-        return $fetch<Promise<ApiResponse<GroupBuyingData>>>('/api/admin/groupBuying', {
+    create(requestFetch: RequestFetch, data: FormState) {
+        return requestFetch<ApiResponse<GroupBuyingData>>('/api/admin/groupBuying', {
             method: 'POST',
             body: data
         })
     }
 
-    delete(groupId: string) {
-        return $fetch<Promise<ApiResponse<GroupBuyingData>>>(`/api/admin/groupBuying/${groupId}`, {
+    delete(requestFetch: RequestFetch, groupId: string) {
+        return requestFetch<ApiResponse<GroupBuyingData>>(`/api/admin/groupBuying/${groupId}`, {
             method: 'DELETE'
         })
     }

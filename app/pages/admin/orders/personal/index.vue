@@ -23,25 +23,90 @@
                         新增訂單
                     </UButton>
                 </div>
-                <div class="flex w-full gap-4 sm:w-auto">
-                    <USelect v-model="searchField" :items="searchOptions" class="w-full sm:w-40" />
-                    <UInput
-                        v-model="searchKeyword"
-                        icon="i-lucide-search"
-                        placeholder="輸入關鍵字..."
-                        class="w-full sm:w-82"
-                    >
-                        <template v-if="searchKeyword?.length" #trailing>
+                <div class="flex w-full flex-col gap-3 sm:w-auto">
+                    <!-- 多條件列表 -->
+                    <div class="flex flex-col gap-2">
+                        <div
+                            v-for="condition in searchConditions"
+                            :key="condition.id"
+                            class="flex w-full flex-col gap-2 sm:flex-row sm:items-center"
+                        >
+                            <USelect
+                                v-model="condition.field"
+                                :items="searchOptions"
+                                class="w-full sm:w-40"
+                                @change="onFieldChange(condition)"
+                            />
+
+                            <template v-if="condition.field === 'status'">
+                                <USelect
+                                    v-model="condition.keyword"
+                                    :items="statusOptions"
+                                    multiple
+                                    class="w-full sm:w-82"
+                                />
+                            </template>
+                            <template v-else>
+                                <UInput
+                                    v-model="condition.keyword as string"
+                                    icon="i-lucide-search"
+                                    placeholder="輸入關鍵字..."
+                                    class="w-full sm:w-82"
+                                >
+                                    <template v-if="String(condition.keyword).length" #trailing>
+                                        <UButton
+                                            color="neutral"
+                                            variant="link"
+                                            size="sm"
+                                            icon="i-lucide-circle-x"
+                                            aria-label="清除關鍵字"
+                                            @click="condition.keyword = ''"
+                                        />
+                                    </template>
+                                </UInput>
+                            </template>
+
+                            <CommonTooltip text="移除條件">
+                                <UButton
+                                    color="error"
+                                    variant="ghost"
+                                    icon="i-lucide-trash-2"
+                                    aria-label="移除條件"
+                                    :disabled="searchConditions.length === 1"
+                                    @click="removeSearchCondition(condition.id)"
+                                />
+                            </CommonTooltip>
+                        </div>
+                    </div>
+
+                    <!-- 條件操作 -->
+                    <div class="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
+                        <div class="flex items-center gap-2">
+                            <span class="shrink-0 text-sm text-slate-500"> 篩選方式 </span>
+
+                            <USelect v-model="searchMode" :items="searchModeOptions" class="w-40" />
+                        </div>
+
+                        <div class="flex gap-2">
                             <UButton
                                 color="neutral"
-                                variant="link"
-                                size="sm"
-                                icon="i-lucide-circle-x"
-                                aria-label="Clear input"
-                                @click="searchKeyword = ''"
-                            />
-                        </template>
-                    </UInput>
+                                variant="outline"
+                                icon="i-lucide-plus"
+                                @click="addSearchCondition"
+                            >
+                                新增條件
+                            </UButton>
+
+                            <UButton
+                                color="neutral"
+                                variant="ghost"
+                                icon="i-lucide-rotate-ccw"
+                                @click="resetSearchConditions"
+                            >
+                                清除篩選
+                            </UButton>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -65,19 +130,71 @@
                 <template #status-cell="{ row }">
                     <div
                         v-if="editingRowId === row.id"
+                        class="editing-active flex items-center justify-center"
+                    >
+                        <USelect v-model="editingStatus" :items="statusOptions" class="w-48" />
+                    </div>
+                    <div v-else class="flex items-center gap-2">
+                        <span class="w-48">{{
+                            statusNameMap[String(row.original.status || '')] ||
+                            String(row.original.status || '') ||
+                            '無'
+                        }}</span>
+                    </div>
+                </template>
+                <template #bankAccountNo-cell="{ row }">
+                    <div
+                        v-if="editingRowId === row.id"
+                        class="editing-active flex items-center justify-center"
+                    >
+                        <UInput
+                            v-model="editingBankAccountNo"
+                            placeholder="帳號後五碼"
+                            class="w-19"
+                        />
+                    </div>
+                    <div v-else class="flex items-center gap-2">
+                        <span class="w-19">{{ row.original.bankAccountNo || '-' }}</span>
+                    </div>
+                </template>
+                <template #remark-cell="{ row }">
+                    <div
+                        v-if="editingRowId === row.id"
+                        class="editing-active flex items-center justify-center"
+                    >
+                        <UInput v-model="editingRemark" placeholder="備註" class="w-48" />
+                    </div>
+                    <CommonTooltip
+                        v-else-if="row.original.remark"
+                        :text="row.original.remark"
+                        :ui="{ popper: { strategy: 'absolute' } }"
+                    >
+                        <span class="truncate">{{
+                            (row.original.remark || '').substring(0, 15) +
+                            ((row.original.remark || '').length > 15 ? '...' : '')
+                        }}</span>
+                    </CommonTooltip>
+                    <span v-else>-</span>
+                </template>
+                <template #orderDate-cell="{ row }">
+                    <ClientOnly>
+                        <span>{{ formatDateTime(row.original.orderDate) }}</span>
+                        <template #fallback>
+                            <span>{{ row.original.orderDate ? '...' : '-' }}</span>
+                        </template>
+                    </ClientOnly>
+                </template>
+                <template #quick-edit-cell="{ row }">
+                    <div
+                        v-if="editingRowId === row.id"
                         class="editing-active flex items-center justify-center gap-2"
                     >
-                        <USelect
-                            v-model="editingStatus"
-                            :items="statusOptions"
-                            class="w-48 text-left"
-                        />
                         <CommonTooltip text="儲存">
                             <UButton
                                 color="secondary"
                                 size="sm"
                                 icon="i-lucide-save"
-                                @click="handleSaveStatus(row)"
+                                @click="handleSaveAll(row)"
                             />
                         </CommonTooltip>
                         <CommonTooltip text="取消">
@@ -90,30 +207,17 @@
                             />
                         </CommonTooltip>
                     </div>
-                    <div v-else class="flex items-center gap-2">
-                        <CommonTooltip v-if="!editingRowId" text="編輯狀態">
+                    <div v-else>
+                        <CommonTooltip text="快速編輯">
                             <UButton
                                 color="secondary"
                                 size="sm"
                                 icon="i-lucide-edit"
-                                aria-label="編輯狀態"
+                                aria-label="快速編輯"
                                 @click="startEditing(row)"
                             />
                         </CommonTooltip>
-                        <span>{{
-                            statusNameMap[String(row.original.status || '')] ||
-                            String(row.original.status || '') ||
-                            '無'
-                        }}</span>
                     </div>
-                </template>
-                <template #orderDate-cell="{ row }">
-                    <ClientOnly>
-                        <span>{{ formatDateTime(row.original.orderDate) }}</span>
-                        <template #fallback>
-                            <span>{{ row.original.orderDate ? '...' : '-' }}</span>
-                        </template>
-                    </ClientOnly>
                 </template>
                 <template #expanded="{ row }">
                     <div
@@ -279,11 +383,11 @@ const router = useRouter()
 
 const orderStore = useOrderStore()
 const { personalOrderList, error, statusOptions } = storeToRefs(orderStore)
-const { updatePersonalOrderStatus } = orderStore
+const { updatePersonalOrder } = orderStore
 
-await callOnce('initOrders', async () => {
+if (orderStore.personalOrderList.length === 0) {
     await orderStore.getPersonalOrders()
-})
+}
 
 const UButton = resolveComponent('UButton')
 const UCheckbox = resolveComponent('UCheckbox')
@@ -297,6 +401,8 @@ const rowSelection = ref<Record<string, boolean>>({})
 // 訂單狀態編輯狀態與選項
 const editingRowId = ref<string | null>(null)
 const editingStatus = ref<string>('')
+const editingBankAccountNo = ref<string>('')
+const editingRemark = ref<string>('')
 
 const statusNameMap = computed(() => {
     return statusOptions.value.reduce(
@@ -311,28 +417,43 @@ const statusNameMap = computed(() => {
 function startEditing(row: { id: string; original: OrderData }) {
     editingRowId.value = row.id
     editingStatus.value = String(row.original.status || '') || '1'
+    editingBankAccountNo.value = row.original.bankAccountNo || ''
+    editingRemark.value = row.original.remark || ''
 }
 
-async function handleSaveStatus(row: { id: string; original: OrderData }) {
+async function handleSaveAll(row: { id: string; original: OrderData }) {
     const { orderId } = row.original
-    const updatedStatus = editingStatus.value
+    const updatedData: Partial<OrderData> = {}
 
-    if (updatedStatus === row.original.status) {
+    const newStatus = editingStatus.value
+    const newBankAccountNo = editingBankAccountNo.value.trim()
+    const newRemark = editingRemark.value.trim()
+
+    if (newStatus !== (row.original.status || '')) {
+        updatedData.status = newStatus
+    }
+    if (newBankAccountNo !== (row.original.bankAccountNo || '')) {
+        updatedData.bankAccountNo = newBankAccountNo
+    }
+    if (newRemark !== (row.original.remark || '')) {
+        updatedData.remark = newRemark
+    }
+
+    if (Object.keys(updatedData).length === 0) {
         editingRowId.value = null // 關閉編輯模式
         return
     }
 
-    if (orderId && updatedStatus) {
-        await updatePersonalOrderStatus(orderId, updatedStatus)
+    if (orderId) {
+        await updatePersonalOrder(orderId, updatedData)
         if (error.value) {
             editingRowId.value = null // 關閉編輯模式
             toastStore.error('更新失敗', error.value)
             return
         }
 
-        row.original.status = editingStatus.value
+        Object.assign(row.original, updatedData)
         editingRowId.value = null // 關閉編輯模式
-
         toastStore.success('更新成功')
     }
 }
@@ -382,21 +503,105 @@ watchPostEffect(() => {
     })
 })
 
-// 關鍵字搜尋
-const searchKeyword = ref('')
-const searchField = ref('orderId')
-const searchOptions = [
+// ==========================================
+// 多條件搜尋
+// ==========================================
+
+type SearchField =
+    | 'orderId'
+    | 'address'
+    | 'name'
+    | 'phone'
+    | 'email'
+    | 'bankAccountNo'
+    | 'status'
+    | 'userId'
+
+type SearchMode = 'all' | 'any'
+
+interface SearchCondition {
+    id: number
+    field: SearchField
+    keyword: string | string[]
+}
+
+const searchOptions: Array<{
+    label: string
+    value: SearchField
+}> = [
     { label: '訂單號碼', value: 'orderId' },
     { label: '收件地址', value: 'address' },
     { label: '收件人', value: 'name' },
     { label: '聯絡電話', value: 'phone' },
     { label: '電子信箱', value: 'email' },
     { label: '帳號後五碼', value: 'bankAccountNo' },
+    { label: '訂單狀態', value: 'status' },
     { label: '會員ID', value: 'userId' }
 ]
 
+const searchModeOptions: Array<{
+    label: string
+    value: SearchMode
+}> = [
+    { label: '符合全部條件', value: 'all' },
+    { label: '符合任一條件', value: 'any' }
+]
+
+const searchMode = ref<SearchMode>('all')
+
+let searchConditionId = 0
+
+function createSearchCondition(field: SearchField = 'orderId'): SearchCondition {
+    searchConditionId += 1
+
+    const keyword = field === 'status' ? [] : ''
+
+    return {
+        id: searchConditionId,
+        field,
+        keyword
+    }
+}
+
+const searchConditions = ref<SearchCondition[]>([createSearchCondition()])
+
+watch(
+    searchConditions,
+    (conditions) => {
+        conditions.forEach((condition) => {
+            if (condition.field === 'status' && !Array.isArray(condition.keyword)) {
+                condition.keyword = []
+            }
+        })
+    },
+    { deep: true }
+)
+
+function addSearchCondition() {
+    searchConditions.value.push(createSearchCondition())
+}
+
+function onFieldChange(condition: SearchCondition) {
+    if (condition.field === 'status') {
+        condition.keyword = []
+    } else {
+        condition.keyword = ''
+    }
+}
+
+function removeSearchCondition(id: number) {
+    if (searchConditions.value.length <= 1) return
+
+    searchConditions.value = searchConditions.value.filter((condition) => condition.id !== id)
+}
+
+function resetSearchConditions() {
+    searchMode.value = 'all'
+    searchConditions.value = [createSearchCondition()]
+}
+
 // 分頁設定
-const pageCount = ref(10)
+const pageCount = ref(99999)
 const pageCountOptions = [
     { label: '10', value: 10 },
     { label: '20', value: 20 },
@@ -405,29 +610,73 @@ const pageCountOptions = [
     { label: '全部', value: 99999 }
 ]
 
+pageCount.value = 10
+
 // 使用 computed 雙向綁定 URL Query 與分頁狀態
 const page = computed({
     get: () => Number(route.query.page) || 1,
     set: (val) => router.replace({ query: { ...route.query, page: val } })
 })
 
+const searchFieldGetters = {
+    orderId: (order: OrderData) => order.orderId,
+    address: (order: OrderData) => order.receiver?.address,
+    name: (order: OrderData) => order.receiver?.name,
+    phone: (order: OrderData) => order.phone,
+    email: (order: OrderData) => order.email,
+    bankAccountNo: (order: OrderData) => order.bankAccountNo,
+    status: (order: OrderData) => order.status,
+    userId: (order: OrderData) => order.userId
+} satisfies Record<SearchField, (order: OrderData) => unknown>
+
+function normalizeSearchValue(value: unknown) {
+    return String(value ?? '')
+        .trim()
+        .toLocaleLowerCase()
+}
+
+function orderMatchesCondition(order: OrderData, condition: SearchCondition) {
+    const targetValue = searchFieldGetters[condition.field](order)
+
+    if (condition.field === 'status' && Array.isArray(condition.keyword)) {
+        // 如果關鍵字陣列是空的，代表不篩選，直接返回 true
+        if (condition.keyword.length === 0) {
+            return true
+        }
+        return condition.keyword.includes(String(targetValue))
+    } else {
+        const keyword = normalizeSearchValue(condition.keyword)
+        const normalizedTarget = normalizeSearchValue(targetValue)
+        return normalizedTarget.includes(keyword)
+    }
+}
+
 const filteredOrders = computed(() => {
-    const keyword = searchKeyword.value?.trim().toLowerCase()
-    if (!keyword) return personalOrderList.value
+    // 忽略尚未輸入關鍵字的空白條件
+    const activeConditions = searchConditions.value.filter((condition) => {
+        if (Array.isArray(condition.keyword)) {
+            return condition.keyword.length > 0
+        }
+        return String(condition.keyword).trim().length > 0
+    })
+
+    // 沒有有效條件時顯示全部訂單
+    if (activeConditions.length === 0) {
+        return personalOrderList.value
+    }
 
     return personalOrderList.value.filter((order) => {
-        const targetValue =
-            searchField.value === 'address' || searchField.value === 'name'
-                ? order.receiver?.[searchField.value]
-                : order[searchField.value as keyof OrderData]
+        if (searchMode.value === 'all') {
+            // AND：每一個條件都必須符合
+            return activeConditions.every((condition) => orderMatchesCondition(order, condition))
+        }
 
-        return String(targetValue ?? '')
-            .toLowerCase()
-            .includes(keyword)
+        // OR：只要其中一個條件符合
+        return activeConditions.some((condition) => orderMatchesCondition(order, condition))
     })
 })
 
-watch([searchKeyword, searchField, pageCount], () => {
+watch([searchConditions, searchMode, pageCount], () => {
     page.value = 1
     rowSelection.value = {}
 })
@@ -513,11 +762,6 @@ const columns: TableColumn<OrderData>[] = [
         header: '訂單號碼'
     },
     {
-        accessorKey: 'status',
-        header: '訂單狀態',
-        meta: { class: { th: 'text-center', td: 'text-center' } }
-    },
-    {
         accessorKey: 'receiver.address',
         header: '收件地址',
         cell: ({ row }) => row.original.receiver?.address || '-'
@@ -538,20 +782,31 @@ const columns: TableColumn<OrderData>[] = [
         cell: ({ row }) => row.original.email || '-'
     },
     {
+        accessorKey: 'status',
+        header: '訂單狀態',
+        meta: { class: { th: 'text-center', td: 'text-center' } }
+    },
+    {
         accessorKey: 'bankAccountNo',
         header: '帳號後五碼',
-        cell: ({ row }) => row.original.bankAccountNo || '-'
+        meta: { class: { th: 'text-center', td: 'text-center' } }
     },
     {
         accessorKey: 'remark',
         header: '備註',
-        cell: ({ row }) => row.original.remark || '-'
+        meta: { class: { th: 'text-center', td: 'text-center' } }
+    },
+    {
+        id: 'quick-edit',
+        header: '快速編輯',
+        meta: { class: { th: 'text-center', td: 'text-center' } }
     },
     {
         id: 'actions',
         header: '操作',
         meta: {
             class: {
+                th: 'text-right',
                 td: 'text-right'
             }
         },

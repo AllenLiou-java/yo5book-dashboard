@@ -47,7 +47,7 @@
                             size="sm"
                             icon="i-lucide-x"
                             aria-label="Clear input"
-                            @click="searchUnitName = ''"
+                            @click="clearSearch"
                         />
                     </template>
                 </UInput>
@@ -245,6 +245,10 @@ const tabs = [
 
 // 關鍵字搜尋(團購單位)狀態
 const searchUnitName = ref('')
+
+const clearSearch = () => {
+    searchUnitName.value = ''
+}
 
 // 根據 Tab 篩選資料
 const filteredActivities = computed(() => {

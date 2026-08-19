@@ -201,8 +201,8 @@
             <div class="mt-4 flex items-center justify-end gap-4 pb-12">
                 <UButton
                     :to="{
-                        path: '/admin/orders/group',
-                        query: { page }
+                        path: `/admin/orders/group/${groupId}`,
+                        query: { page, unitName, endDate }
                     }"
                     label="取消"
                     variant="outline"
@@ -247,15 +247,17 @@ const productSimpleList = useState<GroupBuyingProduct[]>(
     () => []
 )
 
-await callOnce(`initGroupOrderDetail-${groupId.value}`, async () => {
-    const data = await groupBuyingStore.fetchGroupBuyingById(groupId.value)
+const initGroupBuyingById = async (groupId: string) => {
+    const data = await groupBuyingStore.fetchGroupBuyingById(groupId)
 
     if (!data) return
 
     // 將 fetch 取回的資料深拷貝，避免 input v-model 編輯時改到 Store 的原始資料
     const dataCopy = JSON.parse(JSON.stringify(data))
     productSimpleList.value = dataCopy.products || []
-})
+}
+
+await initGroupBuyingById(groupId.value)
 
 const tableColumns = [
     { accessorKey: 'productName', header: '商品名稱' },

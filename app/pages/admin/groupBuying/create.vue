@@ -192,9 +192,9 @@ const { productSimpleList } = storeToRefs(productStore)
 const groupBuyingStore = useGroupBuyingStore()
 const { error: groupBuyingError } = storeToRefs(groupBuyingStore)
 
-await callOnce('initProductsSimple', async () => {
+if (productSimpleList.value.length === 0) {
     await productStore.fetchProductsSimple()
-})
+}
 
 const toastStore = useToastStore()
 

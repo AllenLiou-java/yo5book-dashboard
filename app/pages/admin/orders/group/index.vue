@@ -41,7 +41,7 @@
                             size="sm"
                             icon="i-lucide-x"
                             aria-label="Clear input"
-                            @click="searchUnitName = ''"
+                            @click="clearSearch"
                         />
                     </template>
                 </UInput>
@@ -167,9 +167,9 @@ const tableColumns = [
 const groupBuyingStore = useGroupBuyingStore()
 const { error: groupBuyingError } = storeToRefs(groupBuyingStore)
 
-await callOnce('initGroupBuying', async () => {
+if (groupBuyingStore.list.length <= 1) {
     await groupBuyingStore.fetchGroupBuying()
-})
+}
 
 const toastStore = useToastStore()
 
@@ -194,6 +194,10 @@ const tabs = [
 
 // 關鍵字搜尋(團購單位)狀態
 const searchUnitName = ref('')
+
+const clearSearch = () => {
+    searchUnitName.value = ''
+}
 
 // 根據 Tab 篩選資料
 const filteredActivities = computed(() => {

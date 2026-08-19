@@ -65,6 +65,7 @@ export const useAuthStore = defineStore('auth', () => {
     async function logout() {
         const orderStore = useOrderStore()
         const groupBuyingStore = useGroupBuyingStore()
+        const productStore = useProductStore()
 
         try {
             await $fetch('/api/auth/logout', {
@@ -75,6 +76,7 @@ export const useAuthStore = defineStore('auth', () => {
 
             orderStore.reset()
             groupBuyingStore.reset()
+            productStore.reset()
 
             await navigateTo('/login')
         }

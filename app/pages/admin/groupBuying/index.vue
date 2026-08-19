@@ -219,9 +219,9 @@ const tableColumns = [
 const groupBuyingStore = useGroupBuyingStore()
 const { error: groupBuyingError } = storeToRefs(groupBuyingStore)
 
-await callOnce('initGroupBuying', async () => {
+if (groupBuyingStore.list.length <= 1) {
     await groupBuyingStore.fetchGroupBuying()
-})
+}
 
 const toastStore = useToastStore()
 watch(

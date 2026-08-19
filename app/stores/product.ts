@@ -35,11 +35,18 @@ export const useProductStore = defineStore('product', () => {
         }
     }
 
+    const reset = () => {
+        productSimpleList.value = []
+        isLoading.value = false
+        error.value = null
+    }
+
     return {
         productSimpleList,
         isLoading,
         error,
         totalItems,
-        fetchProductsSimple
+        fetchProductsSimple,
+        reset
     }
 })

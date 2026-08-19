@@ -327,7 +327,7 @@ const isReadonly = computed(() => action.value !== 'edit')
 // 改用 useState 來取代 ref，確保 SSR 與 Client 端共享同一份狀態，避免 Hydration mismatch
 const orderDetail = useState<OrderData | null>(`orderDetailState-${orderId.value}`, () => null)
 
-await callOnce(`fetchGroupOrderDetail-${orderId.value}`, async () => {
+const initOrderDetail = async () => {
     if (!orderId.value || !groupId.value) return
 
     const rawData = await orderStore.getGroupOrderDetailById(groupId.value, orderId.value)
@@ -342,7 +342,9 @@ await callOnce(`fetchGroupOrderDetail-${orderId.value}`, async () => {
     }
 
     orderDetail.value = data
-})
+}
+
+await initOrderDetail()
 
 const columns = [
     { accessorKey: 'productName', header: '商品名稱' },

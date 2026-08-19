@@ -229,9 +229,9 @@ const { statusOptions, error } = storeToRefs(orderStore)
 const productStore = useProductStore()
 const { productSimpleList } = storeToRefs(productStore)
 
-await callOnce('fetchProductSimpleList', async () => {
+if (productSimpleList.value.length === 0) {
     await productStore.fetchProductsSimple()
-})
+}
 
 const route = useRoute()
 const toastStore = useToastStore()

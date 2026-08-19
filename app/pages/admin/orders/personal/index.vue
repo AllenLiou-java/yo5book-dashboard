@@ -385,7 +385,7 @@ const orderStore = useOrderStore()
 const { personalOrderList, error, statusOptions } = storeToRefs(orderStore)
 const { updatePersonalOrder } = orderStore
 
-if (orderStore.personalOrderList.length === 0) {
+if (orderStore.personalOrderList.length <= 1) {
     await orderStore.getPersonalOrders()
 }
 

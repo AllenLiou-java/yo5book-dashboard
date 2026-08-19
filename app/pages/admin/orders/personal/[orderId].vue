@@ -288,8 +288,8 @@ const orderDetail = useState<OrderData | null>(
     () => null
 )
 
-await callOnce(`fetchOrderDetail-${String(route.params.orderId)}`, async () => {
-    const rawData = await orderStore.getPersonalOrderById(route.params.orderId as string)
+const initOrderDetail = async (orderId: string) => {
+    const rawData = await orderStore.getPersonalOrderById(orderId)
     if (!rawData) return
 
     // 將 fetch 取回的資料深拷貝，避免 input v-model 編輯時改到 Store 的原始資料
@@ -299,7 +299,9 @@ await callOnce(`fetchOrderDetail-${String(route.params.orderId)}`, async () => {
         data.receiver = { name: '', address: '' }
     }
     orderDetail.value = data
-})
+}
+
+await initOrderDetail(route.params.orderId as string)
 
 const columns = [
     { accessorKey: 'productName', header: '商品名稱' },

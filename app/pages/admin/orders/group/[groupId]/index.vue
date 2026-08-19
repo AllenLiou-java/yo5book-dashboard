@@ -394,11 +394,9 @@ const orderStore = useOrderStore()
 const { groupOrderList, error, statusOptions } = storeToRefs(orderStore)
 const { updateGroupOrder } = orderStore
 
-await callOnce(`initGroupOrders-${groupId.value}`, async () => {
-    if (groupId.value) {
-        await orderStore.getGroupOrderById(groupId.value)
-    }
-})
+if (groupId.value) {
+    await orderStore.getGroupOrderById(groupId.value)
+}
 
 const UButton = resolveComponent('UButton')
 const UCheckbox = resolveComponent('UCheckbox')

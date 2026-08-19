@@ -320,12 +320,12 @@ const defaultState = (): FormState => ({
 const state = useState<FormState>(`groupBuyingState-${id.value}`, () => defaultState())
 const rollbackState = ref<FormState | null>(null)
 
-await callOnce(`initGroupBuying-${id.value}`, async () => {
+if (productSimpleList.value.length === 0) {
     await productStore.fetchProductsSimple()
+}
 
-    const rawData = await groupBuyingStore.fetchGroupBuyingById(id.value)
-
-    if (!rawData) return
+const initGroupBuyingById = async (gid: string) => {
+    const rawData = await groupBuyingStore.fetchGroupBuyingById(gid)
 
     const data = JSON.parse(JSON.stringify(rawData))
 
@@ -338,7 +338,9 @@ await callOnce(`initGroupBuying-${id.value}`, async () => {
         isLaunched: data.isLaunched ?? true,
         products: data.products && data.products.length > 0 ? data.products : [defaultProduct()]
     })
-})
+}
+
+await initGroupBuyingById(id.value)
 
 watch(
     () => route.query.action,
@@ -426,10 +428,6 @@ async function onEdit() {
         }
     })
     setRollbackState()
-
-    if (productSimpleList.value.length === 0) {
-        await productStore.fetchProductsSimple()
-    }
 }
 
 async function revokeEdit() {

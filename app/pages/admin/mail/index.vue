@@ -1,224 +1,140 @@
 <template>
-    <UContainer class="max-w-2xl py-12">
+    <UContainer class="summary-board-container">
         <UCard>
             <template #header>
-                <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">
-                    群發 Email 系統 (分批發送版)
-                </h2>
-                <p class="mt-1 text-sm text-gray-500">
-                    系統會自動將名單分批處理，以避免連線逾時。寄送期間請勿關閉網頁。
-                </p>
-            </template>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">
+                            信件活動總覽
+                        </h2>
 
-            <form class="space-y-6" @submit.prevent="sendEmails">
-                <UFormField label="活動類型" required>
-                    <UInputMenu v-model="campaignType" :items="campaignTypeOptions" />
-                </UFormField>
-                <UFormField label="身分類型" required>
-                    <UInputMenu v-model="idType" :items="idTypeOptions" />
-                </UFormField>
-                <UFormField label="組織類型" required>
-                    <UInputMenu v-model="orgType" :items="orgTypeOptions" />
-                </UFormField>
-
-                <!-- HTML 檔案上傳 -->
-                <UFormField label="1. 上傳 HTML 信件內容 (支援 {{name}}、{{email}} 變數)" required>
-                    <UInput
-                        type="file"
-                        accept=".html"
-                        icon="i-heroicons-document-text"
-                        :disabled="loading"
-                        @change="onHtmlChange"
-                    />
-                </UFormField>
-
-                <!-- JSON 檔案上傳 -->
-                <UFormField label="2. 上傳收件人清單 (JSON 格式)" required>
-                    <UInput
-                        type="file"
-                        accept=".json"
-                        icon="i-heroicons-users"
-                        :disabled="loading"
-                        @change="onJsonChange"
-                    />
-                    <template #hint>
-                        格式範例：[{"email": "a@test.com", "name": "王小明"}]
-                    </template>
-                </UFormField>
-
-                <!-- 發送進度顯示區 -->
-                <div v-if="loading || progress.total > 0" class="space-y-2">
-                    <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400">
-                        <span>寄送進度：{{ progress.current }} / {{ progress.total }}</span>
-                        <span
-                            >{{ Math.round((progress.current / progress.total) * 100) || 0 }}%</span
-                        >
+                        <p class="mt-1 text-sm text-gray-500">列出所有已執行的群發活動紀錄</p>
                     </div>
-                    <!-- 若您的 Nuxt UI 版本支援 UProgress，可開啟下方註解使用 -->
-                    <!-- <UProgress :value="progress.current" :max="progress.total" /> -->
+
+                    <UButton
+                        icon="i-lucide-refresh-cw"
+                        variant="outline"
+                        size="lg"
+                        :loading="status === 'pending'"
+                        label="重新整理"
+                        @click="refresh()"
+                    >
+                    </UButton>
                 </div>
-
-                <!-- 提交按鈕 -->
-                <UButton
-                    type="submit"
-                    color="primary"
-                    size="lg"
-                    block
-                    :loading="loading"
-                    :disabled="!isFormValid || loading"
-                >
-                    {{ loading ? '分批寄送中...' : '開始寄送' }}
-                </UButton>
-            </form>
-
-            <!-- 狀態訊息回饋 -->
-            <template v-if="alert.show" #footer>
-                <UAlert
-                    :title="alert.title"
-                    :description="alert.message"
-                    :color="alert.color"
-                    :icon="alert.icon"
-                    variant="subtle"
-                />
             </template>
+
+            <!-- 載入中 -->
+            <div v-if="status === 'pending'" class="flex justify-center py-12">
+                <UIcon name="i-lucide-loader-circle" class="text-primary animate-spin text-4xl" />
+            </div>
+
+            <!-- 錯誤 -->
+            <UAlert
+                v-else-if="error"
+                title="載入失敗"
+                :description="error.message || '無法取得活動清單，請稍後再試。'"
+                color="error"
+                icon="i-heroicons-x-circle"
+                variant="subtle"
+            />
+
+            <!-- 空資料 -->
+            <div
+                v-else-if="rows.length === 0"
+                class="py-12 text-center text-sm text-gray-400 dark:text-gray-500"
+            >
+                尚無任何信件活動紀錄
+            </div>
+
+            <!-- 表格 -->
+            <UTable
+                v-else
+                :data="rows"
+                :columns="columns"
+                :ui="{
+                    base: 'min-w-full table-auto',
+                    th: 'text-white bg-primary dark:bg-blue-900',
+                    tr: 'data-[expanded=true]:bg-elevated/50 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors'
+                }"
+            >
+                <template #index-cell="{ row }"> #{{ parseInt(row.id) + 1 }} </template>
+                <template #actions-cell="{ row }">
+                    <NuxtLink :to="`/admin/mail/${row.original.mailId}`">
+                        <CommonTooltip text="點擊前往">
+                            <UButton icon="i-lucide-table-of-contents" variant="ghost"></UButton>
+                        </CommonTooltip>
+                    </NuxtLink>
+                </template>
+            </UTable>
         </UCard>
     </UContainer>
 </template>
 
-<script setup>
-import { ref, computed } from 'vue'
+<script setup lang="ts">
+import { computed } from 'vue'
 
-const htmlFile = ref(null)
-const parsedJson = ref([])
-const loading = ref(false)
+import { CAMPAIGN_TYPE_OPTIONS, ID_TYPE_OPTIONS, ORG_TYPE_OPTIONS } from '#shared/constants/mail'
 
-const campaignTypeOptions = ref([
-    { label: '新書上市', value: 'NB' },
-    { label: '優惠活動', value: 'PR' },
-    { label: '團購活動', value: 'GB' }
-])
+import { parseCampaignId } from '#shared/utils/campaign'
 
-const idTypeOptions = ref([
-    { label: '會計師', value: 'CPA' },
-    { label: '記帳士相關', value: 'CPB' },
-    { label: '其他', value: 'OTHER' }
-])
+// ─── API ──────────────────────────────────────────────────────────────
+const { data, status, error, refresh } = await useFetch('/api/mail/campaigns/list')
 
-const orgTypeOptions = ref([
-    { label: '個人事務所', value: 'Firm' },
-    { label: '公會團體', value: 'Assn' }
-])
+// ─── 輔助函式 ──────────────────────────────────────────────────────────
 
-const campaignType = ref(campaignTypeOptions.value[0])
-const idType = ref(idTypeOptions.value[0])
-const orgType = ref(orgTypeOptions.value[0])
-
-// 進度與提示狀態
-const progress = ref({ current: 0, total: 0 })
-const alert = ref({ show: false, title: '', message: '', color: 'gray', icon: '' })
-
-// 檢查是否已備妥 HTML 檔案且 JSON 名單內有資料
-const isFormValid = computed(() => htmlFile.value && parsedJson.value.length > 0)
-
-const onHtmlChange = (e) => {
-    htmlFile.value = e.target.files[0]
+/**
+ * 將 YYYYMMDD 格式轉為 YYYY/MM/DD
+ */
+function formatDate(raw: string): string {
+    return `${raw.slice(0, 4)}/${raw.slice(4, 6)}/${raw.slice(6, 8)}`
 }
 
-// 讀取 JSON 檔案並在前端直接解析為 Array
-const onJsonChange = (e) => {
-    const file = e.target.files[0]
-    if (!file) {
-        parsedJson.value = []
-        return
-    }
-
-    const reader = new FileReader()
-    reader.onload = (event) => {
-        try {
-            parsedJson.value = JSON.parse(event.target.result)
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        } catch (err) {
-            alert.value = {
-                show: true,
-                title: 'JSON 格式錯誤',
-                message: '請確保上傳的檔案是標準的 JSON 陣列格式。',
-                color: 'error',
-                icon: 'i-heroicons-x-circle'
-            }
-            parsedJson.value = []
-        }
-    }
-    reader.readAsText(file)
+/**
+ * 從 options 陣列找出對應 label，找不到時直接回傳原始 value
+ */
+function labelOf(options: { label: string; value: string }[], value: string): string {
+    return options.find((o) => o.value === value)?.label ?? value
 }
 
-const sendEmails = async () => {
-    if (!isFormValid.value) return
+// ─── 資料轉換 ──────────────────────────────────────────────────────────
+const rows = computed(() => {
+    const keys = data.value?.keys ?? []
 
-    loading.value = true
-    const totalItems = parsedJson.value.length
-    const batchSize = 25 // 每批處理 50 筆
-    progress.value = { current: 0, total: totalItems }
+    return keys
+        .map((key, index) => {
+            const parsed = parseCampaignId(key)
 
-    let totalSuccess = 0
-    let totalFailed = 0
+            if (!parsed) return null
 
-    alert.value = {
-        show: true,
-        title: '系統運作中',
-        message: '正在分批寄送信件，請勿關閉或重新整理網頁...',
-        color: 'blue',
-        icon: 'i-heroicons-arrow-path'
-    }
-
-    // 將大陣列切割並分批呼叫 API
-    for (let i = 0; i < totalItems; i += batchSize) {
-        const batch = parsedJson.value.slice(i, i + batchSize)
-        const formData = new FormData()
-
-        // HTML 檔保持原本的上傳檔案
-        formData.append('html', htmlFile.value)
-        // 收件人清單只傳遞這「25人」的 JSON 字串
-        formData.append('recipients', JSON.stringify(batch))
-
-        formData.append('campaignType', campaignType.value.value)
-        formData.append('idType', idType.value.value)
-        formData.append('orgType', orgType.value.value)
-
-        try {
-            const res = await $fetch('/api/mail/send-bulk-email', {
-                method: 'POST',
-                body: formData
-            })
-
-            totalSuccess += res.successCount
-            totalFailed += res.failedCount
-            progress.value.current += batch.length
-
-            // 批次與批次之間，讓前端暫停 5 秒，避免後端被 SMTP 伺服器判定為機器人攻擊
-            if (progress.value.current < totalItems) {
-                await new Promise((resolve) => setTimeout(resolve, 5000))
+            return {
+                index: index + 1,
+                date: formatDate(parsed.date),
+                campaignType: labelOf(CAMPAIGN_TYPE_OPTIONS, parsed.campaignType),
+                idType: labelOf(ID_TYPE_OPTIONS, parsed.idType),
+                orgType: labelOf(ORG_TYPE_OPTIONS, parsed.orgType),
+                mailId: key
             }
-        } catch (error) {
-            alert.value = {
-                show: true,
-                title: '部分批次發生錯誤',
-                message: error.data?.message || error.message,
-                color: 'error',
-                icon: 'i-heroicons-x-circle'
-            }
-            // 可以選擇在這裡 break 中斷後續批次，或讓它繼續跑
-        }
-    }
+        })
+        .filter((row) => row !== null)
+})
 
-    loading.value = false
-    const isAllSuccess = totalFailed === 0
-
-    alert.value = {
-        show: true,
-        title: isAllSuccess ? '全數寄送完成' : '寄送完成 (含部分失敗)',
-        message: `共成功: ${totalSuccess} 封, 失敗: ${totalFailed} 封。`,
-        color: isAllSuccess ? 'success' : 'warning',
-        icon: isAllSuccess ? 'i-heroicons-check-circle' : 'i-heroicons-exclamation-triangle'
+// ─── 欄位定義 ──────────────────────────────────────────────────────────
+const columns = [
+    {
+        id: 'index',
+        accessorKey: 'index',
+        header: '項次',
+        meta: { class: { th: 'text-center', td: 'text-center w-16' } }
+    },
+    { accessorKey: 'date', header: '發送日期' },
+    { accessorKey: 'campaignType', header: '活動類型' },
+    { accessorKey: 'idType', header: '身分類型' },
+    { accessorKey: 'orgType', header: '組織類型' },
+    {
+        accessorKey: 'actions',
+        id: 'actions',
+        header: '訂單列表',
+        meta: { class: { th: 'text-center', td: 'text-center' } }
     }
-}
+]
 </script>

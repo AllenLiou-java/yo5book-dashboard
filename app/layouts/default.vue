@@ -158,9 +158,14 @@ const BASE_MENU_ITEMS: NavigationMenuItem[] = [
         defaultOpen: true,
         children: [
             {
+                label: '信件總覽',
+                icon: 'i-lucide-inbox',
+                to: '/admin/mail'
+            },
+            {
                 label: '群體發信',
                 icon: 'i-lucide-mails',
-                to: '/admin/mail'
+                to: '/admin/mail/bulk'
             }
         ]
     },

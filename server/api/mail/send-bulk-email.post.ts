@@ -6,19 +6,6 @@ const config = useRuntimeConfig()
 
 const baseUrl = config.webUrl || 'http://localhost:3000'
 
-const subjectList = [
-    '【新書上市】公司登記實務新作2冊｜閉鎖性公司 × 特殊案例一次掌握',
-    '【新書上市】一次掌握閉鎖性股份有限公司與特殊登記實務',
-    '【新書上市】進階公司登記實務工具書｜兩本新作同步出版',
-    '【新書上市】公司登記實務系列最新力作｜閉鎖性公司 × 特殊案例',
-    '【新書上市】從閉鎖性公司到特殊案例｜打造完整登記實務能力',
-    '【新書上市】《閉鎖性股份有限公司》與《公司登記特殊案例實務解析》正式推出',
-    '【新書上市】最新實務工具書｜深入解析閉鎖性公司與特殊案例',
-    '【新書上市】閉鎖性股份有限公司與特殊登記案例完整解析',
-    '【新書上市】閉鎖性股份有限公司與特殊登記案件全方位解析',
-    '【新書上市】公司登記特殊案件全攻略｜閉鎖性公司 × 特殊案例解析'
-]
-
 export default defineEventHandler(async (event) => {
     // 測量：API 接收到資料與解析的耗時
     // console.time('Phase-1-資料解析')
@@ -30,6 +17,7 @@ export default defineEventHandler(async (event) => {
     let campaignType = ''
     let idType = ''
     let orgType = ''
+    let subjects: string[] = []
 
     for (const field of formData) {
         if (field.name === 'html') {
@@ -46,7 +34,20 @@ export default defineEventHandler(async (event) => {
             idType = field.data.toString('utf-8')
         } else if (field.name === 'orgType') {
             orgType = field.data.toString('utf-8')
+        } else if (field.name === 'subjects') {
+            try {
+                const parsed = JSON.parse(field.data.toString('utf-8'))
+                subjects = Array.isArray(parsed)
+                    ? parsed.filter((s: string) => s.trim() !== '')
+                    : []
+            } catch (e) {
+                throw createError({ statusCode: 400, message: '主旨列表解析失敗' })
+            }
         }
+    }
+
+    if (!subjects.length) {
+        throw createError({ statusCode: 400, message: '請至少提供一筆郵件主旨' })
     }
     // console.timeEnd('Phase-1-資料解析')
 
@@ -92,7 +93,7 @@ export default defineEventHandler(async (event) => {
         let customizedHtml = htmlContent.replace(/{{mail}}/g, recipient.email || '')
         customizedHtml = `${customizedHtml}${trackingPixelHtml}`
 
-        const randomSubject = subjectList[Math.floor(Math.random() * subjectList.length)]
+        const randomSubject = subjects[Math.floor(Math.random() * subjects.length)]
 
         // 3. 在寄出前，先將初始狀態寫入 Firebase Realtime Database
         try {

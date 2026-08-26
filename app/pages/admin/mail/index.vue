@@ -1,8 +1,8 @@
 <template>
-    <UContainer class="summary-board-container">
+    <UContainer :ui="{ base: 'max-w-full' }">
         <UCard>
             <template #header>
-                <div class="flex items-center justify-between">
+                <div class="flex items-center justify-between gap-4">
                     <div>
                         <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">
                             信件活動總覽
@@ -46,26 +46,27 @@
                 尚無任何信件活動紀錄
             </div>
 
-            <!-- 表格 -->
-            <UTable
-                v-else
-                :data="rows"
-                :columns="columns"
-                :ui="{
-                    base: 'min-w-full table-auto',
-                    th: 'text-white bg-primary dark:bg-blue-900',
-                    tr: 'data-[expanded=true]:bg-elevated/50 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors'
-                }"
-            >
-                <template #index-cell="{ row }"> #{{ parseInt(row.id) + 1 }} </template>
-                <template #actions-cell="{ row }">
-                    <NuxtLink :to="`/admin/mail/${row.original.mailId}`">
+            <div v-else class="table-container">
+                <!-- 表格 -->
+                <UTable
+                    :data="rows"
+                    :columns="columns"
+                    :ui="{
+                        th: 'table-th',
+                        tr: 'table-tr'
+                    }"
+                >
+                    <template #actions-cell="{ row }">
                         <CommonTooltip text="點擊前往">
-                            <UButton icon="i-lucide-table-of-contents" variant="ghost"></UButton>
+                            <UButton
+                                :to="`/admin/mail/${row.original.mailId}`"
+                                icon="i-lucide-table-of-contents"
+                                variant="ghost"
+                            ></UButton>
                         </CommonTooltip>
-                    </NuxtLink>
-                </template>
-            </UTable>
+                    </template>
+                </UTable>
+            </div>
         </UCard>
     </UContainer>
 </template>
@@ -121,7 +122,6 @@ const rows = computed(() => {
 // ─── 欄位定義 ──────────────────────────────────────────────────────────
 const columns = [
     {
-        id: 'index',
         accessorKey: 'index',
         header: '項次',
         meta: { class: { th: 'text-center', td: 'text-center w-16' } }

@@ -1,15 +1,9 @@
 <template>
-    <UContainer class="summary-board-container">
+    <UContainer :ui="{ base: 'max-w-full' }">
         <UCard>
             <template #header>
-                <div class="flex items-center justify-between">
+                <div class="flex flex-wrap items-center justify-between gap-4">
                     <div>
-                        <!-- <div class="mb-1">
-                            <UButton icon="i-lucide-arrow-left" size="sm" to="/admin/mail">
-                                返回總覽
-                            </UButton>
-                        </div> -->
-
                         <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">
                             活動詳細紀錄
                         </h2>
@@ -17,7 +11,7 @@
                         <p class="mt-1 font-mono text-sm text-gray-400">{{ id }}</p>
                     </div>
 
-                    <div class="flex gap-4">
+                    <div class="flex w-full justify-center gap-4 sm:w-auto">
                         <UButton
                             icon="i-lucide-refresh-cw"
                             size="lg"
@@ -133,49 +127,51 @@
                 </div>
 
                 <!-- 表格 -->
-                <UTable
-                    v-else
-                    :data="filteredRows"
-                    :columns="columns"
-                    :ui="{
-                        base: 'min-w-full table-auto',
-                        th: 'text-white bg-primary dark:bg-blue-900',
-                        tr: 'data-[expanded=true]:bg-elevated/50 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors'
-                    }"
-                >
-                    <template #index-cell="{ row }"> #{{ parseInt(row.id) + 1 }} </template>
-                    <!-- 寄送時間：格式化 timestamp -->
-                    <template #sentAt-cell="{ row }">
-                        <span class="text-sm text-gray-600 dark:text-gray-400">
-                            {{ formatTimestamp(row.original.sentAt) }}
-                        </span>
-                    </template>
+                <div v-else class="table-container">
+                    <UTable
+                        :data="filteredRows"
+                        :columns="columns"
+                        :ui="{
+                            th: 'table-th',
+                            tr: 'table-tr'
+                        }"
+                    >
+                        <template #index-cell="{ row }">
+                            <span>{{ parseInt(row.id) + 1 }}</span>
+                        </template>
+                        <!-- 寄送時間：格式化 timestamp -->
+                        <template #sentAt-cell="{ row }">
+                            <span class="text-sm text-gray-600 dark:text-gray-400">
+                                {{ formatTimestamp(row.original.sentAt) }}
+                            </span>
+                        </template>
 
-                    <!-- 開信狀態：UBadge -->
-                    <template #opened-cell="{ row }">
-                        <UBadge
-                            :color="row.original.opened ? 'success' : 'neutral'"
-                            :icon="row.original.opened ? 'i-lucide-mail-open' : 'i-lucide-mail'"
-                            variant="subtle"
-                            size="sm"
-                        >
-                            {{ row.original.opened ? '已開信' : '未開信' }}
-                        </UBadge>
-                    </template>
+                        <!-- 開信狀態：UBadge -->
+                        <template #opened-cell="{ row }">
+                            <UBadge
+                                :color="row.original.opened ? 'success' : 'neutral'"
+                                :icon="row.original.opened ? 'i-lucide-mail-open' : 'i-lucide-mail'"
+                                variant="subtle"
+                                size="sm"
+                            >
+                                {{ row.original.opened ? '已開信' : '未開信' }}
+                            </UBadge>
+                        </template>
 
-                    <!-- 操作 -->
-                    <template #actions-cell="{ row }">
-                        <div class="flex justify-center">
-                            <UButton
-                                icon="i-lucide-trash-2"
-                                color="error"
-                                variant="ghost"
-                                size="xl"
-                                @click="handleDelete(row.original)"
-                            />
-                        </div>
-                    </template>
-                </UTable>
+                        <!-- 操作 -->
+                        <template #actions-cell="{ row }">
+                            <div class="flex justify-center">
+                                <UButton
+                                    icon="i-lucide-trash-2"
+                                    color="error"
+                                    variant="ghost"
+                                    size="xl"
+                                    @click="handleDelete(row.original)"
+                                />
+                            </div>
+                        </template>
+                    </UTable>
+                </div>
             </template>
         </UCard>
     </UContainer>
@@ -255,7 +251,6 @@ async function handleDelete(log: MailLog) {
 // ─── 欄位定義 ──────────────────────────────────────────────────────────
 const columns = [
     {
-        id: 'index',
         accessorKey: 'index',
         header: '項次',
         meta: { class: { th: 'text-center', td: 'text-center w-16' } }

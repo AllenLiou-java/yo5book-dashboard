@@ -48,3 +48,19 @@
 .summary-board-container {
     @apply mx-auto flex flex-col gap-6;
 }
+
+.table-container {
+    @apply overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900;
+}
+
+.table-base {
+    @apply min-w-full table-auto;
+}
+
+.table-th {
+    @apply bg-primary text-white dark:bg-blue-900;
+}
+
+.table-tr {
+    @apply data-[expanded=true]:bg-elevated/50 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50;
+}

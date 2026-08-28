@@ -158,6 +158,16 @@
                             </UBadge>
                         </template>
 
+                        <template #openedAt-cell="{ row }">
+                            <span class="text-sm text-gray-600 dark:text-gray-400">
+                                {{
+                                    row.original.openedAt
+                                        ? formatTimestamp(row.original.openedAt)
+                                        : '-'
+                                }}
+                            </span>
+                        </template>
+
                         <!-- 操作 -->
                         <template #actions-cell="{ row }">
                             <div class="flex justify-center">
@@ -266,6 +276,11 @@ const columns = [
     {
         accessorKey: 'opened',
         header: '開信狀態',
+        meta: { class: { th: 'text-center', td: 'text-center' } }
+    },
+    {
+        accessorKey: 'openedAt',
+        header: '開信時間',
         meta: { class: { th: 'text-center', td: 'text-center' } }
     },
     {

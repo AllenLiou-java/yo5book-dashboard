@@ -27,6 +27,7 @@ export interface MailLog {
     email: string
     name: string
     opened: boolean
+    openedAt: number
     sentAt: number
     subject: string
     emailKey?: string

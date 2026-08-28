@@ -44,11 +44,7 @@
         'opsz' 24;
 }
 
-/* 當有處於編輯狀態或展開的列時，將表格內其他列加上遮罩效果並停用點擊 */
-.summary-board-container {
-    @apply mx-auto flex flex-col gap-6;
-}
-
+/* UTable相關樣式 */
 .table-container {
     @apply overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900;
 }
@@ -63,4 +59,8 @@
 
 .table-tr {
     @apply data-[expanded=true]:bg-elevated/50 transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50;
+}
+
+.bg-board {
+    @apply rounded-lg border border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800/50;
 }

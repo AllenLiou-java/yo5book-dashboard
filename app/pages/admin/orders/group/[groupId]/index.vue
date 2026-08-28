@@ -1,91 +1,110 @@
 <template>
-    <div class="summary-board-container">
-        <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-            <div>
-                <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">團體訂單列表</h1>
-                <div class="mt-2 mb-4">
-                    <p class="text-sm text-slate-500">
-                        <span class="text-slate-800">團購單位：</span>{{ unitName || '-' }}
-                    </p>
-                    <p class="text-sm text-slate-500">
-                        <span class="text-slate-800"> 截止日期： </span>{{ endDate || '-' }}
-                    </p>
-                </div>
-                <p class="text-sm text-slate-500">共 {{ filteredOrders.length }} 筆訂單</p>
-            </div>
-            <div class="flex w-full flex-col flex-wrap gap-4 sm:w-auto">
-                <div class="flex justify-between gap-4">
-                    <div class="flex justify-end gap-4">
-                        <UButton
-                            color="neutral"
-                            variant="outline"
-                            icon="i-lucide-download"
-                            @click="handleExport"
-                        >
-                            匯出
-                        </UButton>
-                        <UButton
-                            :to="{
-                                path: `/admin/orders/group/${groupId}/create`,
-                                query: { page, unitName, endDate }
-                            }"
-                            color="primary"
-                            icon="i-lucide-plus"
-                        >
-                            新增訂單
-                        </UButton>
+    <UContainer :ui="{ base: 'max-w-full' }">
+        <UCard>
+            <template #header>
+                <div class="flex flex-row flex-wrap justify-between gap-4">
+                    <div>
+                        <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">
+                            團體訂單列表
+                        </h1>
+                        <div class="mt-2 mb-4">
+                            <p class="text-sm text-slate-500">
+                                <span class="text-slate-800">團購單位：</span>{{ unitName || '-' }}
+                            </p>
+                            <p class="text-sm text-slate-500">
+                                <span class="text-slate-800"> 截止日期： </span>{{ endDate || '-' }}
+                            </p>
+                        </div>
+                        <p class="text-sm text-slate-500">共 {{ filteredOrders.length }} 筆訂單</p>
                     </div>
-                    <UButton
-                        :to="{ path: '/admin/orders/group', query: { page } }"
-                        label="上一頁"
-                        variant="outline"
-                        color="primary"
-                        icon="lucide:arrow-left-from-line"
-                    />
+
+                    <div class="flex flex-row flex-wrap items-end gap-4 sm:flex-col sm:flex-nowrap">
+                        <UButton
+                            :to="{ path: '/admin/orders/group', query: { page } }"
+                            label="返回團購列表"
+                            variant="outline"
+                            color="primary"
+                            icon="lucide:arrow-left-from-line"
+                            class=""
+                        />
+                        <div class="flex justify-end gap-4">
+                            <UButton
+                                color="primary"
+                                variant="outline"
+                                icon="i-lucide-download"
+                                label="匯出"
+                                @click="handleExport"
+                            >
+                            </UButton>
+                            <UButton
+                                to="/admin/orders/personal/create"
+                                color="primary"
+                                icon="i-lucide-plus"
+                                label="新增訂單"
+                            >
+                            </UButton>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex w-full flex-col gap-3 sm:w-auto">
-                    <!-- 多條件列表 -->
-                    <div class="flex flex-col gap-2">
-                        <div
-                            v-for="condition in searchConditions"
-                            :key="condition.id"
-                            class="flex w-full flex-col gap-2 sm:flex-row sm:items-center"
-                        >
-                            <USelect
-                                v-model="condition.field"
-                                :items="searchOptions"
-                                class="w-full sm:w-40"
-                                @change="onFieldChange(condition)"
-                            />
+            </template>
 
-                            <template v-if="condition.field === 'status'">
-                                <USelect
-                                    v-model="condition.keyword"
-                                    :items="statusOptions"
-                                    multiple
-                                    class="w-full sm:w-82"
-                                />
-                            </template>
-                            <template v-else>
-                                <UInput
-                                    v-model="condition.keyword as string"
-                                    icon="i-lucide-search"
-                                    placeholder="輸入關鍵字..."
-                                    class="w-full sm:w-82"
-                                >
-                                    <template v-if="String(condition.keyword).length" #trailing>
-                                        <UButton
-                                            color="neutral"
-                                            variant="link"
-                                            size="sm"
-                                            icon="i-lucide-circle-x"
-                                            aria-label="清除關鍵字"
-                                            @click="condition.keyword = ''"
-                                        />
-                                    </template>
-                                </UInput>
-                            </template>
+            <div
+                class="bg-board mb-5 flex flex-col gap-4 p-4 sm:w-auto sm:grid-cols-2 lg:grid-cols-4"
+            >
+                <div class="flex items-center gap-2">
+                    <UIcon name="i-lucide-funnel" class="text-primary size-5" />
+                    <span class="font-bold">篩選條件</span>
+                </div>
 
+                <!-- 多條件列表 -->
+                <div class="grid gap-4 xl:grid-cols-2 2xl:grid-cols-3">
+                    <div
+                        v-for="condition in searchConditions"
+                        :key="condition.id"
+                        class="flex flex-col gap-2 sm:flex-row sm:items-center"
+                    >
+                        <!-- 篩選項目 -->
+                        <USelect
+                            v-model="condition.field"
+                            :items="getAvailableSearchOptions(condition.id)"
+                            class="sm:w-50"
+                            @change="onFieldChange(condition)"
+                        />
+
+                        <div class="flex w-full gap-1">
+                            <!-- 顯示輸入框 or 列表 -->
+                            <div class="w-full sm:grow">
+                                <template v-if="condition.field === 'status'">
+                                    <USelect
+                                        v-model="condition.keyword"
+                                        :items="statusOptions"
+                                        multiple
+                                        class="w-full"
+                                    />
+                                </template>
+
+                                <template v-else>
+                                    <UInput
+                                        v-model="condition.keyword as string"
+                                        icon="i-lucide-search"
+                                        placeholder="輸入關鍵字..."
+                                        class="w-full"
+                                    >
+                                        <template v-if="String(condition.keyword).length" #trailing>
+                                            <UButton
+                                                color="neutral"
+                                                variant="link"
+                                                size="sm"
+                                                icon="i-lucide-circle-x"
+                                                aria-label="清除關鍵字"
+                                                @click="condition.keyword = ''"
+                                            />
+                                        </template>
+                                    </UInput>
+                                </template>
+                            </div>
+
+                            <!-- 刪除按鈕 -->
                             <CommonTooltip text="移除條件">
                                 <UButton
                                     color="error"
@@ -94,287 +113,294 @@
                                     aria-label="移除條件"
                                     :disabled="searchConditions.length === 1"
                                     @click="removeSearchCondition(condition.id)"
-                                />
-                            </CommonTooltip>
+                            /></CommonTooltip>
                         </div>
+                    </div>
+                </div>
+
+                <USeparator />
+
+                <div class="flex flex-col justify-between gap-4 sm:flex-row">
+                    <div class="flex gap-4">
+                        <UButton
+                            variant="outline"
+                            color="info"
+                            icon="i-lucide-plus"
+                            label="新增條件"
+                            :disabled="searchConditions.length >= searchOptions.length"
+                            @click="addSearchCondition"
+                        >
+                        </UButton>
+
+                        <UButton
+                            variant="outline"
+                            color="secondary"
+                            icon="i-lucide-rotate-ccw"
+                            label="清除篩選"
+                            @click="resetSearchConditions"
+                        >
+                        </UButton>
                     </div>
 
                     <!-- 條件操作 -->
-                    <div class="flex flex-col justify-between gap-2 sm:flex-row sm:items-center">
-                        <div class="flex items-center gap-2">
-                            <span class="shrink-0 text-sm text-slate-500"> 篩選方式 </span>
+                    <div class="flex items-center gap-2">
+                        <span class="shrink-0 text-sm text-slate-500"> 篩選方式 </span>
 
-                            <USelect v-model="searchMode" :items="searchModeOptions" class="w-40" />
-                        </div>
-
-                        <div class="flex gap-2">
-                            <UButton
-                                color="neutral"
-                                variant="outline"
-                                icon="i-lucide-plus"
-                                @click="addSearchCondition"
-                            >
-                                新增條件
-                            </UButton>
-
-                            <UButton
-                                color="neutral"
-                                variant="ghost"
-                                icon="i-lucide-rotate-ccw"
-                                @click="resetSearchConditions"
-                            >
-                                清除篩選
-                            </UButton>
-                        </div>
+                        <USelect v-model="searchMode" :items="searchModeOptions" class="grow" />
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div
-            ref="tableContainer"
-            class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900"
-        >
-            <UTable
-                v-model:expanded="expanded"
-                v-model:row-selection="rowSelection"
-                :data="paginatedOrders"
-                :columns="columns"
-                :ui="{
-                    base: 'min-w-full table-auto',
-                    th: 'text-white bg-primary dark:bg-blue-900',
-                    tr: 'data-[expanded=true]:bg-elevated/50 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors'
-                }"
-                class="flex-1"
-            >
-                <template #status-cell="{ row }">
-                    <div
-                        v-if="editingRowId === row.id"
-                        class="editing-active flex items-center justify-center"
-                    >
-                        <USelect v-model="editingStatus" :items="statusOptions" class="w-48" />
-                    </div>
-                    <div v-else class="flex items-center gap-2">
-                        <span class="w-48">{{
-                            statusNameMap[String(row.original.status || '')] ||
-                            String(row.original.status || '') ||
-                            '無'
-                        }}</span>
-                    </div>
-                </template>
-                <template #bankAccountNo-cell="{ row }">
-                    <div
-                        v-if="editingRowId === row.id"
-                        class="editing-active flex items-center justify-center"
-                    >
-                        <UInput
-                            v-model="editingBankAccountNo"
-                            placeholder="帳號後五碼"
-                            class="w-19"
-                        />
-                    </div>
-                    <div v-else class="flex items-center gap-2">
-                        <span class="w-19">{{ row.original.bankAccountNo || '-' }}</span>
-                    </div>
-                </template>
-                <template #remark-cell="{ row }">
-                    <div
-                        v-if="editingRowId === row.id"
-                        class="editing-active flex items-center justify-center"
-                    >
-                        <UInput v-model="editingRemark" placeholder="備註" class="w-48" />
-                    </div>
-                    <CommonTooltip
-                        v-else-if="row.original.remark"
-                        :text="row.original.remark"
-                        :ui="{ popper: { strategy: 'absolute' } }"
-                    >
-                        <span class="truncate">{{
-                            (row.original.remark || '').substring(0, 15) +
-                            ((row.original.remark || '').length > 15 ? '...' : '')
-                        }}</span>
-                    </CommonTooltip>
-                    <span v-else>-</span>
-                </template>
-                <template #orderDate-cell="{ row }">
-                    <ClientOnly>
-                        {{ formatDateTime(row.original.orderDate) }}
-                        <template #fallback>
-                            {{ row.original.orderDate ? '...' : '-' }}
-                        </template>
-                    </ClientOnly>
-                </template>
-                <template #quick-edit-cell="{ row }">
-                    <div
-                        v-if="editingRowId === row.id"
-                        class="editing-active flex items-center justify-center gap-2"
-                    >
-                        <CommonTooltip text="儲存">
+            <div ref="tableContainer" class="table-container">
+                <UTable
+                    v-model:expanded="expanded"
+                    v-model:row-selection="rowSelection"
+                    :data="paginatedOrders"
+                    :columns="columns"
+                    :ui="{
+                        th: 'table-th',
+                        tr: 'table-tr'
+                    }"
+                    class="flex-1"
+                >
+                    <template #status-cell="{ row }">
+                        <div
+                            v-if="editingRowId === row.id"
+                            class="editing-active flex items-center justify-center"
+                        >
+                            <USelect v-model="editingStatus" :items="statusOptions" class="w-48" />
+                        </div>
+                        <div v-else class="flex items-center gap-2">
+                            <span class="w-48">{{
+                                statusNameMap[String(row.original.status || '')] ||
+                                String(row.original.status || '') ||
+                                '無'
+                            }}</span>
+                        </div>
+                    </template>
+                    <template #bankAccountNo-cell="{ row }">
+                        <div
+                            v-if="editingRowId === row.id"
+                            class="editing-active flex items-center justify-center"
+                        >
+                            <UInput
+                                v-model="editingBankAccountNo"
+                                placeholder="帳號後五碼"
+                                class="w-19"
+                            />
+                        </div>
+                        <div v-else class="flex items-center gap-2">
+                            <span class="w-19">{{ row.original.bankAccountNo || '-' }}</span>
+                        </div>
+                    </template>
+                    <template #remark-cell="{ row }">
+                        <div
+                            v-if="editingRowId === row.id"
+                            class="editing-active flex items-center justify-center"
+                        >
+                            <UInput v-model="editingRemark" placeholder="備註" class="w-48" />
+                        </div>
+                        <CommonTooltip
+                            v-else-if="row.original.remark"
+                            :text="row.original.remark"
+                            :ui="{ popper: { strategy: 'absolute' } }"
+                            ><span class="truncate">{{
+                                (row.original.remark || '').substring(0, 15) +
+                                ((row.original.remark || '').length > 15 ? '...' : '')
+                            }}</span></CommonTooltip
+                        >
+                        <span v-else>-</span>
+                    </template>
+                    <template #orderDate-cell="{ row }">
+                        <ClientOnly>
+                            {{ formatDateTime(row.original.orderDate) }}
+                            <template #fallback>
+                                {{ row.original.orderDate ? '...' : '-' }}
+                            </template>
+                        </ClientOnly>
+                    </template>
+                    <template #quick-edit-cell="{ row }">
+                        <div
+                            v-if="editingRowId === row.id"
+                            class="editing-active flex items-center justify-center gap-2"
+                        >
+                            <CommonTooltip text="儲存"
+                                ><div class="inline-block">
+                                    <UButton
+                                        color="secondary"
+                                        size="sm"
+                                        icon="i-lucide-save"
+                                        @click="handleSaveAll(row)"
+                                    /></div
+                            ></CommonTooltip>
+                            <CommonTooltip text="取消"
+                                ><div class="inline-block">
+                                    <UButton
+                                        color="secondary"
+                                        variant="outline"
+                                        size="sm"
+                                        icon="lucide:save-off"
+                                        @click="editingRowId = null"
+                                    /></div
+                            ></CommonTooltip>
+                        </div>
+                        <div v-else>
                             <UButton
                                 color="secondary"
                                 size="sm"
-                                icon="i-lucide-save"
-                                @click="handleSaveAll(row)"
+                                icon="i-lucide-edit"
+                                aria-label="快速編輯"
+                                @click="startEditing(row)"
                             />
-                        </CommonTooltip>
-                        <CommonTooltip text="取消">
-                            <UButton
-                                color="secondary"
-                                variant="outline"
-                                size="sm"
-                                icon="lucide:save-off"
-                                @click="editingRowId = null"
-                            />
-                        </CommonTooltip>
-                    </div>
-                    <div v-else>
-                        <UButton
-                            color="secondary"
-                            size="sm"
-                            icon="i-lucide-edit"
-                            aria-label="快速編輯"
-                            @click="startEditing(row)"
-                        />
-                    </div>
-                </template>
-                <template #expanded="{ row }">
-                    <div
-                        class="expanded-content-wrapper bg-slate-50 p-4 dark:bg-slate-800/50"
-                        :class="{ 'editing-expanded-active': editingRowId === row.id }"
-                    >
-                        <div class="flex flex-col gap-6">
-                            <!-- 訂單列表 -->
-                            <div>
-                                <h3 class="mb-3 font-bold text-slate-900 dark:text-slate-100">
-                                    # 訂單列表
-                                </h3>
-
-                                <UTable
-                                    :data="
-                                        row.original.orderList
-                                            ? Object.values(row.original.orderList)
-                                            : []
-                                    "
-                                    :columns="orderListColumns"
-                                    :ui="{
-                                        base: 'min-w-0 table-auto',
-                                        th: 'bg-slate-100 dark:bg-slate-800'
-                                    }"
-                                    class="w-max rounded-md border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900"
-                                >
-                                    <template #totalPrice-cell="{ row: totalPriceRow }">
-                                        {{ thousandthsFormat(totalPriceRow.original.totalPrice) }}
-                                    </template>
-                                    <template #totalPrice-footer>
-                                        {{ thousandthsFormat(row.original.totalPrice) }}
-                                    </template>
-                                </UTable>
-                            </div>
-
-                            <div class="flex gap-6">
-                                <!-- 發票資訊 -->
+                        </div>
+                    </template>
+                    <template #expanded="{ row }">
+                        <div
+                            class="expanded-content-wrapper bg-slate-50 p-4 dark:bg-slate-800/50"
+                            :class="{ 'editing-expanded-active': editingRowId === row.id }"
+                        >
+                            <div class="flex flex-col gap-6">
+                                <!-- 訂單列表 -->
                                 <div>
                                     <h3 class="mb-3 font-bold text-slate-900 dark:text-slate-100">
-                                        # 發票資訊
+                                        # 訂單列表
                                     </h3>
-                                    <UTable
-                                        :data="[
-                                            {
-                                                buyer: row.original.buyer
-                                                    ? row.original.buyer
-                                                    : '–',
-                                                taxId: row.original.taxId ? row.original.taxId : '–'
-                                            }
-                                        ]"
-                                        :columns="invoiceColumns"
-                                        :ui="{
-                                            base: 'min-w-0 table-auto',
-                                            tr: 'text-center',
-                                            th: 'bg-slate-100 text-center dark:bg-slate-800'
-                                        }"
-                                        class="w-max overflow-hidden rounded-md border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900"
-                                    />
-                                </div>
 
-                                <!-- 配送資訊 -->
-                                <div>
-                                    <h3 class="mb-3 font-bold text-slate-900 dark:text-slate-100">
-                                        # 配送資訊
-                                    </h3>
                                     <UTable
-                                        :data="[
-                                            {
-                                                company: row.original.delivery?.company || '–',
-                                                trackingNo:
-                                                    row.original.delivery?.trackingNo || '–',
-                                                trackingUrl:
-                                                    row.original.delivery?.trackingUrl || '–'
-                                            }
-                                        ]"
-                                        :columns="deliveryColumns"
+                                        :data="
+                                            row.original.orderList
+                                                ? Object.values(row.original.orderList)
+                                                : []
+                                        "
+                                        :columns="orderListColumns"
                                         :ui="{
                                             base: 'min-w-0 table-auto',
-                                            tr: 'text-center',
-                                            th: 'bg-slate-100 text-center dark:bg-slate-800'
+                                            th: 'bg-slate-100 dark:bg-slate-800'
                                         }"
-                                        class="w-max overflow-hidden rounded-md border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900"
+                                        class="w-max rounded-md border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900"
                                     >
-                                        <template #trackingUrl-cell="{ row: deliveryRow }">
-                                            <a
-                                                v-if="deliveryRow.original.trackingUrl !== '–'"
-                                                :href="deliveryRow.original.trackingUrl"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                class="hover:underline"
-                                            >
-                                                {{ deliveryRow.original.trackingUrl }}
-                                            </a>
-                                            <span v-else>–</span>
+                                        <template #totalPrice-cell="{ row: totalPriceRow }">
+                                            {{
+                                                thousandthsFormat(totalPriceRow.original.totalPrice)
+                                            }}
+                                        </template>
+                                        <template #totalPrice-footer>
+                                            {{ thousandthsFormat(row.original.totalPrice) }}
                                         </template>
                                     </UTable>
                                 </div>
+
+                                <div class="flex gap-6">
+                                    <!-- 發票資訊 -->
+                                    <div>
+                                        <h3
+                                            class="mb-3 font-bold text-slate-900 dark:text-slate-100"
+                                        >
+                                            # 發票資訊
+                                        </h3>
+                                        <UTable
+                                            :data="[
+                                                {
+                                                    buyer: row.original.buyer
+                                                        ? row.original.buyer
+                                                        : '–',
+                                                    taxId: row.original.taxId
+                                                        ? row.original.taxId
+                                                        : '–'
+                                                }
+                                            ]"
+                                            :columns="invoiceColumns"
+                                            :ui="{
+                                                base: 'min-w-0 table-auto',
+                                                tr: 'text-center',
+                                                th: 'bg-slate-100 text-center dark:bg-slate-800'
+                                            }"
+                                            class="w-max overflow-hidden rounded-md border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900"
+                                        />
+                                    </div>
+
+                                    <!-- 配送資訊 -->
+                                    <div>
+                                        <h3
+                                            class="mb-3 font-bold text-slate-900 dark:text-slate-100"
+                                        >
+                                            # 配送資訊
+                                        </h3>
+                                        <UTable
+                                            :data="[
+                                                {
+                                                    company: row.original.delivery?.company || '–',
+                                                    trackingNo:
+                                                        row.original.delivery?.trackingNo || '–',
+                                                    trackingUrl:
+                                                        row.original.delivery?.trackingUrl || '–'
+                                                }
+                                            ]"
+                                            :columns="deliveryColumns"
+                                            :ui="{
+                                                base: 'min-w-0 table-auto',
+                                                tr: 'text-center',
+                                                th: 'bg-slate-100 text-center dark:bg-slate-800'
+                                            }"
+                                            class="w-max overflow-hidden rounded-md border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900"
+                                        >
+                                            <template #trackingUrl-cell="{ row: deliveryRow }">
+                                                <a
+                                                    v-if="deliveryRow.original.trackingUrl !== '–'"
+                                                    :href="deliveryRow.original.trackingUrl"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    class="hover:underline"
+                                                >
+                                                    {{ deliveryRow.original.trackingUrl }}
+                                                </a>
+                                                <span v-else>–</span>
+                                            </template>
+                                        </UTable>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </template>
-            </UTable>
-
-            <div
-                class="flex flex-col items-center justify-between gap-4 border-t border-slate-200 bg-slate-50 px-6 py-4 sm:flex-row dark:border-slate-800 dark:bg-slate-800/30"
-            >
-                <div class="flex items-center gap-4">
-                    <p class="text-sm text-slate-500">
-                        顯示第
-                        <span class="font-semibold">{{
-                            filteredOrders.length ? (page - 1) * Number(pageCount) + 1 : 0
-                        }}</span>
-                        到
-                        <span class="font-semibold">{{
-                            Math.min(page * Number(pageCount), filteredOrders.length)
-                        }}</span>
-                        筆結果
-                    </p>
-                    <div class="flex items-center gap-2">
-                        <USelect
-                            v-model.number="pageCount"
-                            :items="pageCountOptions"
-                            :options="pageCountOptions"
-                            class="w-20"
-                            :content="{
-                                side: 'top'
-                            }"
-                        />
-                        <span class="text-sm text-slate-500">筆 / 頁</span>
-                    </div>
-                </div>
-                <UPagination
-                    v-model:page="page"
-                    :total="filteredOrders.length"
-                    :items-per-page="Number(pageCount)"
-                />
+                    </template>
+                </UTable>
             </div>
-        </div>
-    </div>
+
+            <template #footer>
+                <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
+                    <div class="flex items-center gap-4">
+                        <p class="text-sm text-slate-500">
+                            顯示第
+                            <span class="font-semibold">{{
+                                filteredOrders.length ? (page - 1) * Number(pageCount) + 1 : 0
+                            }}</span>
+                            到
+                            <span class="font-semibold">{{
+                                Math.min(page * Number(pageCount), filteredOrders.length)
+                            }}</span>
+                            筆結果
+                        </p>
+                        <div class="flex items-center gap-2">
+                            <USelect
+                                v-model.number="pageCount"
+                                :items="pageCountOptions"
+                                :options="pageCountOptions"
+                                class="w-20"
+                                :content="{
+                                    side: 'top'
+                                }"
+                            />
+                            <span class="text-sm text-slate-500">筆 / 頁</span>
+                        </div>
+                    </div>
+                    <UPagination
+                        v-model:page="page"
+                        :total="filteredOrders.length"
+                        :items-per-page="Number(pageCount)"
+                    />
+                </div>
+            </template>
+        </UCard>
+    </UContainer>
 </template>
 
 <script setup lang="ts">
@@ -541,8 +567,14 @@ const searchMode = ref<SearchMode>('all')
 
 let searchConditionId = 0
 
-function createSearchCondition(field: SearchField = 'orderId'): SearchCondition {
+function createSearchCondition(field?: SearchField): SearchCondition {
     searchConditionId += 1
+
+    if (!field) {
+        const usedFields = searchConditions.value.map((c) => c.field)
+        const availableOption = searchOptions.find((opt) => !usedFields.includes(opt.value))
+        field = availableOption ? availableOption.value : 'orderId'
+    }
 
     const keyword = field === 'status' ? [] : ''
 
@@ -553,7 +585,13 @@ function createSearchCondition(field: SearchField = 'orderId'): SearchCondition 
     }
 }
 
-const searchConditions = ref<SearchCondition[]>([createSearchCondition()])
+const searchConditions = ref<SearchCondition[]>([createSearchCondition('orderId')])
+
+function getAvailableSearchOptions(currentId: number) {
+    const usedFields = searchConditions.value.filter((c) => c.id !== currentId).map((c) => c.field)
+
+    return searchOptions.filter((option) => !usedFields.includes(option.value))
+}
 
 watch(
     searchConditions,
@@ -587,7 +625,7 @@ function removeSearchCondition(id: number) {
 
 function resetSearchConditions() {
     searchMode.value = 'all'
-    searchConditions.value = [createSearchCondition()]
+    searchConditions.value = [createSearchCondition('orderId')]
 }
 
 // 分頁設定

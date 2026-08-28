@@ -1,179 +1,189 @@
 <template>
-    <div class="summary-board-container">
-        <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-            <div>
-                <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">團購活動列表</h1>
+    <UContainer :ui="{ base: 'max-w-full' }">
+        <UCard>
+            <template #header>
+                <div class="mb-4 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+                    <div>
+                        <h1 class="text-2xl font-bold text-slate-900 dark:text-slate-100">
+                            團購活動列表
+                        </h1>
+                        <p class="mt-1 text-sm text-slate-500">
+                            管理與監控所有進行中及歷史團購活動。
+                        </p>
+                    </div>
 
-                <p class="text-sm text-slate-500">管理與監控所有進行中及歷史團購活動。</p>
-            </div>
-            <NuxtLink
-                to="/admin/groupBuying/create"
-                class="bg-primary hover:bg-primary/90 shadow-primary/20 flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition-all"
-            >
-                <span class="material-symbols-outlined text-lg">add_circle</span>
-                新增團購活動
-            </NuxtLink>
-        </div>
+                    <UButton
+                        to="/admin/groupBuying/create"
+                        class="px-5 py-2.5 font-semibold"
+                        icon="i-lucide-plus-circle"
+                        size="lg"
+                    >
+                        新增團購活動
+                    </UButton>
+                </div>
 
-        <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div
-                class="flex w-fit gap-1 rounded-xl border border-slate-200 bg-white p-1.5 dark:border-slate-800 dark:bg-slate-900"
-            >
-                <button
-                    v-for="tab in tabs"
-                    :key="tab.value"
-                    :class="[
-                        'rounded-lg px-6 py-2 text-sm font-semibold transition-colors',
-                        currentTab === tab.value
-                            ? 'bg-primary text-white'
-                            : 'text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800'
-                    ]"
-                    @click="currentTab = tab.value"
-                >
-                    {{ tab.label }}
-                </button>
-            </div>
-
-            <div class="w-full sm:w-72">
-                <UInput
-                    v-model="searchUnitName"
-                    icon="i-lucide-search"
-                    placeholder="搜尋團購單位..."
-                >
-                    <template #trailing>
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div
+                        class="flex w-fit gap-1 rounded-xl border border-slate-200 bg-white p-1.5 dark:border-slate-800 dark:bg-slate-900"
+                    >
                         <UButton
-                            color="neutral"
-                            variant="ghost"
-                            size="sm"
-                            icon="i-lucide-x"
-                            aria-label="Clear input"
-                            @click="clearSearch"
+                            v-for="tab in tabs"
+                            :key="tab.value"
+                            :color="currentTab === tab.value ? 'primary' : 'neutral'"
+                            :variant="currentTab === tab.value ? 'solid' : 'ghost'"
+                            class="px-6 py-2 font-semibold"
+                            :label="tab.label"
+                            @click="currentTab = tab.value"
                         />
+                    </div>
+
+                    <div class="w-full sm:w-72">
+                        <UInput
+                            v-model="searchUnitName"
+                            icon="i-lucide-search"
+                            placeholder="搜尋團購單位..."
+                        >
+                            <template #trailing>
+                                <UButton
+                                    color="neutral"
+                                    variant="ghost"
+                                    size="sm"
+                                    icon="i-lucide-x"
+                                    aria-label="Clear input"
+                                    @click="clearSearch"
+                                />
+                            </template>
+                        </UInput>
+                    </div>
+                </div>
+            </template>
+            <div class="table-container">
+                <UTable
+                    :data="paginatedActivities"
+                    :columns="tableColumns"
+                    :ui="{
+                        th: 'table-th',
+                        tr: 'table-tr'
+                    }"
+                >
+                    <template #gid-cell="{ row }">
+                        <div class="flex items-center justify-center gap-2">
+                            <span class="font-mono text-sm text-slate-600 dark:text-slate-400">
+                                {{ row.original.gid }}
+                            </span>
+                            <CommonTooltip text="複製代號"
+                                ><div class="inline-block">
+                                    <UButton
+                                        icon="i-lucide-copy"
+                                        size="xs"
+                                        variant="ghost"
+                                        @click="copyGid(row.original.gid)"
+                                    /></div
+                            ></CommonTooltip>
+                        </div>
                     </template>
-                </UInput>
-            </div>
-        </div>
 
-        <div class="table-container">
-            <UTable
-                :data="paginatedActivities"
-                :columns="tableColumns"
-                :ui="{
-                    base: 'table-base',
-                    th: 'table-th',
-                    tr: 'table-tr'
-                }"
-            >
-                <template #gid-cell="{ row }">
-                    <div class="flex items-center justify-center gap-2">
-                        <span class="font-mono text-sm text-slate-600 dark:text-slate-400">
-                            {{ row.original.gid }}
+                    <template #unit-cell="{ row }">
+                        <div class="flex items-center gap-3">
+                            <span class="font-medium text-slate-700 dark:text-slate-200">
+                                {{ row.original.unitName }}
+                            </span>
+                            <CommonTooltip text="複製團購單位"
+                                ><div class="inline-block">
+                                    <UButton
+                                        icon="i-lucide-copy"
+                                        size="xs"
+                                        variant="ghost"
+                                        @click="copyGid(row.original.unitName)"
+                                    /></div
+                            ></CommonTooltip>
+                        </div>
+                    </template>
+
+                    <template #title-cell="{ row }">
+                        <span class="text-slate-600 dark:text-slate-400">{{
+                            row.original.title
+                        }}</span>
+                    </template>
+                    <template #buildTime-cell="{ row }">
+                        <span
+                            v-if="row.original.buildTime"
+                            :class="['rounded-full bg-gray-100 px-3 py-1 text-xs font-medium']"
+                        >
+                            {{ formatDate(row.original.buildTime) }}
                         </span>
-                        <CommonTooltip text="複製代號">
-                            <UButton
-                                icon="i-lucide-copy"
-                                size="xs"
-                                variant="ghost"
-                                @click="copyGid(row.original.gid)"
-                            />
-                        </CommonTooltip>
-                    </div>
-                </template>
+                    </template>
 
-                <template #unit-cell="{ row }">
-                    <div class="flex items-center gap-3">
-                        <span class="font-medium text-slate-700 dark:text-slate-200">
-                            {{ row.original.unitName }}
+                    <template #endDate-cell="{ row }">
+                        <span
+                            :class="[
+                                'rounded-full px-3 py-1 text-xs font-medium',
+                                getStatusBadgeClass(row.original.status)
+                            ]"
+                        >
+                            {{ row.original.endDate }}
                         </span>
-                        <CommonTooltip text="複製團購單位">
-                            <UButton
-                                icon="i-lucide-copy"
-                                size="xs"
-                                variant="ghost"
-                                @click="copyGid(row.original.unitName)"
-                            />
-                        </CommonTooltip>
-                    </div>
-                </template>
+                    </template>
 
-                <template #title-cell="{ row }">
-                    <span class="text-slate-600 dark:text-slate-400">{{ row.original.title }}</span>
-                </template>
-                <template #buildTime-cell="{ row }">
-                    <span
-                        v-if="row.original.buildTime"
-                        :class="['rounded-full bg-gray-100 px-3 py-1 text-xs font-medium']"
-                    >
-                        {{ formatDate(row.original.buildTime) }}
-                    </span>
-                </template>
+                    <template #actions-cell="{ row }">
+                        <div class="flex justify-center gap-2">
+                            <CommonTooltip text="詳細資料"
+                                ><div class="inline-block">
+                                    <UButton
+                                        :to="`/admin/groupBuying/${row.original.gid}?action=view&page=${page}`"
+                                        icon="i-lucide-view"
+                                        size="xl"
+                                        variant="ghost"
+                                    /></div
+                            ></CommonTooltip>
 
-                <template #endDate-cell="{ row }">
-                    <span
-                        :class="[
-                            'rounded-full px-3 py-1 text-xs font-medium',
-                            getStatusBadgeClass(row.original.status)
-                        ]"
-                    >
-                        {{ row.original.endDate }}
-                    </span>
-                </template>
+                            <CommonTooltip text="編輯"
+                                ><div class="inline-block">
+                                    <UButton
+                                        :to="`/admin/groupBuying/${row.original.gid}?action=edit&page=${page}`"
+                                        icon="i-lucide-file-edit"
+                                        size="xl"
+                                        variant="ghost"
+                                    /></div
+                            ></CommonTooltip>
 
-                <template #actions-cell="{ row }">
-                    <div class="flex justify-center gap-2">
-                        <CommonTooltip text="詳細資料">
-                            <UButton
-                                :to="`/admin/groupBuying/${row.original.gid}?action=view&page=${page}`"
-                                icon="i-lucide-view"
-                                size="xl"
-                                variant="ghost"
-                            ></UButton>
-                        </CommonTooltip>
-
-                        <CommonTooltip text="編輯">
-                            <UButton
-                                :to="`/admin/groupBuying/${row.original.gid}?action=edit&page=${page}`"
-                                icon="i-lucide-file-edit"
-                                size="xl"
-                                variant="ghost"
-                            ></UButton>
-                        </CommonTooltip>
-
-                        <CommonTooltip text="刪除">
-                            <UButton
-                                class="text-red-500 transition-colors hover:bg-red-50"
-                                icon="i-lucide-trash-2"
-                                size="xl"
-                                variant="ghost"
-                                @click="handleDelete(row.original.gid)"
-                            ></UButton>
-                        </CommonTooltip>
-                    </div>
-                </template>
-            </UTable>
-
-            <div
-                class="flex flex-col items-center justify-between gap-4 border-t border-slate-200 bg-slate-50 px-6 py-4 sm:flex-row dark:border-slate-800 dark:bg-slate-800/30"
-            >
-                <p class="text-sm text-slate-500">
-                    顯示第
-                    <span class="font-semibold">{{
-                        filteredActivities.length ? (page - 1) * pageCount + 1 : 0
-                    }}</span>
-                    到
-                    <span class="font-semibold">{{
-                        Math.min(page * pageCount, filteredActivities.length)
-                    }}</span>
-                    筆結果
-                </p>
-                <UPagination
-                    v-model:page="page"
-                    :total="filteredActivities.length"
-                    :items-per-page="pageCount"
-                />
+                            <CommonTooltip text="刪除"
+                                ><div class="inline-block">
+                                    <UButton
+                                        class="text-red-500 transition-colors hover:bg-red-50"
+                                        icon="i-lucide-trash-2"
+                                        size="xl"
+                                        variant="ghost"
+                                        @click="handleDelete(row.original.gid)"
+                                    /></div
+                            ></CommonTooltip>
+                        </div>
+                    </template>
+                </UTable>
             </div>
-        </div>
-    </div>
+
+            <template #footer>
+                <div class="flex flex-col items-center justify-between gap-4 sm:flex-row">
+                    <p class="text-sm text-slate-500">
+                        顯示第
+                        <span class="font-semibold">{{
+                            filteredActivities.length ? (page - 1) * pageCount + 1 : 0
+                        }}</span>
+                        到
+                        <span class="font-semibold">{{
+                            Math.min(page * pageCount, filteredActivities.length)
+                        }}</span>
+                        筆結果
+                    </p>
+                    <UPagination
+                        v-model:page="page"
+                        :total="filteredActivities.length"
+                        :items-per-page="pageCount"
+                    />
+                </div>
+            </template>
+        </UCard>
+    </UContainer>
 </template>
 
 <script setup lang="ts">

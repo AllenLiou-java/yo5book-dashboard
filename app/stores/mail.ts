@@ -82,6 +82,11 @@ export const useMailStore = defineStore('mail', () => {
         })
     })
 
+    /** 目前活動中已開信的總數量（不受篩選條件影響） */
+    const openedCount = computed(() => {
+        return rows.value.filter((row) => row.opened).length
+    })
+
     // ── Actions ──────────────────────────────────────────────────────────
 
     /** 清除所有篩選條件 */
@@ -180,6 +185,7 @@ export const useMailStore = defineStore('mail', () => {
         rows,
         isFiltered,
         filteredRows,
+        openedCount,
         // actions
         loadCampaign,
         refresh,

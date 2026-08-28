@@ -90,11 +90,15 @@
                 <!-- 篩選結果摘要 + 重設 -->
                 <div class="mb-3 flex items-center justify-between text-sm text-gray-500">
                     <span>
-                        共
+                        已讀
+                        <span class="font-semibold text-gray-800 dark:text-gray-200">
+                            {{ openedCount }}
+                        </span>
+                        筆｜ 共
                         <span class="font-semibold text-gray-800 dark:text-gray-200">
                             {{ filteredRows.length }}
                         </span>
-                        筆（總計 {{ rows.length }} 筆）
+                        筆
                     </span>
 
                     <UButton
@@ -209,7 +213,8 @@ const {
     filterDateEnd,
     filterOpened,
     openedOptions,
-    isFiltered
+    isFiltered,
+    openedCount
 } = storeToRefs(mailStore)
 
 await mailStore.loadCampaign(id)

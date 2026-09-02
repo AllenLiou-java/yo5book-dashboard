@@ -271,7 +271,7 @@
                     </template>
                     <template #totalPrice-cell="{ row }">
                         <span class="text-primary font-semibold">
-                            {{ thousandthsFormat((row.original as OrderItem).totalPrice) }}
+                            {{ thousandthsFormat(row.original.qty * row.original.unitPrice) }}
                         </span>
                     </template>
                 </UTable>
@@ -348,8 +348,8 @@ await initOrderDetail()
 
 const columns = [
     { accessorKey: 'productName', header: '商品名稱' },
-    { accessorKey: 'unitPrice', header: '單價' },
     { accessorKey: 'qty', header: '訂購數' },
+    { accessorKey: 'unitPrice', header: '單價' },
     { accessorKey: 'totalPrice', header: '總金額' }
 ]
 

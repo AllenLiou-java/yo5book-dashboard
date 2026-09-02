@@ -244,11 +244,25 @@
                         訂單商品
                     </h2>
                 </template>
+
                 <UTable :data="orderListArray" :columns="columns" class="w-full">
-                    <template #totalPrice-cell="{ row }">
-                        {{ thousandthsFormat((row.original as OrderItem).totalPrice) }}
+                    <template #unitePrice-cell="{ row }">
+                        {{ thousandthsFormat(row.original.unitPrice) }}
+                    </template>
+                    <template #price-cell="{ row }">
+                        {{ thousandthsFormat(row.original.qty * row.original.unitPrice) }}
                     </template>
                 </UTable>
+                <div
+                    class="flex items-center justify-end border-t border-slate-200 p-6 dark:border-slate-800"
+                >
+                    <span class="text-lg font-medium text-slate-700 dark:text-slate-300"
+                        >合計金額：</span
+                    >
+                    <span class="text-primary ml-4 text-2xl font-bold">
+                        $ {{ thousandthsFormat(orderDetail?.totalPrice || 0) }}
+                    </span>
+                </div>
             </UCard>
 
             <!-- 底部操作按鈕 -->
@@ -272,7 +286,7 @@
 
 <script setup lang="ts">
 import type { FormSubmitEvent } from '#ui/types'
-import type { OrderData, OrderItem } from '~/types/order'
+import type { OrderData } from '~/types/order'
 const orderStore = useOrderStore()
 const { statusOptions, error } = storeToRefs(orderStore)
 
@@ -306,7 +320,8 @@ await initOrderDetail(route.params.orderId as string)
 const columns = [
     { accessorKey: 'productName', header: '商品名稱' },
     { accessorKey: 'qty', header: '訂購數' },
-    { accessorKey: 'totalPrice', header: '總金額' }
+    { accessorKey: 'unitePrice', header: '單價' },
+    { accessorKey: 'price', header: '總金額' }
 ]
 
 const orderListArray = computed(() => Object.values(orderDetail.value?.orderList || {}))

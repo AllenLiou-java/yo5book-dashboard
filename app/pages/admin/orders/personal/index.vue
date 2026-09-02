@@ -268,7 +268,6 @@
                                     <h3 class="mb-3 font-bold text-slate-900 dark:text-slate-100">
                                         # 訂單列表
                                     </h3>
-
                                     <UTable
                                         :data="
                                             row.original.orderList
@@ -282,12 +281,12 @@
                                         }"
                                         class="w-max rounded-md border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900"
                                     >
-                                        <template #totalPrice-cell="{ row: totalPriceRow }">
+                                        <template #price-cell="{ row: totalPriceRow }">
                                             {{
-                                                thousandthsFormat(totalPriceRow.original.totalPrice)
+                                                thousandthsFormat(totalPriceRow.original.unitPrice)
                                             }}
                                         </template>
-                                        <template #totalPrice-footer>
+                                        <template #price-footer>
                                             {{ thousandthsFormat(row.original.totalPrice) }}
                                         </template>
                                     </UTable>
@@ -925,8 +924,8 @@ const orderListColumns = [
     },
     { accessorKey: 'qty', header: '數量' },
     {
-        accessorKey: 'totalPrice',
-        header: '總金額'
+        accessorKey: 'price',
+        header: '價格'
     }
 ]
 

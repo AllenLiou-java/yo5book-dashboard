@@ -93,7 +93,7 @@
                     </template>
 
                     <template #actions-cell="{ row }">
-                        <CommonTooltip text="點擊前往"
+                        <CommonTooltip v-if="row.original.isLaunched" text="點擊前往"
                             ><div class="inline-block">
                                 <UButton
                                     icon="i-lucide-table-of-contents"
@@ -209,7 +209,8 @@ const filteredActivities = computed(() => {
         title: item.title,
         buildTime: item.buildTime,
         endDate: item.endDate,
-        status: item.status
+        status: item.status,
+        isLaunched: item.isLaunched
     }))
 
     if (currentTab.value !== 'all') {

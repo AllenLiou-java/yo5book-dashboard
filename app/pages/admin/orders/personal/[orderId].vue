@@ -82,11 +82,24 @@
                     <UFormField label="帳號後五碼">
                         <UInput
                             v-model="orderDetail.bankAccountNo"
+                            maxlength="5"
+                            placeholder="若尚未確認，請填寫 00000"
                             class="w-full"
                             size="lg"
                             :variant="isReadonly ? 'none' : 'outline'"
                             :readonly="isReadonly"
-                        />
+                        >
+                            <template #trailing>
+                                <div
+                                    id="character-count"
+                                    class="text-muted text-xs tabular-nums"
+                                    aria-live="polite"
+                                    role="status"
+                                >
+                                    {{ orderDetail.bankAccountNo?.length }}/5
+                                </div>
+                            </template>
+                        </UInput>
                     </UFormField>
                     <UFormField label="備註" class="sm:col-span-2">
                         <UInput
@@ -167,11 +180,23 @@
                     <UFormField label="統一編號">
                         <UInput
                             v-model="orderDetail.taxId"
+                            maxlength="8"
                             class="w-full"
                             size="lg"
                             :variant="isReadonly ? 'none' : 'outline'"
                             :readonly="isReadonly"
-                        />
+                        >
+                            <template #trailing>
+                                <div
+                                    id="character-count"
+                                    class="text-muted text-xs tabular-nums"
+                                    aria-live="polite"
+                                    role="status"
+                                >
+                                    {{ orderDetail.taxId?.length }}/8
+                                </div>
+                            </template>
+                        </UInput>
                     </UFormField>
                 </div>
             </UCard>

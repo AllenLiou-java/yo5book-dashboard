@@ -37,10 +37,22 @@
                     <UFormField label="帳號後五碼" name="bankAccountNo">
                         <UInput
                             v-model="orderDetail.bankAccountNo"
+                            maxlength="5"
                             placeholder="若尚未確認，請填寫 00000"
                             class="w-full"
                             size="lg"
-                        />
+                        >
+                            <template #trailing>
+                                <div
+                                    id="character-count"
+                                    class="text-muted text-xs tabular-nums"
+                                    aria-live="polite"
+                                    role="status"
+                                >
+                                    {{ orderDetail.bankAccountNo?.length }}/5
+                                </div>
+                            </template>
+                        </UInput>
                     </UFormField>
                     <UFormField label="備註" class="sm:col-span-2" name="remark">
                         <UInput v-model="orderDetail.remark" class="w-full" size="lg" />
@@ -83,7 +95,18 @@
                         <UInput v-model="orderDetail.buyer!" class="w-full" size="lg" />
                     </UFormField>
                     <UFormField label="統一編號" name="taxId">
-                        <UInput v-model="orderDetail.taxId!" class="w-full" size="lg" />
+                        <UInput v-model="orderDetail.taxId!" maxlength="8" class="w-full" size="lg">
+                            <template #trailing>
+                                <div
+                                    id="character-count"
+                                    class="text-muted text-xs tabular-nums"
+                                    aria-live="polite"
+                                    role="status"
+                                >
+                                    {{ orderDetail.taxId?.length }}/8
+                                </div>
+                            </template>
+                        </UInput>
                     </UFormField>
                 </div>
             </UCard>
@@ -153,14 +176,15 @@
                             min="1"
                             size="lg"
                             class="w-24"
-                            @update:model-value="updateOrderItemTotalPrice(row.index)"
+                            @update:model-value="updateOrderLstTotalPrice()"
                         />
                     </template>
                     <template #totalPrice-cell="{ row }">
                         <span class="text-primary font-semibold">
                             {{
                                 thousandthsFormat(
-                                    orderDetail.orderList?.[row.index]?.totalPrice || 0
+                                    (orderDetail.orderList?.[row.index]?.qty || 0) *
+                                        (orderDetail.orderList?.[row.index]?.unitPrice || 0)
                                 )
                             }}
                         </span>
@@ -284,8 +308,7 @@ const schema = z.object({
                 productId: z.string().min(1, '請選擇商品'),
                 productName: z.string().min(1, '請選擇商品'),
                 qty: z.number().min(1, '數量至少為 1'),
-                unitPrice: z.number().min(0),
-                totalPrice: z.number().min(0)
+                unitPrice: z.number().min(0)
             })
         )
         .min(1, '至少需新增一項商品'),
@@ -307,7 +330,7 @@ const orderDetail = reactive<Schema>({
     buyer: '',
     delivery: { company: '郵局', trackingNo: '', trackingUrl: '' },
     email: '',
-    orderList: [{ productId: '', productName: '', qty: 1, unitPrice: 0, totalPrice: 0 }],
+    orderList: [{ productId: '', productName: '', qty: 1, unitPrice: 0 }],
     phone: '',
     receiver: { name: '', address: '' },
     remark: '',
@@ -360,8 +383,7 @@ function addProduct() {
         productId: '',
         productName: '',
         qty: 1,
-        unitPrice: 0,
-        totalPrice: 0
+        unitPrice: 0
     })
 }
 
@@ -372,18 +394,10 @@ function removeProduct(index: number) {
     }
 }
 
-function updateOrderItemTotalPrice(index: number) {
-    const item = orderDetail.orderList?.[index]
-    if (item) {
-        item.totalPrice = (item.unitPrice || 0) * (item.qty || 1)
-    }
-    updateOrderLstTotalPrice()
-}
-
 function updateOrderLstTotalPrice() {
     let grandTotal = 0
     orderDetail.orderList?.forEach((item) => {
-        grandTotal += item.totalPrice || 0
+        grandTotal += (item.qty || 0) * (item.unitPrice || 0)
     })
     orderDetail.totalPrice = grandTotal
 }
@@ -395,7 +409,7 @@ function onProductSelect(productName: string, index: number) {
     if (product && item) {
         item.unitPrice = product.groupPrice
         item.productId = product.productId as string
-        updateOrderItemTotalPrice(index)
+        updateOrderLstTotalPrice()
     }
 }
 

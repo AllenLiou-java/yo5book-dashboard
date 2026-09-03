@@ -19,9 +19,6 @@ export interface OrderData {
     userId?: string
     groupId?: string
     orderId?: string
-    isClosed?: boolean
-    oderDate?: string
-    isFromGroup?: boolean
 }
 
 export interface Delivery {
@@ -37,12 +34,7 @@ export interface Receiver {
 
 export interface OrderItem {
     productName: string
+    productId?: string
     qty: number
     unitPrice: number
-    totalPrice: number
-    productId?: string
-    content?: string[]
-    imgSrc?: string
 }
-
-// productId、name、price.discount

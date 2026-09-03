@@ -22,7 +22,10 @@
                         >
                         </UButton>
                         <UButton
-                            to="/admin/orders/personal/create"
+                            :to="{
+                                path: '/admin/orders/personal/create',
+                                query: { page }
+                            }"
                             color="primary"
                             icon="i-lucide-plus"
                             label="新增訂單"

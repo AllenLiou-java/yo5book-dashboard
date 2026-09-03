@@ -37,7 +37,10 @@
                             >
                             </UButton>
                             <UButton
-                                to="/admin/orders/personal/create"
+                                :to="{
+                                    path: `/admin/orders/group/${groupId}/create`,
+                                    query: { page, unitName, endDate }
+                                }"
                                 color="primary"
                                 icon="i-lucide-plus"
                                 label="新增訂單"

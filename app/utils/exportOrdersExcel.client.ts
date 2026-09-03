@@ -903,7 +903,7 @@ function getOrderProductText(order: OrderData): string {
 
             const unitPrice = toNumber(item.unitPrice)
 
-            const totalPrice = toNumber(item.totalPrice)
+            const totalPrice = qty * unitPrice
 
             return [
                 item.productName,

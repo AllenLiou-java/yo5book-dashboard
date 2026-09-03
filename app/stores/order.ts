@@ -116,12 +116,9 @@ export const useOrderStore = defineStore('order', () => {
             const orderId = orderIdCreater()
             submitData.orderId = orderId
             submitData.orderDate = Date.now()
-            submitData.isClosed = false
-            const adminUser = useCookie<{ id: string | undefined; email: string } | null>(
-                'admin_user'
-            )
-            if (adminUser) {
-                submitData.userId = adminUser.value?.id || ''
+            const authStore = useAuthStore()
+            if (authStore.admin) {
+                submitData.userId = authStore.admin.id || ''
                 submitData.remark = '管理員新增訂單'
             }
 
@@ -229,13 +226,11 @@ export const useOrderStore = defineStore('order', () => {
             const orderId = orderIdCreater()
             submitData.orderId = orderId
             submitData.orderDate = Date.now()
-            submitData.isClosed = false
+            // submitData.isClosed = false
 
-            const adminUser = useCookie<{ id: string | undefined; email: string } | null>(
-                'admin_user'
-            )
-            if (adminUser) {
-                submitData.userId = adminUser.value?.id || ''
+            const authStore = useAuthStore()
+            if (authStore.admin) {
+                submitData.userId = authStore.admin.id || ''
                 submitData.remark = '管理員新增訂單'
             }
 

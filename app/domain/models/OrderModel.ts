@@ -8,7 +8,6 @@ export class OrderModel {
     status: string
     totalPrice: number
     orderDate: number | null
-    isClosed: boolean
     bankAccountNo: string
     taxId: string
     remark: string
@@ -22,7 +21,6 @@ export class OrderModel {
         address: string
     }
     orderList: OrderItem[]
-    isFromGroup?: boolean
 
     constructor(data: Partial<OrderData>) {
         this.userId = data.userId
@@ -33,14 +31,12 @@ export class OrderModel {
         this.status = data.status || ''
         this.totalPrice = data.totalPrice || 0
         this.orderDate = data.orderDate || null
-        this.isClosed = data.isClosed ?? false
         this.bankAccountNo = data.bankAccountNo || ''
         this.taxId = data.taxId || ''
         this.remark = data.remark || ''
         this.delivery = data.delivery || { company: '', trackingNo: '', trackingUrl: '' }
         this.receiver = data.receiver || { name: '', address: '' }
         this.orderList = data.orderList || []
-        this.isFromGroup = data.isFromGroup
     }
 
     setUserId = (userId: string) => {
@@ -67,9 +63,6 @@ export class OrderModel {
     setOrderDate = (orderDate: number | null) => {
         this.orderDate = orderDate
     }
-    setIsClosed = (isClosed: boolean) => {
-        this.isClosed = isClosed
-    }
     setBankAccountNo = (bankAccountNo: string) => {
         this.bankAccountNo = bankAccountNo
     }
@@ -87,8 +80,5 @@ export class OrderModel {
     }
     setOrderList = (order: OrderItem) => {
         this.orderList.push(order)
-    }
-    setIsFromGroup = (isFromGroup: boolean) => {
-        this.isFromGroup = isFromGroup
     }
 }

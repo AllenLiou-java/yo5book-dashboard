@@ -89,11 +89,24 @@
                     <UFormField label="帳號後五碼">
                         <UInput
                             v-model="orderDetail.bankAccountNo"
+                            maxlength="5"
+                            placeholder="若尚未確認，請填寫 00000"
                             class="w-full"
                             size="lg"
                             :variant="isReadonly ? 'none' : 'outline'"
                             :readonly="isReadonly"
-                        />
+                        >
+                            <template #trailing>
+                                <div
+                                    id="character-count"
+                                    class="text-muted text-xs tabular-nums"
+                                    aria-live="polite"
+                                    role="status"
+                                >
+                                    {{ orderDetail.bankAccountNo?.length }}/5
+                                </div>
+                            </template>
+                        </UInput>
                     </UFormField>
                     <UFormField label="備註" class="sm:col-span-2">
                         <UInput
@@ -174,11 +187,23 @@
                     <UFormField label="統一編號">
                         <UInput
                             v-model="orderDetail.taxId"
+                            maxlength="8"
                             class="w-full"
                             size="lg"
                             :variant="isReadonly ? 'none' : 'outline'"
                             :readonly="isReadonly"
-                        />
+                        >
+                            <template #trailing>
+                                <div
+                                    id="character-count"
+                                    class="text-muted text-xs tabular-nums"
+                                    aria-live="polite"
+                                    role="status"
+                                >
+                                    {{ orderDetail.taxId?.length }}/8
+                                </div>
+                            </template>
+                        </UInput>
                     </UFormField>
                 </div>
             </UCard>
@@ -418,7 +443,6 @@ function updateOrderItemTotalPrice(index: number) {
         // 確保數量不小於 1
         const qty = Math.max(1, item.qty || 1)
         item.qty = qty
-        item.totalPrice = (item.unitPrice || 0) * qty
     }
     updateOrderGrandTotal()
 }
@@ -426,7 +450,7 @@ function updateOrderItemTotalPrice(index: number) {
 function updateOrderGrandTotal() {
     if (!orderDetail.value) return
     const grandTotal = orderDetail.value.orderList.reduce(
-        (sum, item) => sum + (item.totalPrice || 0),
+        (sum, item) => sum + (item.unitPrice || 0) * (item.qty || 1),
         0
     )
     orderDetail.value.totalPrice = grandTotal
